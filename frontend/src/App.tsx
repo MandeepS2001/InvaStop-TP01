@@ -3,14 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import DashboardPage from './pages/DashboardPage';
-import SpeciesPage from './pages/SpeciesPage';
-import ReportsPage from './pages/ReportsPage';
-import ReportFormPage from './pages/ReportFormPage';
-import AnalyticsPage from './pages/AnalyticsPage';
-import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -30,45 +22,15 @@ function App() {
         {/* Public routes */}
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="register" element={<RegisterPage />} />
           
-          {/* Protected routes */}
-          <Route path="dashboard" element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="species" element={
-            <ProtectedRoute>
-              <SpeciesPage />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="reports" element={
-            <ProtectedRoute>
-              <ReportsPage />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="reports/new" element={
-            <ProtectedRoute>
-              <ReportFormPage />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="analytics" element={
-            <ProtectedRoute>
-              <AnalyticsPage />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="profile" element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          } />
+          {/* Placeholder routes for future pages */}
+          <Route path="login" element={<div className="p-8 text-center">Login Page - Coming Soon</div>} />
+          <Route path="register" element={<div className="p-8 text-center">Register Page - Coming Soon</div>} />
+          <Route path="dashboard" element={<div className="p-8 text-center">Dashboard Page - Coming Soon</div>} />
+          <Route path="species" element={<div className="p-8 text-center">Species Page - Coming Soon</div>} />
+          <Route path="reports" element={<div className="p-8 text-center">Reports Page - Coming Soon</div>} />
+          <Route path="analytics" element={<div className="p-8 text-center">Analytics Page - Coming Soon</div>} />
+          <Route path="profile" element={<div className="p-8 text-center">Profile Page - Coming Soon</div>} />
         </Route>
       </Routes>
     </div>
