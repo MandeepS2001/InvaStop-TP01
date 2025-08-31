@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
+import EducationPage from './pages/EducationPage';
+import SpeciesDetailPage from './pages/SpeciesDetailPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
         {/* Public routes */}
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="education" element={<EducationPage />} />
+          <Route path="species/:speciesId" element={<SpeciesDetailPage />} />
           
           {/* Placeholder routes for future pages */}
           <Route path="login" element={<div className="p-8 text-center">Login Page - Coming Soon</div>} />
