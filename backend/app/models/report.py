@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, Float, ForeignKey, Boolean
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import POINT
 from app.core.database import Base
 
 class Report(Base):
@@ -15,7 +14,7 @@ class Report(Base):
     location_name = Column(String, nullable=True)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    coordinates = Column(POINT, nullable=False)  # PostGIS point
+    # coordinates = Column(POINT, nullable=False)  # PostGIS point - removed for compatibility
     accuracy = Column(Float, nullable=True)  # GPS accuracy in meters
     report_date = Column(DateTime, nullable=False)
     image_urls = Column(Text, nullable=True)  # JSON array of image URLs

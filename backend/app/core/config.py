@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     
     # Database settings
-    DATABASE_URL: str = "postgresql://user:password@localhost/invastop"
+    DATABASE_URL: str = "mysql+pymysql://admin:tp01industryexp@tp01.cpyqoog2o4qg.ap-southeast-2.rds.amazonaws.com:3306/invastopdb"
     
     # Security settings
     SECRET_KEY: str = "your-secret-key-here-change-in-production"
