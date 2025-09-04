@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Invasive Species • Dual D3 Visualizations</title>
+<style>
+  :root { --green: #1f9d55; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 24px; color: #111; }
+  h1 { margin: 0 0 6px 0; font-size: 24px; }
+  .subtitle { color: #555; margin-bottom: 18px; }
+  .row { display: flex; gap: 18px; align-items: stretch; }
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; flex: 1 1 0; }
+  .card h3 { margin: 0 0 4px 0; font-size: 18px; }
+  .card .sub { color:#555; margin-bottom: 8px; font-size: 13px; }
+  /* layout: left ~60%, right ~40%, both same height */
+  #barCard { flex-basis: 60%; min-width: 520px; }
+  #circCard { flex-basis: 40%; min-width: 420px; }
+  .axis text { font-size: 12px; }
+  .axis path, .axis line { stroke: #c5cbd3; }
+  .tooltip {
+    position: absolute; pointer-events: none; background: rgba(0,0,0,.85);
+    color: #fff; padding: 8px 10px; border-radius: 6px; font-size: 12px; opacity: 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Biodiversity impacts by Australia’s top 10 invasive species</h1>
+<div class="subtitle">Left: count of unique impacted species per biodiversity group. Right: circular stacked bars per invasive species (stacked by group).</div>
+
+<div class="row">
+  <div id="barCard" class="card">
+    <h3>Groups impacted</h3>
+    <div class="sub">Count of unique “Species name” impacted by group</div>
+    <svg id="barSvg"></svg>
+  </div>
+
+  <div id="circCard" class="card">
+    <h3>Impacts by invasive species</h3>
+    <div class="sub">Each bar is an invasive species; stacks are biodiversity groups (unique species count)</div>
+    <svg id="circSvg"></svg>
+    <div id="legend" style="display:flex; flex-wrap:wrap; gap:8px 12px; margin-top:8px;"></div>
+  </div>
+</div>
+
+<div id="tooltip" class="tooltip"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+/* ===================== DATA SOURCE SWITCH =====================
+ * LOCAL (now):
+ *   CONFIG.mode = "csv"
+ *   CONFIG.csvUrl = "./taxon_threat_impact_cleaned.csv"
+ *
+ * AWS (later):
+ *   CONFIG.mode = "json"
+ *   CONFIG.barJsonUrl   = "https://your-api/impact-by-group"            // [{ group, count }]
+ *   CONFIG.stackJsonUrl = "https://your-api/impact-by-inv-and-group"    // [{ inv_sp_name, group, count }]
+ * Notes:
+ *   - Enable CORS on your API.
+ *   - Keep field names as above so no chart code changes are needed.
+ * =============================================================== */
+const CONFIG = {
+  mode: "csv",
+  csvUrl: "./taxon_threat_impact_cleaned.csv",
+  barJsonUrl: "",
+  stackJsonUrl: ""
+};
+
+const tooltip = d3.select("#tooltip");
+
+// --------- aggregation from CSV (one pass for both charts) ----------
+function aggregateFromCSV(rows) {
+  const byGroup = new Map();        // group -> Set(species)
+  const byInvGroup = new Map();     // inv||group -> Set(species)
+  for (const r of rows) {
+    const inv = (r["inv_sp_name"] || "").toString().trim();
+    const grp = (r["Group"] || "").toString().trim();
+    const sp  = (r["Species name adjusted"] || r["Species name"] || "").toString().trim();
+    if (!inv || !grp || !sp) continue;
+    if (!byGroup.has(grp)) byGroup.set(grp, new Set());
+    byGroup.get(grp).add(sp);
+    const key = inv + "||" + grp;
+    if (!byInvGroup.has(key)) byInvGroup.set(key, new Set());
+    byInvGroup.get(key).add(sp);
+  }
+  const barData = Array.from(byGroup.entries())
+    .map(([group, set]) => ({ group, count: set.size }))
+    .sort((a,b) => d3.descending(a.count, b.count));
+  const stackData = Array.from(byInvGroup.entries()).map(([key, set]) => {
+    const [inv_sp_name, group] = key.split("||");
+    return { inv_sp_name, group, count: set.size };
+  });
+  return { barData, stackData };
+}
+
+// ------------------------ BAR CHART ------------------------
+function renderBarChart(svg, data, width, height) {
+  svg.selectAll("*").remove();
+  svg.attr("width", width).attr("height", height);
+
+  const m = { top: 28, right: 20, bottom: 76, left: 68 };
+  const innerW = width - m.left - m.right;
+  const innerH = height - m.top - m.bottom;
+  const g = svg.append("g").attr("transform", `translate(${m.left},${m.top})`);
+
+  const total = d3.sum(data, d => d.count);
+
+  const x = d3.scaleBand().domain(data.map(d => d.group)).range([0, innerW]).padding(0.2);
+  const y = d3.scaleLinear().domain([0, d3.max(data, d => d.count) || 1]).nice().range([innerH, 0]);
+
+  g.append("g").attr("transform", `translate(0,${innerH})`).attr("class","axis")
+    .call(d3.axisBottom(x))
+    .selectAll("text").attr("transform","rotate(-30)").style("text-anchor","end");
+  g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(6).tickFormat(d3.format(",")));
+
+  g.append("text").attr("x", innerW/2).attr("y", innerH+56).attr("text-anchor","middle").text("Biodiversity Group");
+  g.append("text").attr("x", -innerH/2).attr("y", -50).attr("transform","rotate(-90)").attr("text-anchor","middle").text("Number of species impacted");
+
+  g.selectAll(".bar").data(data).enter().append("rect")
+    .attr("class","bar")
+    .attr("x", d => x(d.group))
+    .attr("y", d => y(d.count))
+    .attr("width", x.bandwidth())
+    .attr("height", d => innerH - y(d.count))
+    .attr("fill", "var(--green)")
+    .on("mousemove", (event,d) => {
+      const pct = total ? (d.count/total*100) : 0;
+      tooltip.style("opacity",1)
+        .html(`<strong>${d.group}</strong><br/>Count: ${d.count.toLocaleString()}<br/>Share: ${pct.toFixed(1)}%`)
+        .style("left", (event.pageX + 12) + "px")
+        .style("top",  (event.pageY - 28) + "px");
+    })
+    .on("mouseleave", () => tooltip.style("opacity",0));
+
+  const maxDatum = data[0];
+  if (maxDatum) {
+    const xMid = x(maxDatum.group) + x.bandwidth()/2;
+    const yTop = y(maxDatum.count);
+    g.append("line").attr("x1",xMid).attr("x2",xMid).attr("y1",yTop-20).attr("y2",yTop)
+      .attr("stroke","var(--green)").attr("stroke-dasharray","3,3");
+    g.append("foreignObject")
+      .attr("x", xMid-68).attr("y", yTop-36).attr("width",136).attr("height",22)
+      .append("xhtml:div")
+      .style("background","var(--green)").style("color","#fff").style("font-size","11px")
+      .style("padding","2px 6px").style("border-radius","10px").style("text-align","center")
+      .text("the most threatened");
+  }
+}
+
+// ------------------ CIRCULAR STACKED BARS ------------------
+function renderCircular(svg, stackData, width, height) {
+  svg.selectAll("*").remove();
+  svg.attr("width", width).attr("height", height);
+
+  const totalsByInv = d3.rollup(stackData, v => d3.sum(v, d => d.count), d => d.inv_sp_name);
+  const invs = Array.from(totalsByInv.keys()).sort((a,b) => d3.descending(totalsByInv.get(a), totalsByInv.get(b)));
+  const groups = Array.from(new Set(stackData.map(d => d.group))).sort();
+  const rows = invs.map(inv => {
+    const row = { inv_sp_name: inv };
+    for (const g of groups) row[g] = 0;
+    stackData.filter(d => d.inv_sp_name === inv).forEach(d => { row[d.group] = d.count; });
+    return row;
+  });
+  const totals = rows.map(r => ({ inv_sp_name: r.inv_sp_name, total: d3.sum(groups, g => r[g]) }));
+  const maxTotal = d3.max(totals, d => d.total) || 1;
+
+  const cx = width/2, cy = height/2, innerR = 100, outerR = Math.min(width,height)/2 - 26;
+
+  const x = d3.scaleBand().domain(invs).range([0, 2*Math.PI]).padding(0.08);
+  const y = d3.scaleLinear().domain([0, maxTotal]).range([innerR, outerR]);
+  const color = d3.scaleOrdinal().domain(groups).range(d3.schemeTableau10.slice(0, groups.length));
+
+  const g = svg.append("g").attr("transform", `translate(${cx},${cy})`);
+
+  const ticks = y.ticks(4).slice(1);
+  g.append("g").selectAll("circle").data(ticks).enter().append("circle")
+    .attr("fill","none").attr("stroke","#cfd8dc").attr("r", d => y(d));
+  g.append("g").selectAll("text").data(ticks).enter().append("text")
+    .attr("y", d => -y(d)).attr("dy", -4).attr("text-anchor","middle")
+    .attr("fill","#607d8b").attr("font-size",11).text(d => d3.format(",")(d));
+
+  g.append("g").selectAll("g").data(invs).enter().append("g")
+    .attr("text-anchor", d => (x(d)+x.bandwidth()/2 + Math.PI/2) % (2*Math.PI) < Math.PI ? "start" : "end")
+    .attr("transform", d => `rotate(${(x(d)+x.bandwidth()/2)*180/Math.PI - 90}) translate(${outerR+12},0)`)
+    .append("text")
+    .attr("transform", d => (x(d)+x.bandwidth()/2 + Math.PI/2) % (2*Math.PI) < Math.PI ? "rotate(0)" : "rotate(180)")
+    .attr("font-size",11).attr("alignment-baseline","middle").text(d => d);
+
+  const stack = d3.stack().keys(groups);
+  const series = stack(rows);
+  const arc = d3.arc()
+    .startAngle(d => x(d.data.inv_sp_name))
+    .endAngle(d => x(d.data.inv_sp_name) + x.bandwidth())
+    .innerRadius(d => y(d[0]))
+    .outerRadius(d => y(d[1]));
+
+  g.append("g").selectAll("g").data(series).enter().append("g")
+    .attr("fill", s => color(s.key))
+    .selectAll("path").data(d => d).enter().append("path")
+    .attr("d", arc)
+    .on("mousemove", (event,d) => {
+      const inv = d.data.inv_sp_name;
+      const group = event.currentTarget.parentNode.__data__.key;
+      const val = (d[1]-d[0]);
+      const invTotal = totals.find(t => t.inv_sp_name === inv)?.total || 0;
+      const pct = invTotal ? (val/invTotal*100) : 0;
+      tooltip.style("opacity",1)
+        .html(`<strong>${inv}</strong><br/>Group: ${group}<br/>Count: ${val.toLocaleString()}<br/>Share within ${inv}: ${pct.toFixed(1)}%`)
+        .style("left", (event.pageX + 12) + "px")
+        .style("top",  (event.pageY - 28) + "px");
+    })
+    .on("mouseleave", () => tooltip.style("opacity",0));
+
+  // legend
+  const legend = d3.select("#legend");
+  legend.selectAll("*").remove();
+  groups.forEach(gp => {
+    const item = legend.append("div").style("display","flex").style("alignItems","center").style("gap","8px").style("fontSize","12px");
+    item.append("span").style("width","12px").style("height","12px").style("borderRadius","3px").style("background", color(gp));
+    item.append("span").text(gp);
+  });
+}
+
+// ------------------------- LOAD + RESPONSIVE RENDER -------------------------
+let gBarData = null, gStackData = null;
+
+async function loadData() {
+  if (CONFIG.mode === "json") {
+    const [barRes, stackRes] = await Promise.all([ fetch(CONFIG.barJsonUrl), fetch(CONFIG.stackJsonUrl) ]);
+    const [barRaw, stackRaw] = await Promise.all([ barRes.json(), stackRes.json() ]);
+    gBarData = barRaw
+      .filter(d => d && d.group && Number.isFinite(+d.count))
+      .map(d => ({ group: String(d.group), count: +d.count }))
+      .sort((a,b) => d3.descending(a.count, b.count));
+    gStackData = stackRaw
+      .filter(d => d && d.inv_sp_name && d.group && Number.isFinite(+d.count))
+      .map(d => ({ inv_sp_name: String(d.inv_sp_name), group: String(d.group), count: +d.count }));
+  } else {
+    const rows = await d3.csv(CONFIG.csvUrl, d3.autoType);
+    ({ barData: gBarData, stackData: gStackData } = aggregateFromCSV(rows));
+  }
+}
+
+function drawAll() {
+  // both charts same height = 560
+  const targetH = 560;
+
+  const barCard = document.getElementById("barCard");
+  const circCard = document.getElementById("circCard");
+
+  // subtract a little padding (card padding ~14*2)
+  const barW  = Math.max(520, barCard.clientWidth  - 28);
+  const circW = Math.max(420, circCard.clientWidth - 28);
+
+  renderBarChart(d3.select("#barSvg"),  gBarData,  barW,  targetH);
+  renderCircular(d3.select("#circSvg"), gStackData, circW, targetH);
+}
+
+(async function init(){
+  await loadData();
+  drawAll();
+  // re-render on resize (debounced)
+  let t;
+  window.addEventListener("resize", () => {
+    clearTimeout(t);
+    t = setTimeout(drawAll, 120);
+  });
+})();
+</script>
+</body>
+</html>
