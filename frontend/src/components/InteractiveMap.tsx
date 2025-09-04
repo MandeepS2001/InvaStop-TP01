@@ -90,7 +90,8 @@ const InteractiveMap: React.FC = () => {
       try {
         setLoading(true);
         console.log('Fetching state data from API...');
-        const response = await fetch('/api/v1/epic1/map/state-data');
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://invastopbackend.vercel.app/api/v1';
+        const response = await fetch(`${apiUrl}/epic1/map/state-data`);
         
         console.log('API Response status:', response.status);
         console.log('API Response headers:', response.headers);
@@ -235,53 +236,7 @@ const InteractiveMap: React.FC = () => {
   };
 
 
-  const getSpeciesDescription = (speciesName: string) => {
-    const descriptions: Record<string, string> = {
-      'Lantana': 'A highly invasive shrub that spreads rapidly and forms dense thickets. It can outcompete native plants and alter ecosystem functions.',
-      'Bitou Bush': 'A fast-growing, aggressive weed that can form dense stands and displace native vegetation.',
-      'Common Myna': 'A highly adaptable bird that can thrive in urban and rural environments, competing with native species for resources.',
-      'Gorse': 'A highly invasive plant that can form dense thickets and displace native vegetation.',
-      'Buffel Grass': 'A highly invasive grass that can form dense stands and displace native vegetation.',
-      'Cane Toad': 'A highly invasive amphibian that can cause significant ecological disruption.',
-      'Red Fox': 'A highly adaptable predator that can thrive in urban and rural environments, competing with native species for resources.',
-      'Gamba Grass': 'A highly invasive grass that can form dense stands and displace native vegetation.',
-      'European Rabbit': 'A highly adaptable herbivore that can cause significant damage to agricultural crops and native vegetation.',
-      'Feral Pig': 'A highly adaptable omnivore that can cause significant damage to agricultural crops and native vegetation.'
-    };
-    return descriptions[speciesName] || 'No specific description available.';
-  };
-
-  const getControlMethods = (speciesName: string) => {
-    const methods: Record<string, string> = {
-      'Lantana': 'Mechanical removal, herbicide, fire, physical barriers',
-      'Bitou Bush': 'Mechanical removal, herbicide, fire, physical barriers',
-      'Common Myna': 'Mechanical removal, predator control, habitat modification',
-      'Gorse': 'Mechanical removal, herbicide, fire, physical barriers',
-      'Buffel Grass': 'Mechanical removal, herbicide, fire, physical barriers',
-      'Cane Toad': 'Mechanical removal, predator control, habitat modification',
-      'Red Fox': 'Predator control, habitat modification, physical barriers',
-      'Gamba Grass': 'Mechanical removal, herbicide, fire, physical barriers',
-      'European Rabbit': 'Mechanical removal, predator control, habitat modification',
-      'Feral Pig': 'Mechanical removal, predator control, habitat modification'
-    };
-    return methods[speciesName] || 'No specific control methods available.';
-  };
-
-  const getEconomicImpact = (speciesName: string) => {
-    const impacts: Record<string, string> = {
-      'Lantana': 'Extensive damage to native vegetation, reduced biodiversity, altered ecosystem functions, economic losses in agriculture and horticulture.',
-      'Bitou Bush': 'Extensive damage to native vegetation, reduced biodiversity, altered ecosystem functions, economic losses in agriculture and horticulture.',
-      'Common Myna': 'Competition with native species, reduced biodiversity, economic losses in agriculture and horticulture.',
-      'Gorse': 'Extensive damage to native vegetation, reduced biodiversity, altered ecosystem functions, economic losses in agriculture and horticulture.',
-      'Buffel Grass': 'Extensive damage to native vegetation, reduced biodiversity, altered ecosystem functions, economic losses in agriculture and horticulture.',
-      'Cane Toad': 'Ecological disruption, economic losses in agriculture and horticulture, reduced biodiversity.',
-      'Red Fox': 'Competition with native species, reduced biodiversity, economic losses in agriculture and horticulture.',
-      'Gamba Grass': 'Extensive damage to native vegetation, reduced biodiversity, altered ecosystem functions, economic losses in agriculture and horticulture.',
-      'European Rabbit': 'Extensive damage to native vegetation, reduced biodiversity, economic losses in agriculture and horticulture.',
-      'Feral Pig': 'Extensive damage to native vegetation, reduced biodiversity, economic losses in agriculture and horticulture.'
-    };
-    return impacts[speciesName] || 'No specific economic impact available.';
-  };
+  // Removed unused functions to fix linting errors
 
   const getSpeciesType = (speciesName: string) => {
     const types: Record<string, string> = {
@@ -414,11 +369,11 @@ const InteractiveMap: React.FC = () => {
                     setCurrentSpeciesIndex(0);
                   }}
                 >
-                  <div className="p-4 max-w-md bg-white rounded-lg" style={{ minHeight: '380px' }}>
+                  <div className="p-3 sm:p-4 max-w-xs sm:max-w-md bg-white rounded-lg" style={{ minHeight: '400px', maxHeight: '500px' }}>
                     {/* Header Row - State and Species Counter */}
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-2">
-                        <h5 className="font-semibold text-gray-800 text-sm">{infoWindow.featureName}</h5>
+                        <h5 className="font-semibold text-gray-800 text-xs sm:text-sm">{infoWindow.featureName}</h5>
                         <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${
                           selected.risk === 'high' 
                             ? 'bg-red-100 text-red-800' 
@@ -435,11 +390,11 @@ const InteractiveMap: React.FC = () => {
                     </div>
                     
                     {/* Species Image with Navigation */}
-                    <div className="relative mb-4">
+                    <div className="relative mb-3">
                       <img 
                         src={getSpeciesImage(selected.species[currentSpeciesIndex].name)}
                         alt={selected.species[currentSpeciesIndex].name}
-                        className="w-full h-44 object-cover rounded-lg"
+                        className="w-full h-36 sm:h-40 object-cover rounded-lg"
                         onError={(e) => {
                           // If the image fails to load, use the SVG fallback
                           const svgFallback = `data:image/svg+xml;base64,${btoa(`
@@ -489,10 +444,10 @@ const InteractiveMap: React.FC = () => {
                     <div className="space-y-2">
                       {/* Species Name and Type */}
                       <div className="flex items-center justify-between mb-1">
-                        <h4 className="text-base font-bold text-gray-900">
+                        <h4 className="text-sm sm:text-base font-bold text-gray-900">
                           {selected.species[currentSpeciesIndex].name}
                         </h4>
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                        <span className="text-xs bg-blue-100 text-blue-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                           {getSpeciesType(selected.species[currentSpeciesIndex].name)}
                         </span>
                       </div>
@@ -503,8 +458,8 @@ const InteractiveMap: React.FC = () => {
                       </p>
                       
                       {/* Risk Indicators Row */}
-                      <div className="flex space-x-2 mb-2">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      <div className="flex flex-wrap gap-1 mb-3">
+                        <span className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
                           selected.species[currentSpeciesIndex].impact === 'High' 
                             ? 'bg-red-100 text-red-800' 
                             : selected.species[currentSpeciesIndex].impact === 'Moderate'
@@ -513,7 +468,7 @@ const InteractiveMap: React.FC = () => {
                         }`}>
                           Harm: {selected.species[currentSpeciesIndex].impact === 'High' ? 'High' : selected.species[currentSpeciesIndex].impact === 'Moderate' ? 'Medium' : 'Low'}
                         </span>
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        <span className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
                           selected.species[currentSpeciesIndex].spread === 'High' 
                             ? 'bg-red-100 text-red-800' 
                             : selected.species[currentSpeciesIndex].spread === 'Moderate'
@@ -527,16 +482,16 @@ const InteractiveMap: React.FC = () => {
                     </div>
                     
                     {/* Action Buttons */}
-                    <div className="mt-3 flex space-x-2">
+                    <div className="mt-2 flex space-x-2">
                       <button
                         onClick={() => {
-                          window.location.href = `/species-detail/${selected.species[currentSpeciesIndex].name
+                          window.location.href = `/species/${selected.species[currentSpeciesIndex].name
                             .toLowerCase()
-                            .replace(/\s+/g, "-")}`;
+                            .replace(/\s+/g, "-")}?from=map`;
                         }}
-                        className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-sm"
+                        className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-xs sm:text-sm"
                       >
-                        More Details
+                        Learn More
                       </button>
                       <button
                         onClick={() => {
@@ -552,24 +507,6 @@ const InteractiveMap: React.FC = () => {
               )}
             </GoogleMap>
             
-            {/* Legend */}
-            <div className="absolute top-6 right-6 bg-white p-6 rounded-xl shadow-2xl border-2 border-gray-200">
-              <h4 className="font-bold text-gray-900 mb-4 text-lg">Problem Levels</h4>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-red-600 rounded-full" />
-                  <span className="text-sm">Many Problems</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-orange-500 rounded-full" />
-                  <span className="text-sm">Some Problems</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-yellow-400 rounded-full" />
-                  <span className="text-sm">Few Problems</span>
-                </div>
-              </div>
-            </div>
           </div>
         ) : (
           <div className="flex items-center justify-center h-[600px] bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">

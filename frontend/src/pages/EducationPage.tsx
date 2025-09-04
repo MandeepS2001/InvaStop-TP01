@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search } from 'lucide-react';
+
+const speciesList: { name: string; image: string }[] = [
+  { name: 'Lantana', image: '/top10/Lantana.png' },
+  { name: 'Bitou Bush', image: '/top10/BitouBush.png' },
+  { name: 'Common Myna', image: '/top10/CommonMyna.png' },
+  { name: 'European Rabbit', image: '/top10/EuropeanRabbit.jpg' },
+  { name: 'Red Fox', image: '/top10/RedFox.png' },
+  { name: 'Gorse', image: '/top10/Gorse.png' },
+  { name: 'Buffel Grass', image: '/top10/BuffelGrass.png' },
+  { name: 'Cane Toad', image: '/top10/CaneToad.png' },
+  { name: 'Feral Pig', image: '/top10/FeralPig.png' },
+  { name: 'Gamba Grass', image: '/top10/GambaGrass.png' },
+];
 
 const EducationPage: React.FC = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -10,205 +23,134 @@ const EducationPage: React.FC = () => {
         <div className="px-3 sm:px-4 lg:px-6">
           <div className="flex justify-between items-center h-24">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center space-x-3">
               <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 object-contain" />
-            </div>
+            </Link>
 
             {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-white hover:text-green-200 transition-colors">
-                Home
-              </Link>
-              <Link to="/education" className="text-white hover:text-green-200 transition-colors font-semibold">
-                Education
-              </Link>
-              <Link to="/map" className="text-white hover:text-green-200 transition-colors">
-                Map
-              </Link>
-              <Link to="/more" className="text-white hover:text-green-200 transition-colors">
-                More
-              </Link>
+              <Link to="/" className="text-white hover:text-green-200 transition-colors">Home</Link>
+              <Link to="/education" className="text-white hover:text-green-200 transition-colors font-semibold">Species Profile</Link>
+              <Link to="/map" className="text-white hover:text-green-200 transition-colors">Map</Link>
+              <span className="text-white/80">More</span>
             </nav>
 
-            {/* Search Icon */}
-            <div className="flex items-center space-x-4">
-              <Search className="h-5 w-5 cursor-pointer hover:text-green-200 transition-colors" />
-            </div>
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden p-2 text-white hover:text-green-200 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
+        
+        {/* Mobile Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-green-700 border-t border-green-600">
+            <div className="px-4 py-2 space-y-1">
+              <Link 
+                to="/" 
+                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/education" 
+                className="block px-3 py-2 text-green-200 font-medium hover:bg-green-600 rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Species Profile
+              </Link>
+              <Link 
+                to="/map" 
+                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Map
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* Main Content Area */}
-      <div className="pt-24">
-        {/* Top Section */}
-        <section className="bg-green-800 text-white py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              {/* Left Panel - Illustration */}
-              <div className="bg-gray-200 rounded-2xl p-8">
-                <div className="relative h-96">
-                  {/* Placeholder for layered paper-cut style illustration */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-green-300 via-green-400 to-green-500 rounded-xl">
-                    {/* Background - Rolling hills */}
-                    <div className="absolute bottom-0 left-0 right-0 h-32 bg-green-300 rounded-b-xl"></div>
-                    
-                    {/* Midground - City buildings and trees */}
-                    <div className="absolute bottom-8 left-4 right-4 flex justify-between">
-                      <div className="w-16 h-24 bg-green-600 rounded-t-lg"></div>
-                      <div className="w-12 h-20 bg-green-500 rounded-t-lg"></div>
-                      <div className="w-20 h-28 bg-green-700 rounded-t-lg"></div>
-                      <div className="w-14 h-22 bg-green-600 rounded-t-lg"></div>
-                    </div>
-                    
-                    {/* Foreground - Grass */}
-                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-green-400 rounded-b-xl"></div>
-                    
-                    {/* Hot air balloon */}
-                    <div className="absolute top-8 right-8">
-                      <div className="w-8 h-10 bg-orange-400 rounded-full"></div>
-                      <div className="w-2 h-6 bg-orange-300 mx-auto"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Panel - Content */}
-              <div>
-                <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                  How to help ?
-                </h1>
-                <p className="text-xl mb-8 text-green-100 leading-relaxed">
-                  Don't let governments off the hook, help us call for real action that protects our natural environment from invasive species.
-                </p>
-                <button className="text-white underline text-lg hover:text-green-200 transition-colors">
-                  Show More
-                </button>
-              </div>
-            </div>
+      {/* Main Content */}
+      <main className="pt-24">
+        <section className="bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">Species Profile</h1>
+            <p className="mt-4 text-gray-600 max-w-2xl mx-auto">Browse the top invasive species we track. Click a card to see more details, images, and how to manage them.</p>
           </div>
         </section>
 
-        {/* Mid Section - Animals Grid */}
-        <section className="bg-gray-100 py-20">
+        <section className="bg-gray-50 py-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              {/* Left Text Block */}
-              <div className="text-center lg:text-left">
-                <div className="space-y-4 text-gray-700 italic text-2xl font-medium">
-                  <div>Feeling familiar?</div>
-                  <div>Click on.</div>
-                  <div>and Check</div>
-                  <div>out more !</div>
-                </div>
-              </div>
-
-              {/* Right Image Grid */}
-              <div className="grid grid-cols-3 gap-4">
-                {/* Top Row */}
-                <div className="space-y-4">
-                  {/* Red Fox */}
-                  <Link to="/species/red-fox" className="block">
-                    <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer">
-                      <div className="w-full h-32 bg-orange-200 rounded-lg flex items-center justify-center">
-                        <div className="text-orange-600 text-sm text-center">
-                          Red Fox
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                  
-                  {/* Rabbit */}
-                  <div className="bg-white rounded-lg p-4 shadow-md">
-                    <div className="w-full h-32 bg-brown-200 rounded-lg flex items-center justify-center">
-                      <div className="text-brown-600 text-sm text-center">
-                        Rabbit
-                      </div>
-                    </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+              {speciesList.map((sp) => (
+                <div key={sp.name} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden">
+                  <img
+                    src={sp.image}
+                    alt={sp.name}
+                    className="w-full h-36 object-cover"
+                    onError={(e) => {
+                      const svgFallback = `data:image/svg+xml;base64,${btoa(
+                        `<svg width="300" height="160" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="160" fill="#166534"/><text x="150" y="80" font-family="Arial" font-size="16" fill="white" text-anchor="middle">Image not available</text></svg>`
+                      )}`;
+                      e.currentTarget.src = svgFallback;
+                    }}
+                  />
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{sp.name}</h3>
+                    <Link to={`/species/${sp.name.toLowerCase().replace(/\s+/g, '-')}`} className="inline-flex items-center text-green-700 hover:text-green-900 font-medium">
+                      Learn More →
+                    </Link>
                   </div>
                 </div>
-
-                <div className="space-y-4">
-                  {/* Goats */}
-                  <div className="bg-white rounded-lg p-4 shadow-md">
-                    <div className="w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center">
-                      <div className="text-gray-600 text-sm text-center">
-                        Goats
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Toad */}
-                  <div className="bg-white rounded-lg p-4 shadow-md">
-                    <div className="w-full h-32 bg-green-200 rounded-lg flex items-center justify-center">
-                      <div className="text-green-600 text-sm text-center">
-                        🐸<br/>Toad
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {/* Wildcat */}
-                  <div className="bg-white rounded-lg p-4 shadow-md">
-                    <div className="w-full h-32 bg-yellow-200 rounded-lg flex items-center justify-center">
-                      <div className="text-yellow-600 text-sm text-center">
-                        🐱<br/>Wildcat
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Wild Boars */}
-                  <div className="bg-white rounded-lg p-4 shadow-md">
-                    <div className="w-full h-32 bg-brown-200 rounded-lg flex items-center justify-center">
-                      <div className="text-brown-600 text-sm text-center">
-                        🐗<br/>Wild Boars
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
-      </div>
+      </main>
 
       {/* Footer */}
-      <footer className="bg-green-800 text-white py-12">
+      <footer className="bg-green-800 text-white py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Logo and Copyright */}
-            <div className="md:col-span-1">
-              <div className="flex items-center space-x-2 mb-4">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-8 w-8" />
-                <span className="text-xl font-bold">invastop</span>
+            <div className="md:col-span-1 flex flex-col items-start">
+              <div className="flex flex-col items-start mb-3">
+                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-24 w-24 mb-2" />
               </div>
-              <p className="text-green-100">© 2025</p>
+              <p className="text-green-100 text-sm">© 2025</p>
             </div>
 
             {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <h3 className="font-bold mb-4">Produtos</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="#" className="hover:text-white transition-colors">Ervas</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Flores</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Cactos</a></li>
+                <h3 className="font-bold mb-3 text-sm">Products</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><Link to="/map" className="hover:text-white transition-colors">Species Database</Link></li>
+                  <li><span className="hover:text-white transition-colors cursor-pointer">Educational Resources</span></li>
+                  <li><Link to="/map" className="hover:text-white transition-colors">Mapping Tools</Link></li>
                 </ul>
               </div>
-
               <div>
-                <h3 className="font-bold mb-4">Sobre nós</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="#" className="hover:text-white transition-colors">Quem somos?</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
+                <h3 className="font-bold mb-3 text-sm">About Us</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><span className="hover:text-white transition-colors cursor-pointer">Who We Are</span></li>
+                  <li><span className="hover:text-white transition-colors cursor-pointer">FAQ</span></li>
+                  <li><span className="hover:text-white transition-colors cursor-pointer">Our Mission</span></li>
                 </ul>
               </div>
-
               <div>
-                <h3 className="font-bold mb-4">Trabalhe com a gente</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="#" className="hover:text-white transition-colors">Entre em contato com nosso email</a></li>
+                <h3 className="font-bold mb-3 text-sm">Contact Us</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
                   <li><a href="mailto:EnvironmentalHealth@hv.sistem.com" className="hover:text-white transition-colors">EnvironmentalHealth@hv.sistem.com</a></li>
+                  <li><span className="hover:text-white transition-colors cursor-pointer">Report an Issue</span></li>
+                  <li><span className="hover:text-white transition-colors cursor-pointer">Partner With Us</span></li>
                 </ul>
               </div>
             </div>

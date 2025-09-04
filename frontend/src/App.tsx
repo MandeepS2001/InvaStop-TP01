@@ -12,7 +12,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="education" element={<EducationPage />} />
-        <Route path="species/:stateName" element={<SpeciesDetailPage />} />
+        <Route path="species/:speciesName" element={<SpeciesDetailPage />} />
         <Route path="species-detail/:speciesName" element={<SpeciesDetailPage />} />
         <Route path="map" element={<MapPage />} />
         <Route path="more" element={<div>More Page - Coming Soon</div>} />

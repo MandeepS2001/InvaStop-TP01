@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, AlertTriangle, Shield, Target, MapPin, Calendar, Users, DollarSign, Leaf, Zap } from 'lucide-react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { ArrowLeft, AlertTriangle, Shield, Target, MapPin, Calendar, Leaf, Zap } from 'lucide-react';
 
 interface SpeciesDetail {
   name: string;
@@ -31,6 +31,11 @@ const SpeciesDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const [species, setSpecies] = useState<SpeciesDetail | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Check if user came from map or species profile page
+  const urlParams = new URLSearchParams(window.location.search);
+  const fromPage = urlParams.get('from');
 
   // Get species image - same function as in InteractiveMap
   const getSpeciesImage = (speciesName: string) => {
@@ -552,7 +557,6 @@ const SpeciesDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (speciesName) {
-      const readableName = getSpeciesNameFromUrl(speciesName);
       const speciesData = getSpeciesData(speciesName);
       setSpecies(speciesData);
     }
@@ -569,41 +573,107 @@ const SpeciesDetailPage: React.FC = () => {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Leaf },
     { id: 'control', label: 'Control Methods', icon: Target },
-    { id: 'impact', label: 'Impact & Management', icon: AlertTriangle },
+    { id: 'impact', label: 'Impact', icon: AlertTriangle },
     { id: 'identification', label: 'Identification', icon: Shield },
     { id: 'prevention', label: 'Prevention', icon: Zap }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+      <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
+        <div className="px-3 sm:px-4 lg:px-6">
+          <div className="flex justify-between items-center h-24">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-3">
+              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 object-contain" />
+            </Link>
+
+            {/* Navigation */}
+            <nav className="hidden md:flex space-x-8">
+              <Link to="/" className="text-white hover:text-green-200 transition-colors">
+                Home
+              </Link>
+              <Link to="/map" className="text-white hover:text-green-200 transition-colors">
+                Map
+              </Link>
+              <Link to="/education" className="text-white hover:text-green-200 transition-colors">
+                Species Profile
+              </Link>
+            </nav>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden p-2 text-white hover:text-green-200 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Back to Map</span>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
-            <h1 className="text-2xl font-bold text-gray-900">{species.name}</h1>
-            <div className="w-20"></div> {/* Spacer for centering */}
           </div>
         </div>
-      </div>
+        
+        {/* Mobile Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-green-700 border-t border-green-600">
+            <div className="px-4 py-2 space-y-1">
+              <Link 
+                to="/" 
+                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/map" 
+                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Map
+              </Link>
+              <Link 
+                to="/education" 
+                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Species Profile
+              </Link>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Page Content */}
+      <div className="pt-24">
+        {/* Back Button Header */}
+        <div className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between py-4">
+              <Link
+                to={fromPage === 'map' ? '/map' : '/education'}
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span>{fromPage === 'map' ? 'Back to Map' : 'Check out more species'}</span>
+              </Link>
+              <h1 className="text-2xl font-bold text-gray-900">{species.name}</h1>
+              <div className="w-20"></div> {/* Spacer for centering */}
+            </div>
+          </div>
+        </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Species Header Card */}
         <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Left Column - Basic Info */}
             <div className="space-y-4">
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">{species.name}</h2>
                 <p className="text-lg text-gray-600 italic">{species.scientificName}</p>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <Leaf className="w-4 h-4 text-green-600" />
@@ -652,7 +722,7 @@ const SpeciesDetailPage: React.FC = () => {
             {/* Image Column */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900">Species Image</h3>
-              <div className="relative">
+                <div className="relative">
                 <img 
                   src={getSpeciesImage(species.name)}
                   alt={species.name}
@@ -672,21 +742,6 @@ const SpeciesDetailPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column - Quick Actions */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
-              <div className="space-y-2">
-                <button className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                  Report Sighting
-                </button>
-                <button className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                  Download Fact Sheet
-                </button>
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                  Contact Expert
-                </button>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -721,8 +776,8 @@ const SpeciesDetailPage: React.FC = () => {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">Description</h3>
                   <p className="text-gray-700 leading-relaxed">{species.description}</p>
-                </div>
-                
+              </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h4 className="text-lg font-medium text-gray-900 mb-2">Habitat</h4>
@@ -735,7 +790,7 @@ const SpeciesDetailPage: React.FC = () => {
                   <div>
                     <h4 className="text-lg font-medium text-gray-900 mb-2">Reproduction</h4>
                     <p className="text-gray-700">{species.reproduction}</p>
-                  </div>
+                    </div>
                   <div>
                     <h4 className="text-lg font-medium text-gray-900 mb-2">Distribution</h4>
                     <p className="text-gray-700">{species.distribution}</p>
@@ -757,8 +812,8 @@ const SpeciesDetailPage: React.FC = () => {
                         <p className="text-gray-700">{method}</p>
                       </div>
                     ))}
-                  </div>
-                </div>
+            </div>
+          </div>
                 
                 <div>
                   <h4 className="text-lg font-medium text-gray-900 mb-2">Management Strategies</h4>
@@ -829,8 +884,8 @@ const SpeciesDetailPage: React.FC = () => {
                         <p className="text-gray-700">{tip}</p>
                       </div>
                     ))}
-                  </div>
-                </div>
+            </div>
+          </div>
                 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <h4 className="text-lg font-medium text-blue-900 mb-2">Remember</h4>
@@ -843,6 +898,52 @@ const SpeciesDetailPage: React.FC = () => {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-green-800 text-white py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {/* Logo and Copyright */}
+            <div className="md:col-span-1 flex flex-col items-start">
+              <div className="flex flex-col items-start mb-3">
+                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-24 w-24 mb-2" />
+              </div>
+              <p className="text-green-100 text-sm">© 2025</p>
+            </div>
+
+            {/* Navigation Columns */}
+            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <h3 className="font-bold mb-3 text-sm">Products</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><a href="#" className="hover:text-white transition-colors">Species Database</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Educational Resources</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Mapping Tools</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-bold mb-3 text-sm">About Us</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><a href="#" className="hover:text-white transition-colors">Who We Are</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Our Mission</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-bold mb-3 text-sm">Contact Us</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><a href="mailto:EnvironmentalHealth@hv.sistem.com" className="hover:text-white transition-colors">EnvironmentalHealth@hv.sistem.com</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Report an Issue</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Partner With Us</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
       </div>
     </div>
   );
