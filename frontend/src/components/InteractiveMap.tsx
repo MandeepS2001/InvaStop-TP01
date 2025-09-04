@@ -217,23 +217,6 @@ const InteractiveMap: React.FC = () => {
     return svgFallback;
   };
 
-  const getImpactScore = (impact: string) => {
-    switch (impact.toLowerCase()) {
-      case 'high': return 9;
-      case 'moderate': return 6;
-      case 'low': return 3;
-      default: return 5;
-    }
-  };
-
-  const getImpactColor = (impact: string) => {
-    switch (impact.toLowerCase()) {
-      case 'high': return '#dc2626';
-      case 'moderate': return '#f97316';
-      case 'low': return '#facc15';
-      default: return '#6b7280';
-    }
-  };
 
   const getScientificName = (speciesName: string) => {
     const scientificNames: Record<string, string> = {
@@ -251,21 +234,6 @@ const InteractiveMap: React.FC = () => {
     return scientificNames[speciesName] || 'N/A';
   };
 
-  const getNativeRange = (speciesName: string) => {
-    const nativeRanges: Record<string, string> = {
-      'Lantana': 'Africa, Asia, Australia',
-      'Bitou Bush': 'Australia',
-      'Common Myna': 'Asia, Africa, Australia',
-      'Gorse': 'Europe, North Africa, Asia',
-      'Buffel Grass': 'Africa, Asia',
-      'Cane Toad': 'Australia, Pacific Islands',
-      'Red Fox': 'Europe, Asia, North America',
-      'Gamba Grass': 'Africa, Asia',
-      'European Rabbit': 'Europe, Asia, North Africa',
-      'Feral Pig': 'Europe, Asia, North Africa'
-    };
-    return nativeRanges[speciesName] || 'N/A';
-  };
 
   const getSpeciesDescription = (speciesName: string) => {
     const descriptions: Record<string, string> = {
@@ -331,21 +299,6 @@ const InteractiveMap: React.FC = () => {
     return types[speciesName] || 'Unknown';
   };
 
-  const getFirstDetected = (speciesName: string) => {
-    const firstDetected: Record<string, string> = {
-      'Lantana': '1980s',
-      'Bitou Bush': '1990s',
-      'Common Myna': '1970s',
-      'Gorse': '1980s',
-      'Buffel Grass': '1990s',
-      'Cane Toad': '1990s',
-      'Red Fox': '1980s',
-      'Gamba Grass': '1990s',
-      'European Rabbit': '1990s',
-      'Feral Pig': '1990s'
-    };
-    return firstDetected[speciesName] || 'N/A';
-  };
 
   if (!GOOGLE_MAPS_API_KEY) {
     return (
@@ -401,34 +354,12 @@ const InteractiveMap: React.FC = () => {
           </div>
         )}
         
-        {!loading && !error && Object.keys(stateMeta).length > 0 && (
-          <div className="text-center mb-4">
-            <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-lg">
-              <span className="mr-2">✅</span>
-              Live data from InvaStop API - {Object.keys(stateMeta).length} states loaded
-            </div>
-          </div>
-        )}
 
         <h3 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-          Interactive Risk Map
+        {/*  Invasive Species Map */}
         </h3>
-        <div className="flex items-center justify-center space-x-6 mb-4">
-          <div className="flex items-center space-x-2">
-            <div className="w-5 h-5 bg-red-600 rounded-full border-2 border-white shadow-sm" />
-            <span className="text-sm text-gray-700">High Risk</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-5 h-5 bg-orange-500 rounded-full border-2 border-white shadow-sm" />
-            <span className="text-sm text-gray-700">Moderate Risk</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-5 h-5 bg-yellow-400 rounded-full border-2 border-white shadow-sm" />
-            <span className="text-sm text-gray-700">Low Risk</span>
-          </div>
-        </div>
-        <p className="text-gray-600 text-center text-lg">
-          Click anywhere on a state to view its top invasive species.
+        <p className="text-gray-600 text-center text-lg mb-6">
+        {/*  Click on any state to see which invasive species are causing the most trouble there. */}
         </p>
       </div>
 
@@ -483,7 +414,7 @@ const InteractiveMap: React.FC = () => {
                     setCurrentSpeciesIndex(0);
                   }}
                 >
-                  <div className="p-3 max-w-sm bg-white rounded-lg">
+                  <div className="p-4 max-w-md bg-white rounded-lg" style={{ minHeight: '380px' }}>
                     {/* Header Row - State and Species Counter */}
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
@@ -495,7 +426,7 @@ const InteractiveMap: React.FC = () => {
                             ? 'bg-orange-100 text-orange-800'
                             : 'bg-yellow-100 text-yellow-800'
                         }`}>
-                          {selected.risk.toUpperCase()}
+                          {selected.risk === 'high' ? 'MANY PROBLEMS' : selected.risk === 'moderate' ? 'SOME PROBLEMS' : 'FEW PROBLEMS'}
                         </span>
                       </div>
                       <span className="text-xs text-gray-500">
@@ -504,11 +435,11 @@ const InteractiveMap: React.FC = () => {
                     </div>
                     
                     {/* Species Image with Navigation */}
-                    <div className="relative mb-3">
+                    <div className="relative mb-4">
                       <img 
                         src={getSpeciesImage(selected.species[currentSpeciesIndex].name)}
                         alt={selected.species[currentSpeciesIndex].name}
-                        className="w-full h-32 object-cover rounded-lg"
+                        className="w-full h-44 object-cover rounded-lg"
                         onError={(e) => {
                           // If the image fails to load, use the SVG fallback
                           const svgFallback = `data:image/svg+xml;base64,${btoa(`
@@ -557,7 +488,7 @@ const InteractiveMap: React.FC = () => {
                     {/* Species Information - Compact Layout */}
                     <div className="space-y-2">
                       {/* Species Name and Type */}
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-1">
                         <h4 className="text-base font-bold text-gray-900">
                           {selected.species[currentSpeciesIndex].name}
                         </h4>
@@ -567,12 +498,12 @@ const InteractiveMap: React.FC = () => {
                       </div>
                       
                       {/* Scientific Name */}
-                      <p className="text-xs text-gray-600 italic">
+                      <p className="text-xs text-gray-600 italic mb-2">
                         {getScientificName(selected.species[currentSpeciesIndex].name)}
                       </p>
                       
                       {/* Risk Indicators Row */}
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 mb-2">
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           selected.species[currentSpeciesIndex].impact === 'High' 
                             ? 'bg-red-100 text-red-800' 
@@ -580,7 +511,7 @@ const InteractiveMap: React.FC = () => {
                             ? 'bg-orange-100 text-orange-800'
                             : 'bg-yellow-100 text-yellow-800'
                         }`}>
-                          Impact: {selected.species[currentSpeciesIndex].impact}
+                          Harm: {selected.species[currentSpeciesIndex].impact === 'High' ? 'High' : selected.species[currentSpeciesIndex].impact === 'Moderate' ? 'Medium' : 'Low'}
                         </span>
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           selected.species[currentSpeciesIndex].spread === 'High' 
@@ -589,26 +520,10 @@ const InteractiveMap: React.FC = () => {
                             ? 'bg-orange-100 text-orange-800'
                             : 'bg-yellow-100 text-yellow-800'
                         }`}>
-                          Spread: {selected.species[currentSpeciesIndex].spread}
+                          Spread: {selected.species[currentSpeciesIndex].spread === 'High' ? 'Fast' : selected.species[currentSpeciesIndex].spread === 'Moderate' ? 'Medium' : 'Slow'}
                         </span>
                       </div>
                       
-                      {/* Description - Truncated */}
-                      <p className="text-xs text-gray-600 line-clamp-2">
-                        {getSpeciesDescription(selected.species[currentSpeciesIndex].name)}
-                      </p>
-                      
-                      {/* Control Methods - Compact */}
-                      <div className="text-xs">
-                        <span className="font-medium text-gray-700">Control: </span>
-                        <span className="text-gray-600">{getControlMethods(selected.species[currentSpeciesIndex].name)}</span>
-                      </div>
-                      
-                      {/* Economic Impact - Compact */}
-                      <div className="text-xs">
-                        <span className="font-medium text-gray-700">Economic: </span>
-                        <span className="text-gray-600 line-clamp-2">{getEconomicImpact(selected.species[currentSpeciesIndex].name)}</span>
-                      </div>
                     </div>
                     
                     {/* Action Buttons */}
@@ -639,19 +554,19 @@ const InteractiveMap: React.FC = () => {
             
             {/* Legend */}
             <div className="absolute top-6 right-6 bg-white p-6 rounded-xl shadow-2xl border-2 border-gray-200">
-              <h4 className="font-bold text-gray-900 mb-4 text-lg">Risk Levels</h4>
+              <h4 className="font-bold text-gray-900 mb-4 text-lg">Problem Levels</h4>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-red-600 rounded-full" />
-                  <span className="text-sm">High</span>
+                  <span className="text-sm">Many Problems</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-orange-500 rounded-full" />
-                  <span className="text-sm">Moderate</span>
+                  <span className="text-sm">Some Problems</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-yellow-400 rounded-full" />
-                  <span className="text-sm">Low</span>
+                  <span className="text-sm">Few Problems</span>
                 </div>
               </div>
             </div>

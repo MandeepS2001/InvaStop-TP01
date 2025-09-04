@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { 
-  ChevronLeft, 
-  ChevronRight,
-  Search
-} from 'lucide-react';
-import InteractiveMap from '../components/InteractiveMap';
+import { Search } from 'lucide-react';
 
 // Types for API data
 interface Epic1Statistics {
@@ -76,8 +70,6 @@ const CountUp: React.FC<{ end: number; duration?: number; prefix?: string; suffi
 };
 
 const HomePage: React.FC = () => {
-  const { isAuthenticated } = useAuth();
-  const [currentStatIndex, setCurrentStatIndex] = useState(0);
   const [expandedStat, setExpandedStat] = useState<number | null>(null);
   const [apiStatistics, setApiStatistics] = useState<Epic1Statistics | null>(null);
   const [loading, setLoading] = useState(true);
@@ -145,13 +137,6 @@ const HomePage: React.FC = () => {
     }
   ] : [];
 
-  const nextStat = () => {
-    setCurrentStatIndex((prev) => (prev + 1) % statistics.length);
-  };
-
-  const prevStat = () => {
-    setCurrentStatIndex((prev) => (prev - 1 + statistics.length) % statistics.length);
-  };
 
   const handleStatClick = (statId: number) => {
     setExpandedStat(expandedStat === statId ? null : statId);
@@ -371,20 +356,70 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Interactive Map Section */}
+      {/* Map Call-to-Action Section */}
       <section className="bg-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              See the Spread of Invasive Species Across Australia
+              See Where Invasive Species Are Causing Problems
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Explore our interactive map to understand the environmental impact and risk levels of invasive species in different states. 
-              Click on any state to learn about the top invasive species affecting that region.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Look at our map to see where invasive plants and animals are causing the most trouble across Australia. 
+              Click on any state to find out which species are most harmful there.
             </p>
+            
+            {/* Map Preview Card */}
+            <div className="bg-gray-50 rounded-lg p-8 max-w-4xl mx-auto">
+              <div className="flex items-center justify-center mb-6">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-3xl">🗺️</span>
+                </div>
+              </div>
+              
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">
+                Invasive Species Map
+              </h3>
+              
+              <p className="text-gray-600 mb-6">
+                Our map shows where invasive plants and animals are causing problems across all Australian states and territories.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-lg">🔴</span>
+                  </div>
+                  <h4 className="font-medium text-gray-900 mb-1">Many Problems</h4>
+                  <p className="text-sm text-gray-600">States with lots of invasive species causing trouble</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-lg">🟠</span>
+                  </div>
+                  <h4 className="font-medium text-gray-900 mb-1">Some Problems</h4>
+                  <p className="text-sm text-gray-600">States with some invasive species causing trouble</p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-lg">🟡</span>
+                  </div>
+                  <h4 className="font-medium text-gray-900 mb-1">Few Problems</h4>
+                  <p className="text-sm text-gray-600">States with only a few invasive species causing trouble</p>
+                </div>
+              </div>
+              
+              <Link 
+                to="/map" 
+                className="inline-flex items-center px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200 text-lg"
+              >
+                <span className="mr-2">🗺️</span>
+                Look at the Map
+                <span className="ml-2">→</span>
+              </Link>
+            </div>
           </div>
-          
-          <InteractiveMap />
         </div>
       </section>
 

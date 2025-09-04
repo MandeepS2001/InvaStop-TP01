@@ -32,6 +32,41 @@ const SpeciesDetailPage: React.FC = () => {
   const [species, setSpecies] = useState<SpeciesDetail | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
 
+  // Get species image - same function as in InteractiveMap
+  const getSpeciesImage = (speciesName: string) => {
+    // Use images from the top10 folder in public - updated to match actual file names
+    const imageMap: Record<string, string> = {
+      'Lantana': '/top10/Lantana.png',
+      'Bitou Bush': '/top10/BitouBush.png',
+      'Common Myna': '/top10/CommonMyna.png',
+      'Gorse': '/top10/Gorse.png',
+      'Buffel Grass': '/top10/BuffelGrass.png',
+      'Cane Toad': '/top10/CaneToad.png',
+      'Red Fox': '/top10/RedFox.png',
+      'Gamba Grass': '/top10/GambaGrass.png',
+      'European Rabbit': '/top10/EuropeanRabbit.jpg',
+      'Feral Pig': '/top10/FeralPig.png'
+    };
+    
+    // Return the mapped image or create a simple SVG fallback
+    if (imageMap[speciesName]) {
+      console.log(`Loading image for ${speciesName}: ${imageMap[speciesName]}`);
+      return imageMap[speciesName];
+    }
+    
+    console.log(`No image found for ${speciesName}, using fallback`);
+    // Create a simple SVG fallback for missing images
+    const svgFallback = `data:image/svg+xml;base64,${btoa(`
+      <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="200" fill="#4F46E5"/>
+        <text x="150" y="100" font-family="Arial" font-size="16" fill="white" text-anchor="middle">Species Image</text>
+        <text x="150" y="125" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Not Available</text>
+      </svg>
+    `)}`;
+    
+    return svgFallback;
+  };
+
   // Convert URL parameter back to readable species name
   const getSpeciesNameFromUrl = (urlName: string) => {
     return urlName.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -561,7 +596,7 @@ const SpeciesDetailPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Species Header Card */}
         <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Left Column - Basic Info */}
             <div className="space-y-4">
               <div>
@@ -611,6 +646,29 @@ const SpeciesDetailPage: React.FC = () => {
                     {species.risk.toUpperCase()}
                   </span>
                 </div>
+              </div>
+            </div>
+
+            {/* Image Column */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">Species Image</h3>
+              <div className="relative">
+                <img 
+                  src={getSpeciesImage(species.name)}
+                  alt={species.name}
+                  className="w-full h-48 object-cover rounded-lg shadow-sm"
+                  onError={(e) => {
+                    // If the image fails to load, use the SVG fallback
+                    const svgFallback = `data:image/svg+xml;base64,${btoa(`
+                      <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="200" fill="#4F46E5"/>
+                        <text x="150" y="100" font-family="Arial" font-size="16" fill="white" text-anchor="middle">Image Error</text>
+                        <text x="150" y="125" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Failed to Load</text>
+                      </svg>
+                    `)}`;
+                    e.currentTarget.src = svgFallback;
+                  }}
+                />
               </div>
             </div>
 

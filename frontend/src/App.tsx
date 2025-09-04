@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import EducationPage from './pages/EducationPage';
 import SpeciesDetailPage from './pages/SpeciesDetailPage';
+import MapPage from './pages/MapPage';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <Route path="education" element={<EducationPage />} />
         <Route path="species/:stateName" element={<SpeciesDetailPage />} />
         <Route path="species-detail/:speciesName" element={<SpeciesDetailPage />} />
-        <Route path="map" element={<div>Map Page - Coming Soon</div>} />
+        <Route path="map" element={<MapPage />} />
         <Route path="more" element={<div>More Page - Coming Soon</div>} />
       </Route>
     </Routes>
