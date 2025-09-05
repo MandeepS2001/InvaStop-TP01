@@ -36,6 +36,7 @@ const SpeciesDetailPage: React.FC = () => {
   // Check if user came from map or species profile page
   const urlParams = new URLSearchParams(window.location.search);
   const fromPage = urlParams.get('from');
+  console.log('SpeciesDetailPage - fromPage:', fromPage, 'URL:', window.location.href);
 
   // Get species image - same function as in InteractiveMap
   const getSpeciesImage = (speciesName: string) => {
@@ -586,7 +587,7 @@ const SpeciesDetailPage: React.FC = () => {
           <div className="flex justify-between items-center h-24">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 object-contain" />
+              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-16 w-16 sm:h-24 sm:w-24 md:h-40 md:w-40 lg:h-60 lg:w-60 object-contain" />
             </Link>
 
             {/* Navigation */}
@@ -649,24 +650,33 @@ const SpeciesDetailPage: React.FC = () => {
         {/* Back Button Header */}
         <div className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between py-4">
-              <Link
-                to={fromPage === 'map' ? '/map' : '/education'}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            <div className="flex items-center justify-between py-3 sm:py-4">
+              <button
+                onClick={() => {
+                  console.log('Back button clicked, fromPage:', fromPage);
+                  if (fromPage === 'map') {
+                    console.log('Navigating to /map');
+                    navigate('/map');
+                  } else {
+                    console.log('Navigating to /education');
+                    navigate('/education');
+                  }
+                }}
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors text-sm sm:text-base"
               >
                 <ArrowLeft className="w-5 h-5" />
                 <span>{fromPage === 'map' ? 'Back to Map' : 'Check out more species'}</span>
-              </Link>
-              <h1 className="text-2xl font-bold text-gray-900">{species.name}</h1>
-              <div className="w-20"></div> {/* Spacer for centering */}
+              </button>
+              <h1 className="text-lg sm:text-2xl font-bold text-gray-900">{species.name}</h1>
+              <div className="w-6 sm:w-20"></div>
             </div>
           </div>
         </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Species Header Card */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {/* Left Column - Basic Info */}
             <div className="space-y-4">
               <div>
@@ -691,9 +701,9 @@ const SpeciesDetailPage: React.FC = () => {
             </div>
 
             {/* Middle Column - Risk Assessment */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <h3 className="text-lg font-semibold text-gray-900">Risk Assessment</h3>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Impact Level:</span>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -720,13 +730,13 @@ const SpeciesDetailPage: React.FC = () => {
             </div>
 
             {/* Image Column */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <h3 className="text-lg font-semibold text-gray-900">Species Image</h3>
                 <div className="relative">
                 <img 
                   src={getSpeciesImage(species.name)}
                   alt={species.name}
-                  className="w-full h-48 object-cover rounded-lg shadow-sm"
+                  className="w-full h-40 sm:h-48 object-cover rounded-lg shadow-sm"
                   onError={(e) => {
                     // If the image fails to load, use the SVG fallback
                     const svgFallback = `data:image/svg+xml;base64,${btoa(`
@@ -748,20 +758,20 @@ const SpeciesDetailPage: React.FC = () => {
         {/* Tab Navigation */}
         <div className="bg-white rounded-lg shadow-sm border mb-6">
           <div className="border-b border-gray-200">
-            <nav className="flex space-x-8 px-6">
+            <nav className="flex overflow-x-auto no-scrollbar space-x-4 sm:space-x-8 px-3 sm:px-6">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
+                    className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-2 whitespace-nowrap ${
                       activeTab === tab.id
                         ? 'border-green-500 text-green-600'
                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>{tab.label}</span>
                   </button>
                 );
@@ -770,7 +780,7 @@ const SpeciesDetailPage: React.FC = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {activeTab === 'overview' && (
               <div className="space-y-6">
                 <div>
@@ -907,13 +917,13 @@ const SpeciesDetailPage: React.FC = () => {
             {/* Logo and Copyright */}
             <div className="md:col-span-1 flex flex-col items-start">
               <div className="flex flex-col items-start mb-3">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-24 w-24 mb-2" />
+                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
               </div>
               <p className="text-green-100 text-sm">© 2025</p>
             </div>
 
             {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-bold mb-3 text-sm">Products</h3>
                 <ul className="space-y-2 text-green-100 text-sm">
@@ -932,14 +942,6 @@ const SpeciesDetailPage: React.FC = () => {
                 </ul>
               </div>
 
-              <div>
-                <h3 className="font-bold mb-3 text-sm">Contact Us</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><a href="mailto:EnvironmentalHealth@hv.sistem.com" className="hover:text-white transition-colors">EnvironmentalHealth@hv.sistem.com</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Report an Issue</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Partner With Us</a></li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>

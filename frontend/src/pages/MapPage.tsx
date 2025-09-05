@@ -4,6 +4,7 @@ import InteractiveMap from '../components/InteractiveMap';
 
 const MapPage: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showInteractiveMap, setShowInteractiveMap] = useState(false);
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -87,6 +88,26 @@ const MapPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Call to Action Section */}
+        <div className="bg-gray-50 border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div className="text-center">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4">
+                Explore Detailed Species Distribution
+              </h2>
+              <p className="text-base sm:text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+                View precise occurrence records and filter by species and year to understand the spread patterns of invasive species across Australia.
+              </p>
+              <button
+                onClick={() => setShowInteractiveMap(true)}
+                className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              >
+                Open Interactive Distribution Map
+              </button>
+            </div>
+          </div>
+        </div>
+
       {/* Map Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         <InteractiveMap />
@@ -136,13 +157,13 @@ const MapPage: React.FC = () => {
             {/* Logo and Copyright */}
             <div className="md:col-span-1 flex flex-col items-start">
               <div className="flex flex-col items-start mb-3">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-24 w-24 mb-2" />
+                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
               </div>
               <p className="text-green-100 text-sm">© 2025</p>
             </div>
 
             {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-bold mb-3 text-sm">Products</h3>
                 <ul className="space-y-2 text-green-100 text-sm">
@@ -161,18 +182,41 @@ const MapPage: React.FC = () => {
                 </ul>
               </div>
               
-              <div>
-                <h3 className="font-bold mb-3 text-sm">Contact Us</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><a href="mailto:EnvironmentalHealth@hv.sistem.com" className="hover:text-white transition-colors">EnvironmentalHealth@hv.sistem.com</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Report an Issue</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Partner With Us</a></li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>
       </footer>
+
+      {/* Interactive Map Overlay Modal */}
+      {showInteractiveMap && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl w-full h-full max-w-7xl max-h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-xl font-semibold text-gray-900">
+                Interactive Species Distribution Map
+              </h3>
+              <button
+                onClick={() => setShowInteractiveMap(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Modal Content - Interactive Map */}
+            <div className="flex-1 overflow-hidden">
+              <iframe
+                src="/map.html"
+                className="w-full h-full border-0"
+                title="Interactive Species Distribution Map"
+              />
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 // src/components/InteractiveMap.tsx
 import React, { useState, useCallback, useEffect } from "react";
 import { GoogleMap, useJsApiLoader, InfoWindow } from "@react-google-maps/api";
+import { useNavigate } from "react-router-dom";
 
 // For development - you can replace this with your actual API key
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "AIzaSyB41DRuKWuJdGrZgCrUdLZtrKEJd_ZmJ9g";
@@ -77,6 +78,7 @@ const stateClickAreas = [
 ];
 
 const InteractiveMap: React.FC = () => {
+  const navigate = useNavigate();
   const [infoWindow, setInfoWindow] = useState<InfoState>(null);
   const [stateMeta, setStateMeta] = useState<StateMetaMap>({});
   const [loading, setLoading] = useState(true);
@@ -485,9 +487,10 @@ const InteractiveMap: React.FC = () => {
                     <div className="mt-2 flex space-x-2">
                       <button
                         onClick={() => {
-                          window.location.href = `/species/${selected.species[currentSpeciesIndex].name
+                          const speciesName = selected.species[currentSpeciesIndex].name
                             .toLowerCase()
-                            .replace(/\s+/g, "-")}?from=map`;
+                            .replace(/\s+/g, "-");
+                          navigate(`/species/${speciesName}?from=map`);
                         }}
                         className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-xs sm:text-sm"
                       >

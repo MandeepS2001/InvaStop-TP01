@@ -400,13 +400,13 @@ const HomePage: React.FC = () => {
             {/* Logo and Copyright */}
             <div className="md:col-span-1 flex flex-col items-start">
               <div className="flex flex-col items-start mb-3">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-24 w-24 mb-2" />
+                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
               </div>
               <p className="text-green-100 text-sm">© 2025</p>
             </div>
 
             {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-bold mb-3 text-sm">Products</h3>
                 <ul className="space-y-2 text-green-100 text-sm">
@@ -425,14 +425,6 @@ const HomePage: React.FC = () => {
                 </ul>
               </div>
               
-              <div>
-                <h3 className="font-bold mb-3 text-sm">Contact Us</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><a href="mailto:EnvironmentalHealth@hv.sistem.com" className="hover:text-white transition-colors">EnvironmentalHealth@hv.sistem.com</a></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Report an Issue</span></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Partner With Us</span></li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>

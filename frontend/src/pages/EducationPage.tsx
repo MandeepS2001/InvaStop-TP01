@@ -24,7 +24,7 @@ const EducationPage: React.FC = () => {
           <div className="flex justify-between items-center h-24">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 object-contain" />
+              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-16 w-16 sm:h-24 sm:w-24 md:h-40 md:w-40 lg:h-60 lg:w-60 object-contain" />
             </Link>
 
             {/* Navigation */}
@@ -32,7 +32,6 @@ const EducationPage: React.FC = () => {
               <Link to="/" className="text-white hover:text-green-200 transition-colors">Home</Link>
               <Link to="/education" className="text-white hover:text-green-200 transition-colors font-semibold">Species Profile</Link>
               <Link to="/map" className="text-white hover:text-green-200 transition-colors">Map</Link>
-              <span className="text-white/80">More</span>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -86,15 +85,15 @@ const EducationPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="bg-gray-50 py-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <section className="bg-gray-50 py-6 sm:py-8 lg:py-10">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
               {speciesList.map((sp) => (
                 <div key={sp.name} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden">
                   <img
                     src={sp.image}
                     alt={sp.name}
-                    className="w-full h-36 object-cover"
+                    className="w-full h-40 sm:h-44 md:h-36 object-cover"
                     onError={(e) => {
                       const svgFallback = `data:image/svg+xml;base64,${btoa(
                         `<svg width="300" height="160" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="160" fill="#166534"/><text x="150" y="80" font-family="Arial" font-size="16" fill="white" text-anchor="middle">Image not available</text></svg>`
@@ -102,9 +101,9 @@ const EducationPage: React.FC = () => {
                       e.currentTarget.src = svgFallback;
                     }}
                   />
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{sp.name}</h3>
-                    <Link to={`/species/${sp.name.toLowerCase().replace(/\s+/g, '-')}`} className="inline-flex items-center text-green-700 hover:text-green-900 font-medium">
+                  <div className="p-3 sm:p-4">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{sp.name}</h3>
+                    <Link to={`/species/${sp.name.toLowerCase().replace(/\s+/g, '-')}?from=education`} className="inline-flex items-center text-green-700 hover:text-green-900 font-medium text-sm sm:text-base">
                       Learn More →
                     </Link>
                   </div>
@@ -122,13 +121,13 @@ const EducationPage: React.FC = () => {
             {/* Logo and Copyright */}
             <div className="md:col-span-1 flex flex-col items-start">
               <div className="flex flex-col items-start mb-3">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-24 w-24 mb-2" />
+                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
               </div>
               <p className="text-green-100 text-sm">© 2025</p>
             </div>
 
             {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-bold mb-3 text-sm">Products</h3>
                 <ul className="space-y-2 text-green-100 text-sm">
@@ -143,14 +142,6 @@ const EducationPage: React.FC = () => {
                   <li><span className="hover:text-white transition-colors cursor-pointer">Who We Are</span></li>
                   <li><span className="hover:text-white transition-colors cursor-pointer">FAQ</span></li>
                   <li><span className="hover:text-white transition-colors cursor-pointer">Our Mission</span></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-bold mb-3 text-sm">Contact Us</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><a href="mailto:EnvironmentalHealth@hv.sistem.com" className="hover:text-white transition-colors">EnvironmentalHealth@hv.sistem.com</a></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Report an Issue</span></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Partner With Us</span></li>
                 </ul>
               </div>
             </div>
