@@ -175,3 +175,16 @@ dmypy.json
 # Backup files
 *.bak
 *.backup
+
+# Model and datasets
+*.docx
+*.yml
+*.csv
+*.csv
+*.xlsx
+*.xlsx
+AI/datasets/*
+AI/detect/*
+AI/__pycache__/*
+AI/raw/*
+AI/*.pt
