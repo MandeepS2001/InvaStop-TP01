@@ -15,6 +15,10 @@
       "dest": "https://invastopbackend.vercel.app/api/$1"
     },
     {
+      "src": "/map.html",
+      "dest": "/map.html"
+    },
+    {
       "src": "/static/(.*)",
       "dest": "/static/$1"
     },
