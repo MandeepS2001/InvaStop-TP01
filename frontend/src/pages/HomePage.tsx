@@ -122,34 +122,10 @@ const HomePage: React.FC = () => {
 
             {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-2">
-              <Link 
-                to="/" 
-                onClick={scrollToTop}
-                className="px-4 py-2 text-white bg-green-600/60 border-green-500 rounded-md transition-all duration-200 font-medium shadow-md"
-              >
-                Home
-              </Link>
-              <Link 
-                to="/education" 
-                onClick={scrollToTop}
-                className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30"
-              >
-                Species Profile
-              </Link>
-              <Link 
-                to="/map" 
-                onClick={scrollToTop}
-                className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30"
-              >
-                Map
-              </Link>
-              <Link 
-                to="/insights" 
-                onClick={scrollToTop}
-                className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30"
-              >
-                Did you Know?
-              </Link>
+              <Link to="/" onClick={scrollToTop} className="px-4 py-2 text-white bg-green-600/60 border-green-500 rounded-md transition-all duration-200 font-medium shadow-md">Home</Link>
+              <Link to="/education" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Species Profile</Link>
+              <Link to="/insights" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Did you Know?</Link>
+              <Link to="/map" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Map</Link>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -389,7 +365,7 @@ const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-green-200/40 p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6">
             <div className="flex-1">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Discover more insights</h3>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">See the Impact on Australian Wildlife</h3>
               <p className="text-gray-600">Explore interactive charts and data stories about how invasive species impact Australia — all in one place.</p>
             </div>
             <div>
@@ -399,7 +375,7 @@ const HomePage: React.FC = () => {
                 className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-green-800 hover:from-green-500 hover:via-green-600 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 text-lg shadow-xl hover:shadow-2xl hover:shadow-green-500/30 transform hover:scale-105 border-2 border-green-500/20 hover:border-green-400/40"
               >
                 <span className="mr-3 text-xl group-hover:rotate-12 transition-transform duration-300">📊</span>
-                <span className="group-hover:tracking-wide transition-all duration-300">See “Did you Know?”</span>
+                <span className="group-hover:tracking-wide transition-all duration-300">Did you Know?</span>
                 <span className="ml-3 text-lg group-hover:translate-x-2 transition-transform duration-300">→</span>
               </Link>
             </div>

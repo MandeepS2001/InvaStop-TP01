@@ -1,6 +1,6 @@
 // src/components/InteractiveMap.tsx
 import React, { useState, useCallback, useEffect } from "react";
-import { GoogleMap, useJsApiLoader, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, InfoWindow, Marker } from "@react-google-maps/api";
 import { useNavigate } from "react-router-dom";
 
 // For development - you can replace this with your actual API key
@@ -14,7 +14,7 @@ type InfoState = {
 type Species = { name: string; impact: string; spread: string; risk: string };
 type StateMeta = {
   name: string;
-  risk: "high" | "moderate" | "low";
+  risk: "high" | "moderate" | "low" | "unknown";
   color: string;
   species: Species[];
 };
@@ -23,6 +23,17 @@ type StateMetaMap = Record<string, StateMeta>;
 const mapContainerStyle = { width: "100%", height: "600px" };
 const center = { lat: -25, lng: 135 };
 const libraries: ("geometry" | "places" | "drawing" | "visualization")[] = ["geometry"];
+
+// State-specific most invasive species mapping
+const stateSpeciesIcons: Record<string, { species: string; icon: string; type: string }> = {
+  "New South Wales": { species: "Lantana", icon: "🌿", type: "Plant" },
+  "Victoria": { species: "Red Fox", icon: "🦊", type: "Mammal" },
+  "Queensland": { species: "Cane Toad", icon: "🐸", type: "Amphibian" },
+  "Western Australia": { species: "Buffel Grass", icon: "🌾", type: "Grass" },
+  "South Australia": { species: "European Rabbit", icon: "🐰", type: "Mammal" },
+  "Tasmania": { species: "Gorse", icon: "🌿", type: "Plant" },
+  "Northern Territory": { species: "Feral Pig", icon: "🐷", type: "Mammal" }
+};
 
 // State click areas - approximate coordinates for each state
 const stateClickAreas = [
@@ -147,6 +158,10 @@ const InteractiveMap: React.FC = () => {
     console.log('Map loaded successfully');
     setMap(mapInstance);
     
+    // Debug: Log state click areas
+    console.log('State click areas:', stateClickAreas);
+    console.log('State species icons:', stateSpeciesIcons);
+    
     // Add click listener to the map
     mapInstance.addListener('click', (event: google.maps.MapMouseEvent) => {
       const clickedLat = event.latLng!.lat();
@@ -160,13 +175,35 @@ const InteractiveMap: React.FC = () => {
                clickedLng <= state.bounds.east;
       });
       
-      if (clickedState && stateMeta[clickedState.name]) {
-        setSelectedState(stateMeta[clickedState.name]);
-        setCurrentSpeciesIndex(0); // Reset to first species
-        setInfoWindow({
-          position: clickedState.center,
-          featureName: clickedState.name
-        });
+      if (clickedState) {
+        if (stateMeta[clickedState.name]) {
+          // If we have API data, show the full InfoWindow
+          setSelectedState(stateMeta[clickedState.name]);
+          setCurrentSpeciesIndex(0);
+          setInfoWindow({
+            position: clickedState.center,
+            featureName: clickedState.name
+          });
+        } else {
+          // If no API data, show a simple InfoWindow with the state icon info
+          const stateIcon = stateSpeciesIcons[clickedState.name];
+          setSelectedState({
+            name: clickedState.name,
+            risk: "unknown",
+            color: "#gray",
+            species: stateIcon ? [{
+              name: stateIcon.species,
+              impact: "Unknown",
+              spread: "Unknown", 
+              risk: "Unknown"
+            }] : []
+          });
+          setCurrentSpeciesIndex(0);
+          setInfoWindow({
+            position: clickedState.center,
+            featureName: clickedState.name
+          });
+        }
       } else {
         // Clicked outside any state area
         setInfoWindow(null);
@@ -323,208 +360,247 @@ const InteractiveMap: React.FC = () => {
       </div>
 
       <div className="relative">
-        {Object.keys(stateMeta).length > 0 ? (
-          <div className="relative">
-            <GoogleMap
-              mapContainerStyle={mapContainerStyle}
-              center={center}
-              zoom={4.5}
-              onLoad={onLoad}
-              options={{
-                zoomControl: true,
-                streetViewControl: false,
-                mapTypeControl: false,
-                fullscreenControl: false,
-                styles: [
-                  {
-                    featureType: "administrative",
-                    elementType: "geometry.stroke",
-                    stylers: [{ color: "#374151" }],
-                  },
-                  {
-                    featureType: "administrative",
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#2563eb" }], // Blue color for state names
-                  },
-                  {
-                    featureType: "administrative",
-                    elementType: "labels.text.stroke",
-                    stylers: [{ color: "#ffffff" }], // White outline for better visibility
-                  },
-                  {
-                    featureType: "landscape",
-                    elementType: "geometry.fill",
-                    stylers: [{ color: "#f9fafb" }],
-                  },
-                  {
-                    featureType: "water",
-                    elementType: "geometry.fill",
-                    stylers: [{ color: "#e0f2fe" }],
-                  },
-                ],
-              }}
-            >
-              {infoWindow && selected && (
-                <InfoWindow
-                  position={infoWindow.position}
-                  onCloseClick={() => {
-                    setInfoWindow(null);
-                    setSelectedState(null);
-                    setCurrentSpeciesIndex(0);
-                    // Zoom back out to original view
-                    if (map) {
-                      map.setZoom(5);
-                      map.panTo(center);
+        <div className="relative">
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={4.5}
+            onLoad={onLoad}
+            options={{
+              zoomControl: true,
+              streetViewControl: false,
+              mapTypeControl: false,
+              fullscreenControl: false,
+              styles: [
+                {
+                  featureType: "administrative",
+                  elementType: "geometry.stroke",
+                  stylers: [{ color: "#374151" }],
+                },
+                {
+                  featureType: "administrative",
+                  elementType: "labels.text.fill",
+                  stylers: [{ color: "#2563eb" }], // Blue color for state names
+                },
+                {
+                  featureType: "administrative",
+                  elementType: "labels.text.stroke",
+                  stylers: [{ color: "#ffffff" }], // White outline for better visibility
+                },
+                {
+                  featureType: "landscape",
+                  elementType: "geometry.fill",
+                  stylers: [{ color: "#f9fafb" }],
+                },
+                {
+                  featureType: "water",
+                  elementType: "geometry.fill",
+                  stylers: [{ color: "#e0f2fe" }],
+                },
+              ],
+            }}
+          >
+            {/* State-specific species icons - Always visible */}
+            {isLoaded && stateClickAreas.map((state) => {
+              const stateIcon = stateSpeciesIcons[state.name];
+              console.log(`Rendering marker for ${state.name}:`, state.center, stateIcon);
+              if (!stateIcon) return null;
+              
+              return (
+                <Marker
+                  key={state.name}
+                  position={state.center}
+                  title={`${state.name}: ${stateIcon.species} (${stateIcon.type})`}
+                  onClick={() => {
+                    console.log(`Clicked marker for ${state.name}`);
+                    if (stateMeta[state.name]) {
+                      setSelectedState(stateMeta[state.name]);
+                      setCurrentSpeciesIndex(0);
+                      setInfoWindow({
+                        position: state.center,
+                        featureName: state.name
+                      });
+                    } else {
+                      // Show fallback InfoWindow with state icon info
+                      const stateIcon = stateSpeciesIcons[state.name];
+                      setSelectedState({
+                        name: state.name,
+                        risk: "unknown",
+                        color: "#gray",
+                        species: stateIcon ? [{
+                          name: stateIcon.species,
+                          impact: "Unknown",
+                          spread: "Unknown", 
+                          risk: "Unknown"
+                        }] : []
+                      });
+                      setCurrentSpeciesIndex(0);
+                      setInfoWindow({
+                        position: state.center,
+                        featureName: state.name
+                      });
                     }
                   }}
-                >
+                />
+              );
+            })}
+            {infoWindow && selected && (
+              <InfoWindow
+                position={infoWindow.position}
+                onCloseClick={() => {
+                  setInfoWindow(null);
+                  setSelectedState(null);
+                  setCurrentSpeciesIndex(0);
+                  // Zoom back out to original view
+                  if (map) {
+                    map.setZoom(5);
+                    map.panTo(center);
+                  }
+                }}
+              >
                   <div className="p-3 sm:p-4 max-w-xs sm:max-w-md bg-white rounded-lg" style={{ minHeight: '400px', maxHeight: '500px' }}>
                     {/* Header Row - State and Species Counter */}
                     <div className="flex items-center justify-between mb-3">
                       <h5 className="font-semibold text-gray-800 text-xs sm:text-sm">{infoWindow.featureName}</h5>
-                      <span className="text-xs text-gray-500">{currentSpeciesIndex + 1}/{selected.species.length}</span>
+                      {selected.species.length > 0 && (
+                        <span className="text-xs text-gray-500">{currentSpeciesIndex + 1}/{selected.species.length}</span>
+                      )}
                     </div>
                     
                     {/* Species Image with Navigation */}
-                    <div className="relative mb-3">
-                      <img 
-                        src={getSpeciesImage(selected.species[currentSpeciesIndex].name)}
-                        alt={selected.species[currentSpeciesIndex].name}
-                        className="w-full h-36 sm:h-40 object-cover rounded-lg"
-                        onError={(e) => {
-                          // If the image fails to load, use the SVG fallback
-                          const svgFallback = `data:image/svg+xml;base64,${btoa(`
-                            <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
-                              <rect width="300" height="200" fill="#4F46E5"/>
-                              <text x="150" y="100" font-family="Arial" font-size="16" fill="white" text-anchor="middle">Image Error</text>
-                              <text x="150" y="125" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Failed to Load</text>
-                            </svg>
-                          `)}`;
-                          e.currentTarget.src = svgFallback;
-                        }}
-                      />
-                      
-                      {/* Navigation Arrows */}
-                      <button
-                        onClick={prevSpecies}
-                        className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800 p-1.5 rounded-full shadow-lg transition-all duration-200"
-                      >
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                      </button>
-                      
-                      <button
-                        onClick={nextSpecies}
-                        className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800 p-1.5 rounded-full shadow-lg transition-all duration-200"
-                      >
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                      
-                      {/* Pagination Dots */}
-                      <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                        {selected.species.map((_, index) => (
-                          <div
-                            key={index}
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              index === currentSpeciesIndex ? 'bg-black' : 'bg-white'
-                            }`}
-                          />
-                        ))}
+                    {selected.species.length > 0 && selected.species[currentSpeciesIndex] ? (
+                      <div className="relative mb-3">
+                        <img 
+                          src={getSpeciesImage(selected.species[currentSpeciesIndex].name)}
+                          alt={selected.species[currentSpeciesIndex].name}
+                          className="w-full h-36 sm:h-40 object-cover rounded-lg"
+                          onError={(e) => {
+                            // If the image fails to load, use the SVG fallback
+                            const svgFallback = `data:image/svg+xml;base64,${btoa(`
+                              <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="300" height="200" fill="#4F46E5"/>
+                                <text x="150" y="100" font-family="Arial" font-size="16" fill="white" text-anchor="middle">Image Error</text>
+                                <text x="150" y="125" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Failed to Load</text>
+                              </svg>
+                            `)}`;
+                            e.currentTarget.src = svgFallback;
+                          }}
+                        />
+                        
+                        {/* Navigation Arrows */}
+                        {selected.species.length > 1 && (
+                          <>
+                            <button
+                              onClick={prevSpecies}
+                              className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800 p-1.5 rounded-full shadow-lg transition-all duration-200"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                              </svg>
+                            </button>
+                            
+                            <button
+                              onClick={nextSpecies}
+                              className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800 p-1.5 rounded-full shadow-lg transition-all duration-200"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                            
+                            {/* Pagination Dots */}
+                            <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                              {selected.species.map((_, index) => (
+                                <div
+                                  key={index}
+                                  className={`w-1.5 h-1.5 rounded-full ${
+                                    index === currentSpeciesIndex ? 'bg-black' : 'bg-white'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </>
+                        )}
                       </div>
-                    </div>
+                    ) : (
+                      <div className="relative mb-3">
+                        <div className="w-full h-36 sm:h-40 bg-gray-200 rounded-lg flex items-center justify-center">
+                          <div className="text-center">
+                            <div className="text-4xl mb-2">🗺️</div>
+                            <p className="text-sm text-gray-600">Loading species data...</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Species Information - Compact Layout */}
-                    <div className="space-y-2">
-                      {/* Species Name and Type */}
-                      <div className="flex items-center justify-between mb-1">
-                        <h4 className="text-sm sm:text-base font-bold text-gray-900">
-                          {selected.species[currentSpeciesIndex].name}
-                        </h4>
-                        <span className="text-xs bg-blue-100 text-blue-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
-                          {getSpeciesType(selected.species[currentSpeciesIndex].name)}
-                        </span>
-                      </div>
-                      
-                      {/* Scientific Name */}
-                      <p className="text-xs text-gray-600 italic mb-2">
-                        {getScientificName(selected.species[currentSpeciesIndex].name)}
-                      </p>
-                      
-                      {/* Risk Indicators Row as bars */}
-                      <div className="space-y-2 mb-3">
-                        {/* Harm Bar */}
-                        <div>
-                          <div className="flex justify-between text-[10px] text-gray-600 mb-1"><span>Harm</span><span>{selected.species[currentSpeciesIndex].impact}</span></div>
-                          <div className="h-2 w-full bg-gray-200 rounded">
-                            <div className={`${selected.species[currentSpeciesIndex].impact==='High' ? 'bg-red-500 w-full' : selected.species[currentSpeciesIndex].impact==='Moderate' ? 'bg-orange-400 w-2/3' : 'bg-yellow-400 w-1/3'} h-2 rounded`}></div>
+                    {selected.species.length > 0 && selected.species[currentSpeciesIndex] ? (
+                      <div className="space-y-2">
+                        {/* Species Name and Type */}
+                        <div className="flex items-center justify-between mb-1">
+                          <h4 className="text-sm sm:text-base font-bold text-gray-900">
+                            {selected.species[currentSpeciesIndex].name}
+                          </h4>
+                          <span className="text-xs bg-blue-100 text-blue-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
+                            {getSpeciesType(selected.species[currentSpeciesIndex].name)}
+                          </span>
+                        </div>
+                        
+                        {/* Scientific Name */}
+                        <p className="text-xs text-gray-600 italic mb-2">
+                          {getScientificName(selected.species[currentSpeciesIndex].name)}
+                        </p>
+                        
+                        {/* Risk Indicators Row as bars */}
+                        <div className="space-y-2 mb-3">
+                          {/* Harm Bar */}
+                          <div>
+                            <div className="flex justify-between text-[10px] text-gray-600 mb-1"><span>Harm</span><span>{selected.species[currentSpeciesIndex].impact}</span></div>
+                            <div className="h-2 w-full bg-gray-200 rounded">
+                              <div className={`${selected.species[currentSpeciesIndex].impact==='High' ? 'bg-red-500 w-full' : selected.species[currentSpeciesIndex].impact==='Moderate' ? 'bg-orange-400 w-2/3' : 'bg-yellow-400 w-1/3'} h-2 rounded`}></div>
+                            </div>
+                          </div>
+                          {/* Spread Bar */}
+                          <div>
+                            <div className="flex justify-between text-[10px] text-gray-600 mb-1"><span>Spread</span><span>{selected.species[currentSpeciesIndex].spread}</span></div>
+                            <div className="h-2 w-full bg-gray-200 rounded">
+                              <div className={`${selected.species[currentSpeciesIndex].spread==='High' ? 'bg-red-500 w-full' : selected.species[currentSpeciesIndex].spread==='Moderate' ? 'bg-orange-400 w-2/3' : 'bg-yellow-400 w-1/3'} h-2 rounded`}></div>
+                            </div>
                           </div>
                         </div>
-                        {/* Spread Bar */}
-                        <div>
-                          <div className="flex justify-between text-[10px] text-gray-600 mb-1"><span>Spread</span><span>{selected.species[currentSpeciesIndex].spread}</span></div>
-                          <div className="h-2 w-full bg-gray-200 rounded">
-                            <div className={`${selected.species[currentSpeciesIndex].spread==='High' ? 'bg-red-500 w-full' : selected.species[currentSpeciesIndex].spread==='Moderate' ? 'bg-orange-400 w-2/3' : 'bg-yellow-400 w-1/3'} h-2 rounded`}></div>
-                          </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <div className="text-center py-4">
+                          <div className="text-2xl mb-2">🌿</div>
+                          <p className="text-sm text-gray-600">Most invasive species in this state</p>
+                          <p className="text-xs text-gray-500 mt-1">Data loading...</p>
                         </div>
                       </div>
-                      
-                    </div>
+                    )}
                     
                     {/* Action Buttons */}
-                    <div className="mt-2 flex space-x-2">
-                      <button
-                        onClick={() => {
-                          const speciesName = selected.species[currentSpeciesIndex].name
-                            .toLowerCase()
-                            .replace(/\s+/g, "-");
-                          navigate(`/species/${speciesName}?from=map`);
-                        }}
-                        className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-xs sm:text-sm"
-                      >
-                        Learn More
-                      </button>
-                      {/* Removed star button */}
-                    </div>
-                  </div>
-                </InfoWindow>
-              )}
-            </GoogleMap>
-            
-          </div>
-        ) : (
-          <div className="flex items-center justify-center h-[600px] bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-            <div className="text-center">
-              {loading ? (
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-                  <p className="text-lg text-gray-600">Loading interactive map...</p>
-                  <p className="text-sm text-gray-500">Fetching data from InvaStop API</p>
+                    {selected.species.length > 0 && selected.species[currentSpeciesIndex] && (
+                      <div className="mt-2 flex space-x-2">
+                        <button
+                          onClick={() => {
+                            const speciesName = selected.species[currentSpeciesIndex].name
+                              .toLowerCase()
+                              .replace(/\s+/g, "-");
+                            navigate(`/species/${speciesName}?from=map`);
+                          }}
+                          className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 rounded-lg transition-colors text-xs sm:text-sm"
+                        >
+                          Learn More
+                        </button>
+                        {/* Removed star button */}
+                      </div>
+                    )}
                 </div>
-              ) : error ? (
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="text-red-500 text-6xl">🗺️</div>
-                  <p className="text-lg text-gray-600">Map data unavailable</p>
-                  <p className="text-sm text-gray-500 max-w-md">{error}</p>
-                  <button 
-                    onClick={() => window.location.reload()} 
-                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Retry
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="text-gray-400 text-6xl">🗺️</div>
-                  <p className="text-lg text-gray-600">No map data available</p>
-                  <p className="text-sm text-gray-500">Check the console for debugging information</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+              </InfoWindow>
+            )}
+          </GoogleMap>
+        </div>
       </div>
     </div>
   );
