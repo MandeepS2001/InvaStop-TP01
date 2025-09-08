@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Australia Invasive Species — Interactive Map</title>
+
+<!-- Google Maps MarkerClusterer -->
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+
+<!-- d3 for CSV parsing and color scales -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+<style>
+  :root { --green: #1f9d55; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #111; }
+  header { padding: 16px 20px 12px; border-bottom: 1px solid #e5e7eb; }
+  h1 { margin: 0 0 6px; font-size: 20px; }
+  .sub { color:#555; font-size: 13px; }
+
+  .wrap { display: grid; grid-template-columns: 320px 1fr; gap: 12px; height: calc(100vh - 68px); }
+  .controls { padding: 14px; border-right: 1px solid #e5e7eb; overflow-y: auto; }
+  .controls h3 { margin: 0 0 8px; font-size: 16px; }
+  .panel { margin-bottom: 16px; }
+  .panel label { font-size: 13px; color:#444; display:block; margin-bottom:6px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { font-size: 12px; border:1px solid #d1d5db; border-radius: 999px; padding:4px 8px; cursor:pointer; user-select:none; }
+  .chip.active { background: #eef7f0; border-color: var(--green); color: #0d5a2e; }
+  .year-row { display:flex; gap:8px; align-items:center; }
+  .legend { display:flex; flex-wrap:wrap; gap:8px 12px; padding: 6px 0; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:12px; }
+  .swatch { width:12px; height:12px; border-radius: 3px; }
+
+  #map { width: 100%; height: 100%; }
+
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+
+  .toolbar { display:flex; gap:8px; margin-top: 8px; }
+  .btn { font-size: 12px; border:1px solid #d1d5db; background:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; }
+  .btn:hover { background:#f5f7f6; }
+  .stat { font-size:12px; color:#555; margin-top: 6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Distribution of Australia’s 10 Common Invasive Species</h1>
+  <div class="sub">Pinpoints show occurrence records. Use filters to focus by species and year.</div>
+  <div id="status" class="sub"></div>
+ </header>
+
+<div class="wrap">
+  <aside class="controls">
+    <div class="panel">
+      <h3>Species filter</h3>
+      <div id="chips" class="chips"></div>
+      <div class="toolbar">
+        <button id="selectAll" class="btn">Select all</button>
+        <button id="clearAll" class="btn">Clear all</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Year range</h3>
+      <label>Show records between years (inclusive):</label>
+      <div class="year-row">
+        <input id="yearMin" type="number" style="width:90px">
+        <span>to</span>
+        <input id="yearMax" type="number" style="width:90px">
+        <button id="applyYear" class="btn">Apply</button>
+      </div>
+      <div class="stat" id="yearStats"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Legend</h3>
+      <div id="legend" class="legend"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Map</h3>
+      <div class="toolbar">
+        <button id="resetView" class="btn">Reset view</button>
+        <button id="fitToData" class="btn">Zoom to data</button>
+      </div>
+      <div class="stat" id="countStats"></div>
+    </div>
+  </aside>
+
+  <main id="map"></main>
+</div>
+
+<script>
+/* ===================== DATA SOURCE SWITCH =====================
+ * LOCAL (now):
+ *   CONFIG.mode = "csv"
+ *   CONFIG.csvUrl = "./invasive_species_combined_filtered.csv"
+ *
+ * AWS (later):
+ *   CONFIG.mode = "json"
+ *   CONFIG.jsonUrl = "https://your-api/occurrences" // returns array of objects:
+ *        [{ vernacularName, decimalLatitude, decimalLongitude,
+ *           eventDate, stateProvince, scientificName, country, countryCode }]
+ *
+ * Notes:
+ *   - Enable CORS on your API.
+ *   - Keep field names as above so no code changes are needed.
+ * =============================================================== */
+const CONFIG = {
+  mode: "json",
+  csvUrl: "",
+  // You can override this with ?api=YOUR_URL in the iframe src
+  jsonUrl: "https://invastopbackend.vercel.app/api/v1/epic1/invasive-records"
+};
+
+// The 10 species curated:
+const ALLOWED_SPECIES = [
+  "Bitou Bush","Buffel Grass","Cane Toad","Common Myna",
+  "European Rabbit","Red Fox","Feral Pig","Gamba Grass","Gorse","Lantana"
+];
+
+// Categorical colors for the 10 species (stable across sessions)
+const color = d3.scaleOrdinal()
+  .domain(ALLOWED_SPECIES)
+  .range(d3.schemeTableau10);
+
+let MAP, CLUSTER, CURRENT_MARKERS = [];
+const AU_CENTER = [-25.0, 134.0];
+const AU_ZOOM = 4;
+
+// UI elements
+const chipsEl = document.getElementById("chips");
+const legendEl = document.getElementById("legend");
+const yearMinEl = document.getElementById("yearMin");
+const yearMaxEl = document.getElementById("yearMax");
+const yearStatsEl = document.getElementById("yearStats");
+const countStatsEl = document.getElementById("countStats");
+const statusEl = document.getElementById("status");
+
+// State
+let rawRows = [];     // original rows
+let filteredRows = []; // after filters
+let selectedSpecies = new Set(ALLOWED_SPECIES);
+let minYear = 2015, maxYear = new Date().getFullYear(); // default from your wrangling
+
+// --- Map setup ---
+function initMap() {
+  MAP = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: AU_CENTER[0], lng: AU_CENTER[1] },
+    zoom: AU_ZOOM,
+    mapTypeControl: false,
+    streetViewControl: false,
+  });
+  CLUSTER = new markerClusterer.MarkerClusterer({ map: MAP, markers: [] });
+}
+
+function markerIcon(hex) {
+  // SVG circle marker
+  const svg = {
+    path: "M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0z",
+    fillColor: hex,
+    fillOpacity: 1,
+    strokeColor: '#ffffff',
+    strokeWeight: 2,
+    scale: 1,
+    anchor: new google.maps.Point(8,8)
+  };
+  return svg;
+}
+
+// --- UI: species chips + legend ---
+function renderChips() {
+  chipsEl.innerHTML = "";
+  ALLOWED_SPECIES.forEach(sp => {
+    const div = document.createElement("div");
+    div.className = "chip" + (selectedSpecies.has(sp) ? " active" : "");
+    div.textContent = sp;
+    div.style.borderColor = color(sp);
+    div.addEventListener("click", () => {
+      if (selectedSpecies.has(sp)) selectedSpecies.delete(sp);
+      else selectedSpecies.add(sp);
+      div.classList.toggle("active");
+      applyFiltersAndRender();
+    });
+    chipsEl.appendChild(div);
+  });
+
+  document.getElementById("selectAll").onclick = () => {
+    selectedSpecies = new Set(ALLOWED_SPECIES);
+    renderChips();
+    applyFiltersAndRender();
+  };
+  document.getElementById("clearAll").onclick = () => {
+    selectedSpecies.clear();
+    renderChips();
+    applyFiltersAndRender();
+  };
+}
+
+function renderLegend() {
+  legendEl.innerHTML = "";
+  ALLOWED_SPECIES.forEach(sp => {
+    const item = document.createElement("div");
+    item.className = "legend-item";
+    const sw = document.createElement("div"); sw.className = "swatch"; sw.style.background = color(sp);
+    const tx = document.createElement("span"); tx.textContent = sp;
+    item.appendChild(sw); item.appendChild(tx);
+    legendEl.appendChild(item);
+  });
+}
+
+// --- Data loading ---
+async function loadData() {
+  if (CONFIG.mode === "json") {
+    try {
+      let res = await fetch(CONFIG.jsonUrl);
+      if (!res.ok) {
+        const altUrl = CONFIG.jsonUrl.endsWith('/') ? CONFIG.jsonUrl.slice(0, -1) : CONFIG.jsonUrl + '/';
+        res = await fetch(altUrl);
+      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      const arr = Array.isArray(json) ? json : (Array.isArray(json?.data) ? json.data : (Array.isArray(json?.records) ? json.records : []));
+      if (!Array.isArray(arr)) throw new Error('Payload is not an array');
+      rawRows = arr.map(d => ({
+      vernacularName: String(d.vernacularName || "").trim(),
+      decimalLatitude: +d.decimalLatitude,
+      decimalLongitude: +d.decimalLongitude,
+      eventDate: d.eventDate ? new Date(d.eventDate) : null,
+      stateProvince: d.stateProvince || "",
+      scientificName: d.scientificName || "",
+      country: d.country || "", countryCode: d.countryCode || ""
+    }));
+      statusEl.textContent = `Live data loaded (${rawRows.length.toLocaleString()} rows)`;
+    } catch (e) {
+      console.warn('Failed to fetch API data, using fallback demo data');
+      rawRows = [
+        { vernacularName: 'Red Fox', scientificName: 'Vulpes vulpes', decimalLatitude: -37.8136, decimalLongitude: 144.9631, stateProvince: 'VIC', eventDate: new Date('2021-06-01') },
+        { vernacularName: 'European Rabbit', scientificName: 'Oryctolagus cuniculus', decimalLatitude: -33.8688, decimalLongitude: 151.2093, stateProvince: 'NSW', eventDate: new Date('2020-03-11') },
+        { vernacularName: 'Cane Toad', scientificName: 'Rhinella marina', decimalLatitude: -27.4698, decimalLongitude: 153.0251, stateProvince: 'QLD', eventDate: new Date('2019-09-05') },
+        { vernacularName: 'Buffel Grass', scientificName: 'Cenchrus ciliaris', decimalLatitude: -12.4634, decimalLongitude: 130.8456, stateProvince: 'NT', eventDate: new Date('2022-02-14') },
+      ];
+      statusEl.textContent = 'Using demo data (API unavailable).';
+    }
+  } else {
+    // CSV mode: expect your combined filtered CSV with columns you wrangled earlier
+    const rows = await d3.csv(CONFIG.csvUrl, d3.autoType);
+    rawRows = rows.map(d => ({
+      vernacularName: String(d.vernacularName || "").trim(),
+      decimalLatitude: +d.decimalLatitude,
+      decimalLongitude: +d.decimalLongitude,
+      // Try both: eventDate_from_parts or eventDate if you renamed it
+      eventDate: d.eventDate_from_parts ? new Date(d.eventDate_from_parts) :
+                 (d.eventDate ? new Date(d.eventDate) : null),
+      stateProvince: d.stateProvince || "",
+      scientificName: d.scientificName || "",
+      country: d.country || "", countryCode: d.countryCode || ""
+    }));
+  }
+
+  // Basic cleaning & limit to the 10 species
+  rawRows = rawRows.filter(r =>
+    ALLOWED_SPECIES.includes(r.vernacularName) &&
+    Number.isFinite(r.decimalLatitude) &&
+    Number.isFinite(r.decimalLongitude)
+  );
+
+  if (rawRows.length === 0) {
+    countStatsEl.textContent = 'No records for current filters.';
+    return;
+  }
+
+  // Infer min/max year from data (but clamp to 2015–present if needed)
+  const years = rawRows
+    .map(r => (r.eventDate instanceof Date && !isNaN(r.eventDate) ? r.eventDate.getFullYear() : null))
+    .filter(y => y !== null);
+  const yrMin = years.length ? Math.min(...years) : 2015;
+  const yrMax = years.length ? Math.max(...years) : new Date().getFullYear();
+  minYear = Math.max(2015, yrMin);
+  maxYear = Math.max(minYear, yrMax);
+
+  yearMinEl.value = minYear;
+  yearMaxEl.value = maxYear;
+  yearStatsEl.textContent = `Data years: ${minYear}–${maxYear}`;
+}
+
+// --- Filtering + render markers ---
+function applyFiltersAndRender() {
+  const yMin = parseInt(yearMinEl.value, 10) || minYear;
+  const yMax = parseInt(yearMaxEl.value, 10) || maxYear;
+
+  filteredRows = rawRows.filter(r => {
+    if (!selectedSpecies.has(r.vernacularName)) return false;
+    if (!(r.eventDate instanceof Date) || isNaN(r.eventDate)) return false;
+    const y = r.eventDate.getFullYear();
+    return y >= yMin && y <= yMax;
+  });
+
+  drawMarkers(filteredRows);
+}
+
+function drawMarkers(rows) {
+  // Clear existing markers from clusterer
+  CLUSTER.clearMarkers();
+
+  const markers = rows.map(r => {
+    const marker = new google.maps.Marker({
+      position: { lat: r.decimalLatitude, lng: r.decimalLongitude },
+      title: r.vernacularName,
+      icon: markerIcon(color(r.vernacularName))
+    });
+    const infowin = new google.maps.InfoWindow({
+      content: `<strong>${r.vernacularName}</strong><br/>
+                <em>${r.scientificName || ''}</em><br/>
+                ${r.stateProvince || ''}<br/>
+                ${r.eventDate ? r.eventDate.toISOString().slice(0,10) : ''}`
+    });
+    marker.addListener('click', () => infowin.open({ map: MAP, anchor: marker }));
+    return marker;
+  });
+  CURRENT_MARKERS = markers;
+  CLUSTER.addMarkers(markers);
+
+  countStatsEl.textContent = `Showing ${rows.length.toLocaleString()} records`;
+}
+
+// --- Wire UI buttons ---
+document.getElementById("applyYear").onclick = () => applyFiltersAndRender();
+document.getElementById("resetView").onclick = () => MAP.setCenter({lat: AU_CENTER[0], lng: AU_CENTER[1]}) || MAP.setZoom(AU_ZOOM);
+document.getElementById("fitToData").onclick = () => {
+  const bounds = new google.maps.LatLngBounds();
+  if (!CURRENT_MARKERS.length) return;
+  CURRENT_MARKERS.forEach(m => bounds.extend(m.getPosition()));
+  MAP.fitBounds(bounds, 40);
+};
+
+// --- Init everything ---
+(async function main() {
+  // Load Google Maps using API key from ?key= query param
+  const params = new URLSearchParams(location.search);
+  const apiKey = params.get('key');
+  const apiOverride = params.get('api');
+  if (apiOverride) CONFIG.jsonUrl = apiOverride;
+  if (!apiKey) {
+    document.getElementById('map').innerHTML = '<div style="padding:16px">Missing Google Maps API key (?key=...)</div>';
+    return;
+  }
+  await new Promise((resolve) => {
+    const s = document.createElement('script');
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+    s.async = true; s.defer = true; s.onload = resolve; document.head.appendChild(s);
+  });
+  initMap();
+  renderChips();
+  renderLegend();
+  await loadData();
+  applyFiltersAndRender();
+})();
+</script>
+</body>
+</html>

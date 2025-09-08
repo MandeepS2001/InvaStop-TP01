@@ -1,0 +1,117 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "STATE_NAME": "New South Wales"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [141.0, -28.0],
+          [153.5, -28.0],
+          [153.5, -37.5],
+          [141.0, -37.5],
+          [141.0, -28.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "STATE_NAME": "Victoria"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [141.0, -34.0],
+          [150.0, -34.0],
+          [150.0, -39.0],
+          [141.0, -39.0],
+          [141.0, -34.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "STATE_NAME": "Queensland"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [138.0, -10.7],
+          [153.5, -10.7],
+          [153.5, -29.0],
+          [138.0, -29.0],
+          [138.0, -10.7]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "STATE_NAME": "Western Australia"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [113.5, -14.0],
+          [129.0, -14.0],
+          [129.0, -35.0],
+          [113.5, -35.0],
+          [113.5, -14.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "STATE_NAME": "South Australia"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [129.0, -26.0],
+          [141.0, -26.0],
+          [141.0, -38.0],
+          [129.0, -38.0],
+          [129.0, -26.0]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "STATE_NAME": "Tasmania"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [144.5, -40.5],
+          [148.5, -40.5],
+          [148.5, -43.7],
+          [144.5, -43.7],
+          [144.5, -40.5]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "STATE_NAME": "Northern Territory"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [129.0, -11.0],
+          [138.0, -11.0],
+          [138.0, -26.0],
+          [129.0, -26.0],
+          [129.0, -11.0]
+        ]]
+      }
+    }
+  ]
+}

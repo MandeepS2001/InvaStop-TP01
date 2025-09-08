@@ -1,0 +1,250 @@
+{
+  "groupData": [
+    {
+      "group": "Plants",
+      "count": 169,
+      "share": 47.61
+    },
+    {
+      "group": "Birds",
+      "count": 69,
+      "share": 19.44
+    },
+    {
+      "group": "Mammals",
+      "count": 64,
+      "share": 18.03
+    },
+    {
+      "group": "Reptiles",
+      "count": 24,
+      "share": 6.76
+    },
+    {
+      "group": "Invertebrates",
+      "count": 22,
+      "share": 6.2
+    },
+    {
+      "group": "Frogs",
+      "count": 4,
+      "share": 1.13
+    },
+    {
+      "group": "Fish",
+      "count": 3,
+      "share": 0.85
+    }
+  ],
+  "speciesGroupData": [
+    {
+      "species": "Red Fox",
+      "group": "Birds",
+      "count": 30,
+      "share": 31.25
+    },
+    {
+      "species": "Red Fox",
+      "group": "Mammals",
+      "count": 52,
+      "share": 54.17
+    },
+    {
+      "species": "Red Fox",
+      "group": "Frogs",
+      "count": 4,
+      "share": 4.17
+    },
+    {
+      "species": "Red Fox",
+      "group": "Reptiles",
+      "count": 10,
+      "share": 10.42
+    },
+    {
+      "species": "European Rabbit",
+      "group": "Birds",
+      "count": 22,
+      "share": 16.92
+    },
+    {
+      "species": "European Rabbit",
+      "group": "Plants",
+      "count": 102,
+      "share": 78.46
+    },
+    {
+      "species": "European Rabbit",
+      "group": "Reptiles",
+      "count": 4,
+      "share": 3.08
+    },
+    {
+      "species": "European Rabbit",
+      "group": "Mammals",
+      "count": 2,
+      "share": 1.54
+    },
+    {
+      "species": "Feral Pig",
+      "group": "Mammals",
+      "count": 2,
+      "share": 2.86
+    },
+    {
+      "species": "Feral Pig",
+      "group": "Plants",
+      "count": 44,
+      "share": 62.86
+    },
+    {
+      "species": "Feral Pig",
+      "group": "Invertebrates",
+      "count": 10,
+      "share": 14.29
+    },
+    {
+      "species": "Feral Pig",
+      "group": "Reptiles",
+      "count": 3,
+      "share": 4.29
+    },
+    {
+      "species": "Feral Pig",
+      "group": "Birds",
+      "count": 10,
+      "share": 14.29
+    },
+    {
+      "species": "Feral Pig",
+      "group": "Fish",
+      "count": 1,
+      "share": 1.43
+    },
+    {
+      "species": "Lantana",
+      "group": "Invertebrates",
+      "count": 6,
+      "share": 23.08
+    },
+    {
+      "species": "Lantana",
+      "group": "Mammals",
+      "count": 1,
+      "share": 3.85
+    },
+    {
+      "species": "Lantana",
+      "group": "Plants",
+      "count": 17,
+      "share": 65.38
+    },
+    {
+      "species": "Lantana",
+      "group": "Birds",
+      "count": 1,
+      "share": 3.85
+    },
+    {
+      "species": "Lantana",
+      "group": "Reptiles",
+      "count": 1,
+      "share": 3.85
+    },
+    {
+      "species": "Gamba Grass",
+      "group": "Plants",
+      "count": 1,
+      "share": 50
+    },
+    {
+      "species": "Gamba Grass",
+      "group": "Birds",
+      "count": 1,
+      "share": 50
+    },
+    {
+      "species": "Cane Toad",
+      "group": "Invertebrates",
+      "count": 2,
+      "share": 15.38
+    },
+    {
+      "species": "Cane Toad",
+      "group": "Mammals",
+      "count": 6,
+      "share": 46.15
+    },
+    {
+      "species": "Cane Toad",
+      "group": "Reptiles",
+      "count": 3,
+      "share": 23.08
+    },
+    {
+      "species": "Cane Toad",
+      "group": "Fish",
+      "count": 2,
+      "share": 15.38
+    },
+    {
+      "species": "Buffel Grass",
+      "group": "Invertebrates",
+      "count": 4,
+      "share": 26.67
+    },
+    {
+      "species": "Buffel Grass",
+      "group": "Birds",
+      "count": 3,
+      "share": 20
+    },
+    {
+      "species": "Buffel Grass",
+      "group": "Mammals",
+      "count": 1,
+      "share": 6.67
+    },
+    {
+      "species": "Buffel Grass",
+      "group": "Reptiles",
+      "count": 3,
+      "share": 20
+    },
+    {
+      "species": "Buffel Grass",
+      "group": "Plants",
+      "count": 4,
+      "share": 26.67
+    },
+    {
+      "species": "Gorse",
+      "group": "Plants",
+      "count": 1,
+      "share": 100
+    },
+    {
+      "species": "Common Myna",
+      "group": "Birds",
+      "count": 1,
+      "share": 100
+    },
+    {
+      "species": "Bitou Bush",
+      "group": "Birds",
+      "count": 1,
+      "share": 100
+    }
+  ],
+  "topSpecies": [
+    "Bitou Bush",
+    "European Rabbit",
+    "Red Fox",
+    "Feral Pig",
+    "Lantana",
+    "Gamba Grass",
+    "Cane Toad",
+    "Gorse",
+    "Common Myna"
+  ]
+}
