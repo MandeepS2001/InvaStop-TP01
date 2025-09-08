@@ -85,6 +85,7 @@ const InteractiveMap: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<StateMeta | null>(null);
   const [currentSpeciesIndex, setCurrentSpeciesIndex] = useState(0);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
 
   // Fetch real state data from Epic 1.0 API
   useEffect(() => {
@@ -142,11 +143,12 @@ const InteractiveMap: React.FC = () => {
     libraries: libraries,
   });
 
-  const onLoad = useCallback((map: google.maps.Map) => {
+  const onLoad = useCallback((mapInstance: google.maps.Map) => {
     console.log('Map loaded successfully');
+    setMap(mapInstance);
     
     // Add click listener to the map
-    map.addListener('click', (event: google.maps.MapMouseEvent) => {
+    mapInstance.addListener('click', (event: google.maps.MapMouseEvent) => {
       const clickedLat = event.latLng!.lat();
       const clickedLng = event.latLng!.lng();
       
@@ -326,7 +328,7 @@ const InteractiveMap: React.FC = () => {
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
               center={center}
-              zoom={4}
+              zoom={4.5}
               onLoad={onLoad}
               options={{
                 zoomControl: true,
@@ -369,26 +371,18 @@ const InteractiveMap: React.FC = () => {
                     setInfoWindow(null);
                     setSelectedState(null);
                     setCurrentSpeciesIndex(0);
+                    // Zoom back out to original view
+                    if (map) {
+                      map.setZoom(5);
+                      map.panTo(center);
+                    }
                   }}
                 >
                   <div className="p-3 sm:p-4 max-w-xs sm:max-w-md bg-white rounded-lg" style={{ minHeight: '400px', maxHeight: '500px' }}>
                     {/* Header Row - State and Species Counter */}
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-2">
-                        <h5 className="font-semibold text-gray-800 text-xs sm:text-sm">{infoWindow.featureName}</h5>
-                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${
-                          selected.risk === 'high' 
-                            ? 'bg-red-100 text-red-800' 
-                            : selected.risk === 'moderate'
-                            ? 'bg-orange-100 text-orange-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {selected.risk === 'high' ? 'MANY PROBLEMS' : selected.risk === 'moderate' ? 'SOME PROBLEMS' : 'FEW PROBLEMS'}
-                        </span>
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        {currentSpeciesIndex + 1}/{selected.species.length}
-                      </span>
+                      <h5 className="font-semibold text-gray-800 text-xs sm:text-sm">{infoWindow.featureName}</h5>
+                      <span className="text-xs text-gray-500">{currentSpeciesIndex + 1}/{selected.species.length}</span>
                     </div>
                     
                     {/* Species Image with Navigation */}
@@ -459,26 +453,22 @@ const InteractiveMap: React.FC = () => {
                         {getScientificName(selected.species[currentSpeciesIndex].name)}
                       </p>
                       
-                      {/* Risk Indicators Row */}
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        <span className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
-                          selected.species[currentSpeciesIndex].impact === 'High' 
-                            ? 'bg-red-100 text-red-800' 
-                            : selected.species[currentSpeciesIndex].impact === 'Moderate'
-                            ? 'bg-orange-100 text-orange-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          Harm: {selected.species[currentSpeciesIndex].impact === 'High' ? 'High' : selected.species[currentSpeciesIndex].impact === 'Moderate' ? 'Medium' : 'Low'}
-                        </span>
-                        <span className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
-                          selected.species[currentSpeciesIndex].spread === 'High' 
-                            ? 'bg-red-100 text-red-800' 
-                            : selected.species[currentSpeciesIndex].spread === 'Moderate'
-                            ? 'bg-orange-100 text-orange-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          Spread: {selected.species[currentSpeciesIndex].spread === 'High' ? 'Fast' : selected.species[currentSpeciesIndex].spread === 'Moderate' ? 'Medium' : 'Slow'}
-                        </span>
+                      {/* Risk Indicators Row as bars */}
+                      <div className="space-y-2 mb-3">
+                        {/* Harm Bar */}
+                        <div>
+                          <div className="flex justify-between text-[10px] text-gray-600 mb-1"><span>Harm</span><span>{selected.species[currentSpeciesIndex].impact}</span></div>
+                          <div className="h-2 w-full bg-gray-200 rounded">
+                            <div className={`${selected.species[currentSpeciesIndex].impact==='High' ? 'bg-red-500 w-full' : selected.species[currentSpeciesIndex].impact==='Moderate' ? 'bg-orange-400 w-2/3' : 'bg-yellow-400 w-1/3'} h-2 rounded`}></div>
+                          </div>
+                        </div>
+                        {/* Spread Bar */}
+                        <div>
+                          <div className="flex justify-between text-[10px] text-gray-600 mb-1"><span>Spread</span><span>{selected.species[currentSpeciesIndex].spread}</span></div>
+                          <div className="h-2 w-full bg-gray-200 rounded">
+                            <div className={`${selected.species[currentSpeciesIndex].spread==='High' ? 'bg-red-500 w-full' : selected.species[currentSpeciesIndex].spread==='Moderate' ? 'bg-orange-400 w-2/3' : 'bg-yellow-400 w-1/3'} h-2 rounded`}></div>
+                          </div>
+                        </div>
                       </div>
                       
                     </div>
@@ -496,14 +486,7 @@ const InteractiveMap: React.FC = () => {
                       >
                         Learn More
                       </button>
-                      <button
-                        onClick={() => {
-                          // Add to favorites or report functionality
-                        }}
-                        className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm"
-                      >
-                        ⭐
-                      </button>
+                      {/* Removed star button */}
                     </div>
                   </div>
                 </InfoWindow>

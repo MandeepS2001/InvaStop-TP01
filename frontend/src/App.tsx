@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import EducationPage from './pages/EducationPage';
 import SpeciesDetailPage from './pages/SpeciesDetailPage';
 import MapPage from './pages/MapPage';
+import DidYouKnowPage from './pages/DidYouKnowPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="species/:speciesName" element={<SpeciesDetailPage />} />
         <Route path="species-detail/:speciesName" element={<SpeciesDetailPage />} />
         <Route path="map" element={<MapPage />} />
+        <Route path="insights" element={<DidYouKnowPage />} />
         <Route path="more" element={<div>More Page - Coming Soon</div>} />
       </Route>
     </Routes>

@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, AlertTriangle, Shield, Target, MapPin, Calendar, Leaf, Zap } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, Shield, Target, MapPin, Calendar, Leaf, Zap, Info, Wrench, TrendingUp, Search, Eye } from 'lucide-react';
+
+// Utility function to scroll to top
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 interface SpeciesDetail {
   name: string;
@@ -32,11 +37,37 @@ const SpeciesDetailPage: React.FC = () => {
   const [species, setSpecies] = useState<SpeciesDetail | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hoveredElement, setHoveredElement] = useState<string | null>(null);
+  const parallaxRef = useRef<HTMLDivElement>(null);
   
   // Check if user came from map or species profile page
   const urlParams = new URLSearchParams(window.location.search);
   const fromPage = urlParams.get('from');
   console.log('SpeciesDetailPage - fromPage:', fromPage, 'URL:', window.location.href);
+
+  // Parallax scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (parallaxRef.current) {
+        const scrolled = window.pageYOffset;
+        const parallaxElements = parallaxRef.current.querySelectorAll('.parallax-element');
+        parallaxElements.forEach((element, index) => {
+          const speed = 0.3 + (index * 0.1);
+          (element as HTMLElement).style.transform = `translateY(${scrolled * speed}px)`;
+        });
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Simulate loading
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Get species image - same function as in InteractiveMap
   const getSpeciesImage = (speciesName: string) => {
@@ -572,11 +603,11 @@ const SpeciesDetailPage: React.FC = () => {
   }
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: Leaf },
-    { id: 'control', label: 'Control Methods', icon: Target },
-    { id: 'impact', label: 'Impact', icon: AlertTriangle },
-    { id: 'identification', label: 'Identification', icon: Shield },
-    { id: 'prevention', label: 'Prevention', icon: Zap }
+    { id: 'overview', label: 'Overview', icon: Info },
+    { id: 'control', label: 'Prevention Tips', icon: Wrench },
+    { id: 'impact', label: 'Impact', icon: TrendingUp },
+    { id: 'identification', label: 'Identification', icon: Search },
+    { id: 'prevention', label: 'Prevention', icon: Shield }
   ];
 
   return (
@@ -586,20 +617,40 @@ const SpeciesDetailPage: React.FC = () => {
         <div className="px-3 sm:px-4 lg:px-6">
           <div className="flex justify-between items-center h-24">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3">
+            <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3">
               <img src="/Invastop-Logo.png" alt="InvaStop" className="h-16 w-16 sm:h-24 sm:w-24 md:h-40 md:w-40 lg:h-60 lg:w-60 object-contain" />
             </Link>
 
             {/* Navigation */}
-            <nav className="hidden md:flex space-x-8">
-              <Link to="/" className="text-white hover:text-green-200 transition-colors">
+            <nav className="hidden md:flex items-center space-x-2">
+              <Link 
+                to="/" 
+                onClick={scrollToTop}
+                className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30"
+              >
                 Home
               </Link>
-              <Link to="/map" className="text-white hover:text-green-200 transition-colors">
-                Map
-              </Link>
-              <Link to="/education" className="text-white hover:text-green-200 transition-colors">
+              <Link 
+                to="/education" 
+                onClick={scrollToTop}
+                className={`px-4 py-2 text-white rounded-md transition-all duration-200 font-medium ${
+                  fromPage === 'education' 
+                    ? 'bg-green-600/60 border-green-500 shadow-md' 
+                    : 'hover:text-gray-200 hover:bg-gray-700/50 border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30'
+                }`}
+              >
                 Species Profile
+              </Link>
+              <Link 
+                to="/map" 
+                onClick={scrollToTop}
+                className={`px-4 py-2 text-white rounded-md transition-all duration-200 font-medium ${
+                  fromPage === 'map' 
+                    ? 'bg-green-600/60 border-green-500 shadow-md' 
+                    : 'hover:text-gray-200 hover:bg-gray-700/50 border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30'
+                }`}
+              >
+                Map
               </Link>
             </nav>
 
@@ -618,27 +669,44 @@ const SpeciesDetailPage: React.FC = () => {
         {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-green-700 border-t border-green-600">
-            <div className="px-4 py-2 space-y-1">
+            <div className="px-4 py-3 space-y-2">
               <Link 
                 to="/" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-3 text-white hover:text-gray-200 hover:bg-gray-600/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 shadow-sm bg-gray-800/30"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToTop();
+                }}
               >
                 Home
               </Link>
               <Link 
-                to="/map" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Map
-              </Link>
-              <Link 
                 to="/education" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
+                className={`block px-4 py-3 text-white rounded-md transition-all duration-200 font-medium ${
+                  fromPage === 'education' 
+                    ? 'bg-green-600/60 border border-green-500 shadow-md' 
+                    : 'hover:text-gray-200 hover:bg-gray-600/50 border border-gray-600 hover:border-gray-500 shadow-sm bg-gray-800/30'
+                }`}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToTop();
+                }}
               >
                 Species Profile
+              </Link>
+              <Link 
+                to="/map" 
+                className={`block px-4 py-3 text-white rounded-md transition-all duration-200 font-medium ${
+                  fromPage === 'map' 
+                    ? 'bg-green-600/60 border border-green-500 shadow-md' 
+                    : 'hover:text-gray-200 hover:bg-gray-600/50 border border-gray-600 hover:border-gray-500 shadow-sm bg-gray-800/30'
+                }`}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToTop();
+                }}
+              >
+                Map
               </Link>
             </div>
           </div>
@@ -647,36 +715,93 @@ const SpeciesDetailPage: React.FC = () => {
 
       {/* Page Content */}
       <div className="pt-24">
-        {/* Back Button Header */}
-        <div className="bg-white shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between py-3 sm:py-4">
-              <button
-                onClick={() => {
-                  console.log('Back button clicked, fromPage:', fromPage);
-                  if (fromPage === 'map') {
-                    console.log('Navigating to /map');
-                    navigate('/map');
-                  } else {
-                    console.log('Navigating to /education');
-                    navigate('/education');
-                  }
+        {/* Enhanced Back Button Header */}
+        <div className="relative bg-gradient-to-r from-green-800 via-green-700 to-green-900 text-white py-8 sm:py-12 overflow-hidden">
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400/10 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-green-300/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-500/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+            
+            {/* Floating Particles */}
+            {[...Array(12)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-1 bg-green-300/30 rounded-full animate-float"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 5}s`,
+                  animationDuration: `${3 + Math.random() * 4}s`
                 }}
-                className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors text-sm sm:text-base"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                <span>{fromPage === 'map' ? 'Back to Map' : 'Check out more species'}</span>
-              </button>
-              <h1 className="text-lg sm:text-2xl font-bold text-gray-900">{species.name}</h1>
-              <div className="w-6 sm:w-20"></div>
+              ></div>
+            ))}
+          </div>
+          
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center">
+              <div className="text-center">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+                  <span className="inline-block">
+                    {species.name}
+                  </span>
+                </h1>
+                <p className="text-green-100 text-sm sm:text-base italic">
+                  {species.scientificName}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Species Header Card */}
-        <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 mb-6 sm:mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+      <div ref={parallaxRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {isLoading ? (
+          // Skeleton Loading State
+          <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 sm:p-8 mb-6 sm:mb-8 animate-pulse">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+              <div className="space-y-4">
+                <div className="h-8 bg-gray-300 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+                <div className="h-48 bg-gray-300 rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Enhanced Species Header Card */
+          <div className="relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-6 sm:p-8 mb-6 sm:mb-8 overflow-hidden">
+            {/* Floating particles around the card */}
+            <div className="absolute inset-0 overflow-hidden rounded-2xl">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={`particle-${i}`}
+                  className="absolute w-1 h-1 bg-green-400/30 rounded-full animate-float parallax-element"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 3}s`,
+                    animationDuration: `${2 + Math.random() * 2}s`
+                  }}
+                ></div>
+              ))}
+            </div>
+            
+            <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {/* Left Column - Basic Info */}
             <div className="space-y-4">
               <div>
@@ -700,43 +825,66 @@ const SpeciesDetailPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Middle Column - Risk Assessment */}
+            {/* Middle Column - Enhanced Risk Assessment */}
             <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Risk Assessment</h3>
-              <div className="space-y-2 sm:space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Impact Level:</span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    species.impact === 'High' ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800'
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+                <AlertTriangle className="w-5 h-5 text-orange-500" />
+                <span>How Much of a Problem?</span>
+              </h3>
+              <div className="space-y-3 sm:space-y-4">
+                <div 
+                  className="group flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-gray-100 hover:to-gray-200 transition-all duration-300 cursor-pointer"
+                  onMouseEnter={() => setHoveredElement('impact')}
+                  onMouseLeave={() => setHoveredElement(null)}
+                >
+                  <span className="text-sm text-gray-600 font-medium">How much damage does it cause:</span>
+                  <span className={`px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all duration-300 transform group-hover:scale-105 ${
+                    species.impact === 'High' 
+                      ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/30' 
+                      : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-orange-500/30'
                   }`}>
                     {species.impact}
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Spread Likelihood:</span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    species.spread === 'High' ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800'
+                <div 
+                  className="group flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-gray-100 hover:to-gray-200 transition-all duration-300 cursor-pointer"
+                  onMouseEnter={() => setHoveredElement('spread')}
+                  onMouseLeave={() => setHoveredElement(null)}
+                >
+                  <span className="text-sm text-gray-600 font-medium">How fast does it spread:</span>
+                  <span className={`px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all duration-300 transform group-hover:scale-105 ${
+                    species.spread === 'High' 
+                      ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/30' 
+                      : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-orange-500/30'
                   }`}>
                     {species.spread}
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Overall Risk:</span>
-                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                    {species.risk.toUpperCase()}
+                <div 
+                  className="group flex items-center justify-between p-3 bg-gradient-to-r from-red-50 to-red-100 rounded-xl hover:from-red-100 hover:to-red-200 transition-all duration-300 cursor-pointer"
+                  onMouseEnter={() => setHoveredElement('risk')}
+                  onMouseLeave={() => setHoveredElement(null)}
+                >
+                  <span className="text-sm text-gray-600 font-medium">Overall threat level:</span>
+                  <span className="px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/30 transition-all duration-300 transform group-hover:scale-105">
+                    {species.risk}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Image Column */}
+            {/* Enhanced Image Column */}
             <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Species Image</h3>
-                <div className="relative">
+              <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+                <Eye className="w-5 h-5 text-blue-500" />
+                <span>Species Image</span>
+              </h3>
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-xl blur-sm group-hover:blur-md transition-all duration-500"></div>
                 <img 
                   src={getSpeciesImage(species.name)}
                   alt={species.name}
-                  className="w-full h-40 sm:h-48 object-cover rounded-lg shadow-sm"
+                  className="relative w-full h-48 sm:h-64 lg:h-72 object-cover rounded-xl shadow-lg group-hover:shadow-2xl transition-all duration-500 transform group-hover:scale-105"
                   onError={(e) => {
                     // If the image fails to load, use the SVG fallback
                     const svgFallback = `data:image/svg+xml;base64,${btoa(`
@@ -749,30 +897,57 @@ const SpeciesDetailPage: React.FC = () => {
                     e.currentTarget.src = svgFallback;
                   }}
                 />
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-xl transition-all duration-300 flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
+                      <Eye className="w-6 h-6 text-gray-700" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow-sm border mb-6">
-          <div className="border-b border-gray-200">
-            <nav className="flex overflow-x-auto no-scrollbar space-x-4 sm:space-x-8 px-3 sm:px-6">
+        {/* Enhanced Tab Navigation */}
+        <div className="relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 mb-6 overflow-hidden">
+          {/* Floating particles around tabs */}
+          <div className="absolute inset-0 overflow-hidden rounded-2xl">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={`tab-particle-${i}`}
+                className="absolute w-1 h-1 bg-green-400/20 rounded-full animate-float parallax-element"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 3}s`,
+                  animationDuration: `${2 + Math.random() * 2}s`
+                }}
+              ></div>
+            ))}
+          </div>
+          
+          <div className="relative z-10 border-b border-gray-200/50">
+            <nav className="flex overflow-x-auto no-scrollbar space-x-2 sm:space-x-4 px-3 sm:px-6">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-2 whitespace-nowrap ${
+                    className={`group py-3 sm:py-4 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-2 whitespace-nowrap transition-all duration-300 rounded-t-xl ${
                       activeTab === tab.id
-                        ? 'border-green-500 text-green-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        ? 'border-green-500 text-green-600 bg-gradient-to-b from-green-50 to-green-100 shadow-lg shadow-green-500/20'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gradient-to-b hover:from-gray-50 hover:to-gray-100 hover:shadow-md'
                     }`}
                   >
-                    <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span>{tab.label}</span>
+                    <Icon className={`w-3 h-3 sm:w-4 sm:h-4 transition-all duration-300 ${
+                      activeTab === tab.id ? 'text-green-600' : 'text-gray-400 group-hover:text-gray-600'
+                    }`} />
+                    <span className="transition-all duration-300">{tab.label}</span>
                   </button>
                 );
               })}
@@ -783,27 +958,42 @@ const SpeciesDetailPage: React.FC = () => {
           <div className="p-4 sm:p-6">
             {activeTab === 'overview' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Description</h3>
-                  <p className="text-gray-700 leading-relaxed">{species.description}</p>
-              </div>
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-100 shadow-sm">
+                  <h3 className="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                    <Info className="w-5 h-5 mr-2 text-blue-600" />
+                    Description
+                  </h3>
+                  <p className="text-gray-800 leading-relaxed font-medium bg-white p-4 rounded-lg shadow-sm border border-blue-100">{species.description}</p>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="text-lg font-medium text-gray-900 mb-2">Habitat</h4>
-                    <p className="text-gray-700">{species.habitat}</p>
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <h4 className="text-lg font-bold text-green-800 mb-3 flex items-center">
+                      <MapPin className="w-4 h-4 mr-2 text-green-600" />
+                      Habitat
+                    </h4>
+                    <p className="text-gray-800 font-medium leading-relaxed bg-white p-3 rounded-lg shadow-sm border border-green-100">{species.habitat}</p>
                   </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-gray-900 mb-2">Seasonal Behavior</h4>
-                    <p className="text-gray-700">{species.seasonalBehavior}</p>
+                  <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-5 rounded-xl border border-orange-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <h4 className="text-lg font-bold text-orange-800 mb-3 flex items-center">
+                      <Calendar className="w-4 h-4 mr-2 text-orange-600" />
+                      Seasonal Behavior
+                    </h4>
+                    <p className="text-gray-800 font-medium leading-relaxed bg-white p-3 rounded-lg shadow-sm border border-orange-100">{species.seasonalBehavior}</p>
                   </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-gray-900 mb-2">Reproduction</h4>
-                    <p className="text-gray-700">{species.reproduction}</p>
-                    </div>
-                  <div>
-                    <h4 className="text-lg font-medium text-gray-900 mb-2">Distribution</h4>
-                    <p className="text-gray-700">{species.distribution}</p>
+                  <div className="bg-gradient-to-br from-purple-50 to-violet-50 p-5 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <h4 className="text-lg font-bold text-purple-800 mb-3 flex items-center">
+                      <Leaf className="w-4 h-4 mr-2 text-purple-600" />
+                      Reproduction
+                    </h4>
+                    <p className="text-gray-800 font-medium leading-relaxed bg-white p-3 rounded-lg shadow-sm border border-purple-100">{species.reproduction}</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-teal-50 to-cyan-50 p-5 rounded-xl border border-teal-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <h4 className="text-lg font-bold text-teal-800 mb-3 flex items-center">
+                      <Target className="w-4 h-4 mr-2 text-teal-600" />
+                      Distribution
+                    </h4>
+                    <p className="text-gray-800 font-medium leading-relaxed bg-white p-3 rounded-lg shadow-sm border border-teal-100">{species.distribution}</p>
                   </div>
                 </div>
               </div>
@@ -811,29 +1001,37 @@ const SpeciesDetailPage: React.FC = () => {
 
             {activeTab === 'control' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Control Methods</h3>
-                  <div className="space-y-4">
-                    {species.controlMethods.map((method, index) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <div className="flex-shrink-0 w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-medium">
-                          {index + 1}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-100 shadow-sm">
+                    <h3 className="text-xl font-bold text-green-800 mb-4 flex items-center">
+                      <Wrench className="w-5 h-5 mr-2 text-green-600" />
+                      Prevention Tips
+                    </h3>
+                    <div className="space-y-4">
+                      {species.controlMethods.map((method, index) => (
+                        <div key={index} className="flex items-start space-x-3 p-3 bg-white rounded-lg shadow-sm border border-green-100 hover:shadow-md transition-shadow duration-200">
+                          <div className="flex-shrink-0 w-7 h-7 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm">
+                            {index + 1}
+                          </div>
+                          <p className="text-gray-800 font-medium leading-relaxed">{method}</p>
                         </div>
-                        <p className="text-gray-700">{method}</p>
-                      </div>
-                    ))}
-            </div>
-          </div>
-                
-                <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-2">Management Strategies</h4>
-                  <div className="space-y-2">
-                    {species.managementStrategies.map((strategy, index) => (
-                      <div key={index} className="flex items-start space-x-2">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                        <p className="text-gray-700">{strategy}</p>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100 shadow-sm">
+                    <h3 className="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                      <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+                      Management Strategies
+                    </h3>
+                    <div className="space-y-3">
+                      {species.managementStrategies.map((strategy, index) => (
+                        <div key={index} className="flex items-start space-x-3 p-3 bg-white rounded-lg shadow-sm border border-blue-100 hover:shadow-md transition-shadow duration-200">
+                          <div className="w-3 h-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mt-2 flex-shrink-0 shadow-sm"></div>
+                          <p className="text-gray-800 font-medium leading-relaxed">{strategy}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -841,71 +1039,132 @@ const SpeciesDetailPage: React.FC = () => {
 
             {activeTab === 'impact' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Economic Impact</h3>
-                  <p className="text-gray-700 leading-relaxed">{species.economicImpact}</p>
+                <div className="bg-gradient-to-br from-red-50 to-rose-50 p-6 rounded-xl border border-red-100 shadow-sm">
+                  <h3 className="text-xl font-bold text-red-800 mb-4 flex items-center">
+                    <TrendingUp className="w-5 h-5 mr-2 text-red-600" />
+                    Economic Impact
+                  </h3>
+                  <p className="text-gray-800 leading-relaxed font-medium bg-white p-4 rounded-lg shadow-sm border border-red-100">{species.economicImpact}</p>
                 </div>
                 
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Ecological Impact</h3>
-                  <p className="text-gray-700 leading-relaxed">{species.ecologicalImpact}</p>
+                <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-6 rounded-xl border border-orange-100 shadow-sm">
+                  <h3 className="text-xl font-bold text-orange-800 mb-4 flex items-center">
+                    <AlertTriangle className="w-5 h-5 mr-2 text-orange-600" />
+                    Ecological Impact
+                  </h3>
+                  <p className="text-gray-800 leading-relaxed font-medium bg-white p-4 rounded-lg shadow-sm border border-orange-100">{species.ecologicalImpact}</p>
                 </div>
                 
-                <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-2">Legal Status</h4>
-                  <p className="text-gray-700">{species.legalStatus}</p>
+                <div className="bg-gradient-to-br from-purple-50 to-violet-50 p-5 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <h4 className="text-lg font-bold text-purple-800 mb-3 flex items-center">
+                    <Shield className="w-4 h-4 mr-2 text-purple-600" />
+                    Legal Status
+                  </h4>
+                  <p className="text-gray-800 font-medium leading-relaxed bg-white p-3 rounded-lg shadow-sm border border-purple-100">{species.legalStatus}</p>
                 </div>
               </div>
             )}
 
             {activeTab === 'identification' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Key Identification Features</h3>
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100 shadow-sm">
+                  <h3 className="text-xl font-bold text-blue-800 mb-4 flex items-center">
+                    <Search className="w-5 h-5 mr-2 text-blue-600" />
+                    Key Identification Features
+                  </h3>
                   <div className="space-y-3">
                     {species.identification.map((feature, index) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <div className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">
+                      <div key={index} className="flex items-start space-x-3 p-3 bg-white rounded-lg shadow-sm border border-blue-100 hover:shadow-md transition-shadow duration-200">
+                        <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm">
                           ✓
                         </div>
-                        <p className="text-gray-700">{feature}</p>
+                        <p className="text-gray-800 font-medium leading-relaxed">{feature}</p>
                       </div>
                     ))}
                   </div>
                 </div>
                 
-                <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-2">Reporting</h4>
-                  <p className="text-gray-700">{species.reporting}</p>
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <h4 className="text-lg font-bold text-green-800 mb-3 flex items-center">
+                    <AlertTriangle className="w-4 h-4 mr-2 text-green-600" />
+                    Reporting
+                  </h4>
+                  <p className="text-gray-800 font-medium leading-relaxed bg-white p-3 rounded-lg shadow-sm border border-green-100">{species.reporting}</p>
                 </div>
               </div>
             )}
 
             {activeTab === 'prevention' && (
               <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Prevention Tips</h3>
+                <div className="bg-gradient-to-br from-yellow-50 to-amber-50 p-6 rounded-xl border border-yellow-100 shadow-sm">
+                  <h3 className="text-xl font-bold text-yellow-800 mb-4 flex items-center">
+                    <Shield className="w-5 h-5 mr-2 text-yellow-600" />
+                    Prevention Tips
+                  </h3>
                   <div className="space-y-3">
                     {species.preventionTips.map((tip, index) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <div className="flex-shrink-0 w-6 h-6 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center text-sm font-medium">
+                      <div key={index} className="flex items-start space-x-3 p-3 bg-white rounded-lg shadow-sm border border-yellow-100 hover:shadow-md transition-shadow duration-200">
+                        <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-sm">
                           !
                         </div>
-                        <p className="text-gray-700">{tip}</p>
+                        <p className="text-gray-800 font-medium leading-relaxed">{tip}</p>
                       </div>
                     ))}
             </div>
           </div>
                 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="text-lg font-medium text-blue-900 mb-2">Remember</h4>
-                  <p className="text-blue-800 text-sm">
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 p-5 rounded-xl border border-blue-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <h4 className="text-lg font-bold text-blue-800 mb-3 flex items-center">
+                    <AlertTriangle className="w-4 h-4 mr-2 text-blue-600" />
+                    Remember
+                  </h4>
+                  <p className="text-gray-800 font-medium leading-relaxed bg-white p-3 rounded-lg shadow-sm border border-blue-100">
                     Early detection and rapid response are crucial for effective invasive species management. 
                     If you suspect you've found this species, report it immediately to your local authorities.
                   </p>
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      </div>
+
+      {/* Check out more species section */}
+      <div className="relative bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 py-12 sm:py-16 overflow-hidden">
+        {/* Parallax Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-green-200/20 rounded-full blur-3xl animate-parallax-up parallax-element"></div>
+          <div className="absolute bottom-10 right-10 w-80 h-80 bg-green-300/15 rounded-full blur-3xl animate-parallax-down parallax-element"></div>
+        </div>
+        
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            Explore More Invasive Species
+          </h2>
+          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            Discover other invasive species that might be affecting your area and learn how to identify and manage them.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link 
+              to="/education" 
+              onClick={scrollToTop}
+              className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-green-800 hover:from-green-500 hover:via-green-600 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 text-lg shadow-xl hover:shadow-2xl hover:shadow-green-500/30 transform hover:scale-105 border-2 border-green-500/20 hover:border-green-400/40"
+            >
+              <span className="mr-3 text-xl group-hover:rotate-12 transition-transform duration-300">🔍</span>
+              <span className="group-hover:tracking-wide transition-all duration-300">Browse All Species</span>
+              <span className="ml-3 text-lg group-hover:translate-x-2 transition-transform duration-300">→</span>
+            </Link>
+            
+            <Link
+              to="/map"
+              onClick={scrollToTop}
+              className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 hover:from-blue-500 hover:via-blue-600 hover:to-blue-700 text-white font-bold rounded-xl transition-all duration-300 text-lg shadow-xl hover:shadow-2xl hover:shadow-blue-500/30 transform hover:scale-105 border-2 border-blue-500/20 hover:border-blue-400/40"
+            >
+              <span className="mr-3 text-xl group-hover:rotate-12 transition-transform duration-300">🗺️</span>
+              <span className="group-hover:tracking-wide transition-all duration-300">View on Map</span>
+              <span className="ml-3 text-lg group-hover:translate-x-2 transition-transform duration-300">→</span>
+            </Link>
           </div>
         </div>
       </div>
