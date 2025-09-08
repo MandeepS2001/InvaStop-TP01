@@ -403,16 +403,25 @@ const InteractiveMap: React.FC = () => {
             {/* State-specific species icons - Always visible */}
             {isLoaded && stateClickAreas.map((state) => {
               const stateIcon = stateSpeciesIcons[state.name];
-              console.log(`Rendering marker for ${state.name}:`, state.center, stateIcon);
               if (!stateIcon) return null;
               
               return (
                 <Marker
                   key={state.name}
                   position={state.center}
+                  icon={{
+                    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+                      <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="25" cy="25" r="22" fill="white" stroke="#10b981" stroke-width="3"/>
+                        <circle cx="25" cy="25" r="20" fill="#f0fdf4"/>
+                        <text x="25" y="32" font-family="Arial, sans-serif" font-size="24" text-anchor="middle">${stateIcon.icon}</text>
+                      </svg>
+                    `)}`,
+                    scaledSize: new google.maps.Size(50, 50),
+                    anchor: new google.maps.Point(25, 25)
+                  }}
                   title={`${state.name}: ${stateIcon.species} (${stateIcon.type})`}
                   onClick={() => {
-                    console.log(`Clicked marker for ${state.name}`);
                     if (stateMeta[state.name]) {
                       setSelectedState(stateMeta[state.name]);
                       setCurrentSpeciesIndex(0);
