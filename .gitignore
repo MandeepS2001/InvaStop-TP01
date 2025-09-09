@@ -188,3 +188,4 @@ AI/detect/*
 AI/__pycache__/*
 AI/raw/*
 AI/*.pt
+test_dataset/*

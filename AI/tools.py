@@ -7,7 +7,25 @@ from tqdm import tqdm
 
 DEFAULT_DATASET = 'raw'
 
-def downloadImage(category, *urls, dataset:str=DEFAULT_DATASET):
+## internal functions
+def __convert(x1:float, y1:float, x2:float, y2:float, w:int, h:int) -> tuple:
+    """
+    Convert (x1, y1, x2, y2) to (x_center, y_center, width, height)
+    """
+    if x1 > x2:
+        x1, x2 = x2, x1
+    if y1 > y2:
+        y1, y2 = y2, y1
+    width = x2 - x1
+    height = y2 - y1
+    x_center = (x1 + width / 2)/w
+    y_center = (y1 + height / 2)/h
+    width /= w
+    height /= h
+    return x_center, y_center, width, height
+
+## exported functions
+def downloadImage(category, *urls, file:str=None, dataset:str=DEFAULT_DATASET):
     """
     Download an image, change its name to its category, save it.
     """
@@ -21,12 +39,17 @@ def downloadImage(category, *urls, dataset:str=DEFAULT_DATASET):
                 num = int(name.split('_')[-1].split('.')[0])
                 if num >= next_num:
                     next_num = num + 1
+
+    # If a file is given, read urls from it
+    if file is not None and os.path.exists(file):
+        with open(file, 'r', encoding='utf-8') as f:
+            urls = [line.strip() for line in f.readlines() if line.strip().startswith('http')]
     
     # Download the image first as now its extension is unknown
     # Flow download
     for no in range(len(urls)):
         url = urls[no]
-        print(f"正在下载第 {no+1} 张图片: {url}")
+        print(f"Downloading image[{no+1}] : {url}")
 
         with rq.get(url, stream=True) as resp:
             # Check if the response is ok
@@ -41,7 +64,7 @@ def downloadImage(category, *urls, dataset:str=DEFAULT_DATASET):
             elif 1024**2 <= chunk_size < 1024**3:
                 chunk_size /= 1024**2
                 unit = "MB"
-            print(f"文件总大小: {chunk_size:.2f} {unit}")
+            print(f"Total file size: {chunk_size:.2f} {unit}")
 
             # Download with progress bar
             raw_filename = os.path.join(dataset, url.split("/")[-1])
@@ -60,7 +83,7 @@ def downloadImage(category, *urls, dataset:str=DEFAULT_DATASET):
             ext = raw_filename.split('.')[-1]
             filename = os.path.join(dataset, f"{category}_{next_num}.{ext}")
             os.rename(raw_filename, filename)
-            print(f"[{no+1}] 已保存至 {filename}\n-----------\n")
+            print(f"Image[{no+1}] has been saved as {filename}\n-----------\n")
 
             # Update the number
             next_num += 1
@@ -84,22 +107,6 @@ def removeImageData(dataset:str=DEFAULT_DATASET):
                 with open(json_path, 'w', encoding="utf-8") as f:
                     json.dump(data, f)
                 print(f"Removed imageData in {json_path}.")
-
-def __convert(x1:float, y1:float, x2:float, y2:float, w:int, h:int) -> tuple:
-    """
-    Convert (x1, y1, x2, y2) to (x_center, y_center, width, height)
-    """
-    if x1 > x2:
-        x1, x2 = x2, x1
-    if y1 > y2:
-        y1, y2 = y2, y1
-    width = x2 - x1
-    height = y2 - y1
-    x_center = (x1 + width / 2)/w
-    y_center = (y1 + height / 2)/h
-    width /= w
-    height /= h
-    return x_center, y_center, width, height
 
 def buildNDJson(dataset:str=DEFAULT_DATASET, update_file:str=None):
     """
@@ -175,13 +182,10 @@ def buildNDJson(dataset:str=DEFAULT_DATASET, update_file:str=None):
                 # Update this label to labels
                 # It is ensured that there is at most one shape in each json file
                 shapes = data.get("shapes", [{}])
-                label = shapes[0].get("label", "undefined")
-                if label not in labels:
-                    labels.append(label)
 
-                # Change x1, y1, x2, y2 to x_center, y_center, width, height
-                points = shapes[0].get("points")
-                x_center, y_center, width, height = __convert(*points[0], *points[1], data["imageWidth"], data["imageHeight"])
+                # Extend new labels to array `labels`.
+                new_labels = [l.get("label") for l in shapes if l.get("label") not in labels]
+                labels.extend(new_labels)
 
                 # Build an ndjson row
                 entry = {
@@ -192,9 +196,13 @@ def buildNDJson(dataset:str=DEFAULT_DATASET, update_file:str=None):
                     "height": data.get("imageHeight", 0),
                     "annotations": {
                         "boxes": [[
-                            labels.index(label), # category id
-                            x_center, y_center, width, height
-                        ]]
+                            labels.index(s.get("label")),
+                            *__convert(
+                                *s.get("points")[0], # x1, y1
+                                *s.get("points")[1], # x2, y2
+                                data["imageWidth"], data["imageHeight"]
+                            ) # Change x1, y1, x2, y2 to x_center, y_center, width, height
+                        ] for s in shapes ]
                     }, 
                 }
 
@@ -209,7 +217,8 @@ def buildNDJson(dataset:str=DEFAULT_DATASET, update_file:str=None):
     ndjson_path = os.path.join(dataset, f"{dataset}.ndjson")
     with open(ndjson_path, 'w', encoding='utf-8') as f:
         f.write(contents)
-    print("转换完成")
+    print("Complete. Preparing NDJson file...")
+    prepareNDJson(dataset=dataset)
 
 def prepareNDJson(dataset:str=DEFAULT_DATASET, train_ratio:float=0.85, val_ratio:float=0.15, test_ratio:float=0):
     """
@@ -257,7 +266,7 @@ def prepareNDJson(dataset:str=DEFAULT_DATASET, train_ratio:float=0.85, val_ratio
             "\n".join(json.dumps(entry, ensure_ascii=False) for entry in train_entries + val_entries + test_entries) + '\n'
         )
     
-def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11l", epochs:int=100, batch_size:int=16, img_size:int=640, project:str='detect', name:str='test_cane_toad'):
+def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epochs:int=50, batch_size:int=16, img_size:int=640, project:str='detect', name:str='main'):
     """
     Train a model using the dataset.
     """
