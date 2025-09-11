@@ -180,8 +180,6 @@ dmypy.json
 *.docx
 *.yml
 *.csv
-*.csv
-*.xlsx
 *.xlsx
 AI/datasets/*
 AI/detect/*

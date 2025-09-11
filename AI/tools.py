@@ -2,8 +2,6 @@ import os
 import json
 
 import requests as rq
-import fire 
-from tqdm import tqdm
 
 DEFAULT_DATASET = 'raw'
 
@@ -29,6 +27,7 @@ def downloadImage(category, *urls, file:str=None, dataset:str=DEFAULT_DATASET):
     """
     Download an image, change its name to its category, save it.
     """
+    from tqdm import tqdm
     category = category.replace(' ', '_').lower()
 
     # Decide its number
@@ -184,8 +183,10 @@ def buildNDJson(dataset:str=DEFAULT_DATASET, update_file:str=None):
                 shapes = data.get("shapes", [{}])
 
                 # Extend new labels to array `labels`.
-                new_labels = [l.get("label") for l in shapes if l.get("label") not in labels]
-                labels.extend(new_labels)
+                for s in shapes:
+                    label = s.get("label")
+                    if label not in labels:
+                        labels.append(label)
 
                 # Build an ndjson row
                 entry = {
@@ -333,26 +334,46 @@ def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epochs:int=50, 
 
     print(f" [ Complete training task <{name}>. ]\n")
 
-def predict(model, img):
-    from PIL import Image, ImageDraw
+def predict(model, img, visualize:bool=True):
+    """
+    Do a prediction using a given model.
+    If visualize=True, show the result after prediction finishes.
+    """
+    from PIL import Image, ImageDraw, ImageFont
     from ultralytics import YOLO
 
     im = Image.open(img)
     w, h = im.size
     model = YOLO(model)  # load a pretrained model (recommended for training)
     results = model.predict(source=im, conf=0.25, save=False, save_txt=False, save_crop=False, line_width=3, hide_labels=False, hide_conf=False, verbose=False)
-    print(results)
-    result = results[0]
-    boxes = result.boxes.xywhn.cpu().numpy().tolist()
-    draw = ImageDraw.Draw(im)
-    for box in boxes:
-        x_center, y_center, width, height = box
-        x1 = int((x_center - width/2) * w)
-        y1 = int((y_center - height/2) * h)
-        x2 = int((x_center + width/2) * w)
-        y2 = int((y_center + height/2) * h)
-        draw.rectangle([x1, y1, x2, y2], outline="blue", width=3)
-    im.show()
+    result = json.loads(results[0].to_json())
+
+    if visualize:
+        draw = ImageDraw.Draw(im)
+        for pred in result:
+            # Draw box
+            #x_center, y_center, width, height = box
+            #x1 = int((x_center - width/2) * w)
+            #y1 = int((y_center - height/2) * h)
+            #x2 = int((x_center + width/2) * w)
+            #y2 = int((y_center + height/2) * h)
+            box = pred["box"]
+            x1 = int(box["x1"])
+            x2 = int(box["x2"])
+            y1 = int(box["y1"])
+            y2 = int(box["y2"])
+            draw.rectangle([x1, y1, x2, y2], outline="blue", width=3)
+
+            # Write name and prob
+            text = f"{pred['name']}({pred['class']}): {pred['confidence']:.2f}"
+            font = ImageFont.truetype("arial.ttf", 16)
+            draw.rectangle(draw.textbbox((x1,y1), text, font=font), fill="blue")
+            draw.text((x1,y1), text, fill=(255,255,255), font=font)
+
+        im.show()
+
+    return result
 
 if __name__ == "__main__":
+    import fire
     fire.Fire()
