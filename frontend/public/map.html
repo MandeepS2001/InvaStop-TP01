@@ -107,7 +107,7 @@
 const CONFIG = {
   mode: "json",
   csvUrl: "",
-  // You can override this with ?api=YOUR_URL in the iframe src
+  // Using backend as proxy to ALA API to avoid CORS issues
   jsonUrl: "https://invastopbackend.vercel.app/api/v1/epic1/invasive-records"
 };
 
@@ -231,14 +231,9 @@ async function loadData() {
     }));
       statusEl.textContent = `Live data loaded (${rawRows.length.toLocaleString()} rows)`;
     } catch (e) {
-      console.warn('Failed to fetch API data, using fallback demo data');
-      rawRows = [
-        { vernacularName: 'Red Fox', scientificName: 'Vulpes vulpes', decimalLatitude: -37.8136, decimalLongitude: 144.9631, stateProvince: 'VIC', eventDate: new Date('2021-06-01') },
-        { vernacularName: 'European Rabbit', scientificName: 'Oryctolagus cuniculus', decimalLatitude: -33.8688, decimalLongitude: 151.2093, stateProvince: 'NSW', eventDate: new Date('2020-03-11') },
-        { vernacularName: 'Cane Toad', scientificName: 'Rhinella marina', decimalLatitude: -27.4698, decimalLongitude: 153.0251, stateProvince: 'QLD', eventDate: new Date('2019-09-05') },
-        { vernacularName: 'Buffel Grass', scientificName: 'Cenchrus ciliaris', decimalLatitude: -12.4634, decimalLongitude: 130.8456, stateProvince: 'NT', eventDate: new Date('2022-02-14') },
-      ];
-      statusEl.textContent = 'Using demo data (API unavailable).';
+      console.error('Failed to fetch API data:', e);
+      rawRows = [];
+      statusEl.textContent = `No data available (API error: ${e.message})`;
     }
   } else {
     // CSV mode: expect your combined filtered CSV with columns you wrangled earlier
