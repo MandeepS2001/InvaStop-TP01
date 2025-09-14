@@ -170,7 +170,7 @@ const InteractiveMap: React.FC = () => {
     console.log('State species icons:', stateSpeciesIcons);
     
     // Add click listener to the map
-    mapInstance.addListener('click', (event: google.maps.MapMouseEvent) => {
+    map.addListener('click', (event: google.maps.MapMouseEvent) => {
       const clickedLat = event.latLng!.lat();
       const clickedLng = event.latLng!.lng();
       
