@@ -19,6 +19,10 @@
       "dest": "/map.html"
     },
     {
+      "src": "/iteration1/manifest.json",
+      "dest": "/iteration1/manifest.json"
+    },
+    {
       "src": "/iteration1/static/(.*)",
       "dest": "/iteration1/static/$1"
     },
@@ -33,6 +37,10 @@
     {
       "src": "/iteration1/(.*)",
       "dest": "/iteration1/index.html"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
     },
     {
       "src": "/static/(.*)",
