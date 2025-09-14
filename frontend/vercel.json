@@ -7,14 +7,6 @@
       "config": {
         "distDir": "build"
       }
-    },
-    {
-      "src": "iteration1-deployment/frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "iteration1-deployment/frontend/build",
-        "buildCommand": "npm run build:iteration1"
-      }
     }
   ],
   "routes": [
@@ -27,20 +19,24 @@
       "dest": "/map.html"
     },
     {
+      "src": "/iteration1/static/(.*)",
+      "dest": "/iteration1/static/$1"
+    },
+    {
+      "src": "/iteration1/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|mp4|mov|webm))",
+      "dest": "/iteration1/$1"
+    },
+    {
+      "src": "/iteration1/(.*)",
+      "dest": "/iteration1/index.html"
+    },
+    {
       "src": "/static/(.*)",
       "dest": "/static/$1"
     },
     {
       "src": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|mp4|mov|webm))",
       "dest": "/$1"
-    },
-    {
-      "src": "/iteration1/(.*)",
-      "dest": "/iteration1-deployment/frontend/build/$1"
-    },
-    {
-      "src": "/iteration1",
-      "dest": "/iteration1-deployment/frontend/build/index.html"
     },
     {
       "src": "/(.*)",
