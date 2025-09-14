@@ -16,7 +16,7 @@ https://inaturalist-open-data.s3.amazonaws.com/photos/551169702/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/550636199/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/550127047/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/549563220/large.jpg
-https://inaturalist-open-data.s3.amazonaws.com/photos/549563220/large.jpg
+https://inaturalist-open-data.s3.amazonaws.com/photos/470458599/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/549264656/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/548795533/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/548795565/large.jpg
@@ -97,4 +97,4 @@ https://inaturalist-open-data.s3.amazonaws.com/photos/503092272/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/502561952/large.jpeg
 https://inaturalist-open-data.s3.amazonaws.com/photos/502181310/large.jpeg
 https://inaturalist-open-data.s3.amazonaws.com/photos/502114008/large.jpeg
-https://inaturalist-open-data.s3.amazonaws.com/photos/462488063/large.jpg
+https://inaturalist-open-data.s3.amazonaws.com/photos/470300101/large.jpg

@@ -120,11 +120,11 @@ def removeImageData(dataset:str=DEFAULT_DATASET):
                 json_path = os.path.join(a, name)
                 with open(json_path, 'r', encoding="utf-8") as f:
                     data = json.load(f)
-                if "imageData" in data:
+                if "imageData" in data and data["imageData"] is not None:
                     data["imageData"] = None
-                with open(json_path, 'w', encoding="utf-8") as f:
-                    json.dump(data, f)
-                print(f"Removed imageData in {json_path}.")
+                    with open(json_path, 'w', encoding="utf-8") as f:
+                        json.dump(data, f)
+                    print(f"Removed imageData in {json_path}.")
 
 def purge(category, dataset:str=DEFAULT_DATASET, file:str=None):
     """
