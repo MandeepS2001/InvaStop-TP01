@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 // For development - you can replace this with your actual API key
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "AIzaSyB41DRuKWuJdGrZgCrUdLZtrKEJd_ZmJ9g";
 
+// Debug logging
+console.log('Google Maps API Key:', GOOGLE_MAPS_API_KEY ? 'Present' : 'Missing');
+console.log('API URL:', process.env.REACT_APP_API_URL || 'Using default');
+
 type InfoState = {
   position: google.maps.LatLngLiteral;
   featureName: string;
@@ -141,6 +145,9 @@ const InteractiveMap: React.FC = () => {
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
+
+  // Debug logging for Google Maps loader
+  console.log('Google Maps Loader Status:', { isLoaded, loadError });
 
   const onLoad = useCallback((map: google.maps.Map) => {
     console.log('Map loaded successfully');
