@@ -27,6 +27,10 @@
       "dest": "/iteration1/$1"
     },
     {
+      "src": "/iteration1$",
+      "dest": "/iteration1/index.html"
+    },
+    {
       "src": "/iteration1/(.*)",
       "dest": "/iteration1/index.html"
     },
