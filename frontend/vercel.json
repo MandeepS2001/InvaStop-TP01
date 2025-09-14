@@ -31,6 +31,12 @@
       "dest": "/index.html"
     }
   ],
+  "rewrites": [
+    {
+      "source": "/iteration1/(.*)",
+      "destination": "/$1"
+    }
+  ],
   "env": {
     "REACT_APP_API_URL": "https://invastopbackend.vercel.app/api/v1",
     "REACT_APP_GOOGLE_MAPS_API_KEY": "AIzaSyCh3p6V9qDsgiMUzYVySAIKJ9ZU64Zj314"
