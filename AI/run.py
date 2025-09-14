@@ -22,6 +22,19 @@ def __convert(x1:float, y1:float, x2:float, y2:float, w:int, h:int) -> tuple:
     height /= h
     return x_center, y_center, width, height
 
+def __nextNum(category:str, dataset:str=DEFAULT_DATASET, starts_from:int=1) -> int:
+    """
+    Get the next file number for a given category in the dataset folder.
+    """
+    category = category.replace(' ', '_').lower()
+    next_num = starts_from
+    a, b, c = next(os.walk(dataset))
+
+    # Decide by whether the image is labelled or not
+    while f"{category}_{next_num}.json" in c:
+        next_num += 1
+    return next_num
+
 ## exported functions
 def downloadImage(category, *urls, file:str=None, dataset:str=DEFAULT_DATASET):
     """
@@ -29,15 +42,7 @@ def downloadImage(category, *urls, file:str=None, dataset:str=DEFAULT_DATASET):
     """
     from tqdm import tqdm
     category = category.replace(' ', '_').lower()
-
-    # Decide its number
     next_num = 1
-    for a, b, c in os.walk(dataset):
-        for name in c:
-            if name.startswith(category):
-                num = int(name.split('_')[-1].split('.')[0])
-                if num >= next_num:
-                    next_num = num + 1
 
     # If a file is given, read urls from it
     if file is not None and os.path.exists(file):
@@ -81,6 +86,20 @@ def downloadImage(category, *urls, file:str=None, dataset:str=DEFAULT_DATASET):
             # Rename the image
             ext = raw_filename.split('.')[-1]
             filename = os.path.join(dataset, f"{category}_{next_num}.{ext}")
+
+            # If the image is downloaded by directly giving an url, decide its num by __nextNum()
+            if file is None:
+                next_num = __nextNum(category, dataset=dataset, starts_from=next_num)
+                filename = os.path.join(dataset, f"{category}_{next_num}.{ext}")
+            # Or if the image url is one line in the given url file, use its line number as its num
+            else:
+                filename = os.path.join(dataset, f"{category}_{no+1}.{ext}")
+                # Do nothing to its label file(json file). If it needs to be relabelled, remove the lbael file manually.
+            
+            # Remove first if the file exists, avoiding FileExistsError
+            if os.path.exists(filename):
+                os.remove(filename)
+
             os.rename(raw_filename, filename)
             print(f"Image[{no+1}] has been saved as {filename}\n-----------\n")
 
@@ -106,6 +125,42 @@ def removeImageData(dataset:str=DEFAULT_DATASET):
                 with open(json_path, 'w', encoding="utf-8") as f:
                     json.dump(data, f)
                 print(f"Removed imageData in {json_path}.")
+
+def purge(category, dataset:str=DEFAULT_DATASET, file:str=None):
+    """
+    Purge certian images based on label file(json).
+    url_file(str, Default=None): A text file containing urls of images. If given, also set corresponding lines in the file to be blank.
+    """
+    # Record all file numbers to be kept(i.e. they are labelled)
+    to_keep = set()
+    for a, b, c in os.walk(dataset):
+        for name in c:
+            if name.startswith(category) and name.endswith('.json'):
+                to_keep.add(name.split('_')[-1].split('.')[0]) # get the number part
+    
+    # Remove unlabelled images
+    to_remove_images = []
+    for a, b, c in os.walk(dataset):
+        for name in c:
+            if not name.endswith('.json') and name.startswith(category):
+                num = name.split('_')[-1].split('.')[0]
+                if num not in to_keep:
+                    to_remove_images.append(os.path.join(a, name))
+    for img in to_remove_images:
+        os.remove(img)
+        print(f"Removed unlabelled image {img}.")
+    
+    # Optional: also remove corresponding lines in the url_file
+    if file is not None and os.path.exists(file):
+        with open(file, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+        for i in range(len(lines)):
+            num = str(i+1)
+            if num not in to_keep and lines[i].strip().startswith('http'):
+                lines[i] = '\n'
+                print(f"Removed line {i+1} in {file}.")
+        with open(file, 'w', encoding='utf-8') as f:
+            f.writelines(lines)
 
 def buildNDJson(dataset:str=DEFAULT_DATASET, update_file:str=None):
     """
@@ -284,7 +339,7 @@ def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epochs:int=50, 
     elif os.path.exists(ndjson_path):
         print(f" [ Using NDJson config: {ndjson_path} ]")
         config_path = ndjson_path
-    
+    print(f" [ Ultralytic settings: {settings}]")
     # Load a model
     print(f" [ Loading model {model_name}.pt ... ]")
     model = YOLO(f"{model_name}.pt")  # load a pretrained model (recommended for training)
@@ -312,13 +367,18 @@ def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epochs:int=50, 
         "project": project,
         "name": name,
     }
+    
+    from shutil import copyfile, rmtree
     try:
+        if os.path.exists("datasets"):
+            rmtree("datasets")# clean up first
+        # This would always fail: the images cannot be copied to detect/dataset/images/. This `train()` call only creates the folder structure.
         model.train(**train_setting)
 
     except FileNotFoundError as e:
+        print(" [ Copying images to the training folder... ]")
         # Cannot copy images; copy them manually
         # Read the ndjson file
-        from shutil import copyfile, rmtree
         with open(ndjson_path, 'r', encoding='utf-8') as f:
             lines = f.readlines()
         entries = [json.loads(line) for line in lines[1:]]
@@ -330,6 +390,7 @@ def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epochs:int=50, 
         rmtree(os.path.join(project, name), ignore_errors=True)
 
         # Now start training again
+        print(" [ Starting training... ]")
         model.train(**train_setting)
 
     print(f" [ Complete training task <{name}>. ]\n")
