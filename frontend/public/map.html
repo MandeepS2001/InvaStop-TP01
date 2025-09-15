@@ -352,7 +352,7 @@ function drawMarkers(rows) {
       content: `<strong>${r.vernacularName}</strong><br/>
                 <em>${r.scientificName || ''}</em><br/>
                 ${r.stateProvince || ''}<br/>
-                ${r.eventDate ? r.eventDate.toISOString().slice(0,10) : ''}`
+                ${r.eventDate && r.eventDate instanceof Date ? r.eventDate.toISOString().slice(0,10) : (r.eventDate || '')}`
     });
     marker.addListener('click', () => infowin.open({ map: MAP, anchor: marker }));
     return marker;
@@ -417,7 +417,17 @@ async function findNearbyRecords(postcode) {
     const data = await response.json();
     
     // Update the map to show only nearby records
-    rawRows = data.records;
+    // Process the records to ensure proper data format
+    rawRows = data.records.map(d => ({
+      vernacularName: String(d.vernacularName || "").trim(),
+      decimalLatitude: +d.decimalLatitude,
+      decimalLongitude: +d.decimalLongitude,
+      eventDate: d.eventDate ? new Date(d.eventDate) : null,
+      stateProvince: d.stateProvince || "",
+      scientificName: d.scientificName || "",
+      country: d.country || "", 
+      countryCode: d.countryCode || ""
+    }));
     
     // Debug logging
     console.log('Nearby records loaded:', rawRows.length);
