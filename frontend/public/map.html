@@ -213,6 +213,18 @@ function renderChips() {
       locationStatsEl.textContent = "Please enter a postcode";
     }
   };
+  
+  document.getElementById("resetView").onclick = () => {
+    // Reset to full dataset
+    loadData().then(() => {
+      applyFiltersAndRender();
+      MAP.setCenter(AU_CENTER);
+      MAP.setZoom(AU_ZOOM);
+      locationStatsEl.textContent = "";
+      postcodeEl.value = "";
+      statusEl.textContent = `Live data loaded (${rawRows.length.toLocaleString()} rows)`;
+    });
+  };
 }
 
 function renderLegend() {
@@ -392,6 +404,12 @@ async function findNearbyRecords(postcode) {
     
     // Update the map to show only nearby records
     rawRows = data.records;
+    
+    // Reset year filters to show all years for nearby records
+    yearMinEl.value = '';
+    yearMaxEl.value = '';
+    
+    // Apply filters and render
     applyFiltersAndRender();
     
     // Center map on the location
