@@ -43,7 +43,7 @@
 </head>
 <body>
 <header>
-  <h1>Distribution of Australia’s 10 Common Invasive Species</h1>
+  <h1>Distribution of Australia's 5 Common Invasive Plant Species</h1>
   <div class="sub">Pinpoints show occurrence records. Use filters to focus by species and year.</div>
   <div id="status" class="sub"></div>
  </header>
@@ -111,10 +111,9 @@ const CONFIG = {
   jsonUrl: "https://invastopbackend.vercel.app/api/v1/epic1/invasive-records"
 };
 
-// The 10 species curated:
+// The 5 plant species curated (animals removed):
 const ALLOWED_SPECIES = [
-  "Bitou Bush","Buffel Grass","Cane Toad","Common Myna",
-  "European Rabbit","Red Fox","Feral Pig","Gamba Grass","Gorse","Lantana"
+  "Bitou Bush","Buffel Grass","Gamba Grass","Gorse","Lantana"
 ];
 
 // Categorical colors for the 10 species (stable across sessions)

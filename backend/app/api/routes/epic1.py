@@ -188,7 +188,7 @@ def get_invasive_records(
     species: str = None, 
     year_start: int = None, 
     year_end: int = None,
-    limit: int = 10000,
+    limit: int = None,
     db: Session = Depends(get_db)
 ):
     """Get invasive species occurrence records for the interactive map overlay"""
@@ -208,8 +208,9 @@ def get_invasive_records(
         if year_end:
             query = query.filter(InvasiveRecord.eventDate <= f"{year_end}-12-31")
         
-        # Apply limit to prevent overwhelming the frontend (increased default to 10,000)
-        query = query.limit(limit)
+        # Apply limit only if specified (default: no limit - show all records)
+        if limit is not None:
+            query = query.limit(limit)
         
         # Execute query
         records = query.all()
