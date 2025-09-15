@@ -311,14 +311,28 @@ async function loadData() {
 
 // --- Filtering + render markers ---
 function applyFiltersAndRender() {
-  const yMin = parseInt(yearMinEl.value, 10) || minYear;
-  const yMax = parseInt(yearMaxEl.value, 10) || maxYear;
+  const yMin = parseInt(yearMinEl.value, 10);
+  const yMax = parseInt(yearMaxEl.value, 10);
+  
+  // If year fields are empty, don't filter by year (show all records)
+  const useYearFilter = !isNaN(yMin) && !isNaN(yMax);
 
   filteredRows = rawRows.filter(r => {
     if (!selectedSpecies.has(r.vernacularName)) return false;
+    
+    // If we're not using year filter, skip date validation
+    if (!useYearFilter) return true;
+    
     if (!(r.eventDate instanceof Date) || isNaN(r.eventDate)) return false;
     const y = r.eventDate.getFullYear();
     return y >= yMin && y <= yMax;
+  });
+
+  console.log('Filtering results:', {
+    totalRecords: rawRows.length,
+    filteredRecords: filteredRows.length,
+    useYearFilter: useYearFilter,
+    selectedSpecies: Array.from(selectedSpecies)
   });
 
   drawMarkers(filteredRows);
@@ -404,6 +418,10 @@ async function findNearbyRecords(postcode) {
     
     // Update the map to show only nearby records
     rawRows = data.records;
+    
+    // Debug logging
+    console.log('Nearby records loaded:', rawRows.length);
+    console.log('Sample record:', rawRows[0]);
     
     // Reset year filters to show all years for nearby records
     yearMinEl.value = '';
