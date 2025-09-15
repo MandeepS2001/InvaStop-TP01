@@ -348,11 +348,28 @@ function drawMarkers(rows) {
       title: r.vernacularName,
       icon: markerIcon(color(r.vernacularName))
     });
+    // Create image path for the species
+    const imagePath = `/top10/${r.vernacularName.replace(/\s+/g, '')}.png`;
+    
     const infowin = new google.maps.InfoWindow({
-      content: `<strong>${r.vernacularName}</strong><br/>
-                <em>${r.scientificName || ''}</em><br/>
-                ${r.stateProvince || ''}<br/>
-                ${r.eventDate && r.eventDate instanceof Date ? r.eventDate.toISOString().slice(0,10) : (r.eventDate || '')}`
+      content: `
+        <div style="max-width: 300px; font-family: system-ui, sans-serif;">
+          <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <img src="${imagePath}" alt="${r.vernacularName}" 
+                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 12px; border: 2px solid #e5e7eb;" 
+                 onerror="this.style.display='none'">
+            <div>
+              <strong style="font-size: 16px; color: #1f2937;">${r.vernacularName}</strong><br/>
+              <em style="color: #6b7280; font-size: 14px;">${r.scientificName || ''}</em>
+            </div>
+          </div>
+          <div style="font-size: 14px; color: #374151;">
+            <div><strong>Location:</strong> ${r.stateProvince || 'Unknown'}</div>
+            <div><strong>Date:</strong> ${r.eventDate && r.eventDate instanceof Date ? r.eventDate.toISOString().slice(0,10) : (r.eventDate || 'Unknown')}</div>
+            ${r.country ? `<div><strong>Country:</strong> ${r.country}</div>` : ''}
+          </div>
+        </div>
+      `
     });
     marker.addListener('click', () => infowin.open({ map: MAP, anchor: marker }));
     return marker;
