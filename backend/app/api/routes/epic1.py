@@ -184,61 +184,60 @@ def get_risk_color(risk_level: str) -> str:
         return "#facc15"  # Yellow
 
 @router.get("/invasive-records")
-def get_invasive_records(db: Session = Depends(get_db)):
+def get_invasive_records(
+    species: str = None, 
+    year_start: int = None, 
+    year_end: int = None,
+    limit: int = 1000,
+    db: Session = Depends(get_db)
+):
     """Get invasive species occurrence records for the interactive map overlay"""
     try:
-        # Get all species from top_5_common table
-        species = db.query(Top5Common).all()
+        from app.models.biodiversity_impact import InvasiveRecord
         
-        # Australian state coordinates (approximate centers)
-        state_coordinates = {
-            "New South Wales": {"lat": -31.2532, "lng": 146.9211},
-            "Victoria": {"lat": -37.8136, "lng": 144.9631},
-            "Queensland": {"lat": -20.9176, "lng": 142.7028},
-            "Western Australia": {"lat": -25.2744, "lng": 133.7751},
-            "South Australia": {"lat": -30.0002, "lng": 136.2092},
-            "Tasmania": {"lat": -41.4545, "lng": 145.9707},
-            "Northern Territory": {"lat": -19.4914, "lng": 132.5509},
-            "Australian Capital Territory": {"lat": -35.2809, "lng": 149.1300}
+        # Build query for invasive_records table
+        query = db.query(InvasiveRecord)
+        
+        # Apply species filter if provided
+        if species:
+            query = query.filter(InvasiveRecord.vernacularName.ilike(f"%{species}%"))
+        
+        # Apply year range filter if provided
+        if year_start:
+            query = query.filter(InvasiveRecord.eventDate >= f"{year_start}-01-01")
+        if year_end:
+            query = query.filter(InvasiveRecord.eventDate <= f"{year_end}-12-31")
+        
+        # Apply limit to prevent overwhelming the frontend
+        query = query.limit(limit)
+        
+        # Execute query
+        records = query.all()
+        
+        # Format records for frontend
+        formatted_records = []
+        for record in records:
+            formatted_records.append({
+                "vernacularName": record.vernacularName,
+                "decimalLatitude": float(record.decimalLatitude),
+                "decimalLongitude": float(record.decimalLongitude),
+                "eventDate": record.eventDate.isoformat() if record.eventDate else None,
+                "stateProvince": record.stateProvince,
+                "scientificName": record.scientificName,
+                "country": record.country,
+                "countryCode": record.occurrenceStatus  # Using occurrenceStatus as countryCode
+            })
+        
+        return {
+            "records": formatted_records,
+            "total_count": len(formatted_records),
+            "filters_applied": {
+                "species": species,
+                "year_start": year_start,
+                "year_end": year_end,
+                "limit": limit
+            }
         }
-        
-        # Generate occurrence records based on available data
-        records = []
-        for sp in species:
-            state_name = sp.state_name
-            if state_name in state_coordinates:
-                # Add some random variation to coordinates to show multiple points per state
-                import random
-                base_coords = state_coordinates[state_name]
-                lat_variation = random.uniform(-2, 2)  # ±2 degrees
-                lng_variation = random.uniform(-2, 2)  # ±2 degrees
-                
-                # Generate multiple records per species per state (2-5 records)
-                num_records = random.randint(2, 5)
-                for i in range(num_records):
-                    # Add more variation for multiple records
-                    lat = base_coords["lat"] + lat_variation + random.uniform(-0.5, 0.5)
-                    lng = base_coords["lng"] + lng_variation + random.uniform(-0.5, 0.5)
-                    
-                    # Generate a random date between 2015-2024
-                    import datetime
-                    year = random.randint(2015, 2024)
-                    month = random.randint(1, 12)
-                    day = random.randint(1, 28)  # Safe day for all months
-                    event_date = datetime.date(year, month, day)
-                    
-                    records.append({
-                        "vernacularName": sp.sp_common_name,
-                        "decimalLatitude": round(lat, 6),
-                        "decimalLongitude": round(lng, 6),
-                        "eventDate": event_date.isoformat(),
-                        "stateProvince": state_name,
-                        "scientificName": sp.sp_scientific_name,
-                        "country": "Australia",
-                        "countryCode": "AU"
-                    })
-        
-        return records
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
