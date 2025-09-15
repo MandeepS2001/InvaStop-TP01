@@ -71,6 +71,16 @@
     </div>
 
     <div class="panel">
+      <h3>Find in my area</h3>
+      <label>Enter your postcode:</label>
+      <div class="year-row">
+        <input id="postcode" type="text" placeholder="e.g. 3000" style="width:120px">
+        <button id="findNearby" class="btn">Find</button>
+      </div>
+      <div class="stat" id="locationStats"></div>
+    </div>
+
+    <div class="panel">
       <h3>Legend</h3>
       <div id="legend" class="legend"></div>
     </div>
@@ -133,6 +143,8 @@ const yearMaxEl = document.getElementById("yearMax");
 const yearStatsEl = document.getElementById("yearStats");
 const countStatsEl = document.getElementById("countStats");
 const statusEl = document.getElementById("status");
+const postcodeEl = document.getElementById("postcode");
+const locationStatsEl = document.getElementById("locationStats");
 
 // State
 let rawRows = [];     // original rows
@@ -191,6 +203,15 @@ function renderChips() {
     selectedSpecies.clear();
     renderChips();
     applyFiltersAndRender();
+  };
+  
+  document.getElementById("findNearby").onclick = () => {
+    const postcode = postcodeEl.value.trim();
+    if (postcode) {
+      findNearbyRecords(postcode);
+    } else {
+      locationStatsEl.textContent = "Please enter a postcode";
+    }
   };
 }
 
@@ -325,6 +346,67 @@ document.getElementById("fitToData").onclick = () => {
   CURRENT_MARKERS.forEach(m => bounds.extend(m.getPosition()));
   MAP.fitBounds(bounds, 40);
 };
+
+// --- Geocoding and location functions ---
+async function geocodePostcode(postcode) {
+  try {
+    // Use Google Geocoding API to convert postcode to coordinates
+    const geocoder = new google.maps.Geocoder();
+    const result = await new Promise((resolve, reject) => {
+      geocoder.geocode({ address: `${postcode}, Australia` }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+          const location = results[0].geometry.location;
+          resolve({
+            lat: location.lat(),
+            lng: location.lng(),
+            formatted_address: results[0].formatted_address
+          });
+        } else {
+          reject(new Error(`Geocoding failed: ${status}`));
+        }
+      });
+    });
+    return result;
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    throw error;
+  }
+}
+
+async function findNearbyRecords(postcode) {
+  try {
+    locationStatsEl.textContent = "Looking up location...";
+    
+    // Geocode the postcode
+    const location = await geocodePostcode(postcode);
+    
+    // Fetch nearby records from API
+    const apiUrl = `${CONFIG.jsonUrl}/near-location?latitude=${location.lat}&longitude=${location.lng}&radius_km=50`;
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // Update the map to show only nearby records
+    rawRows = data.records;
+    applyFiltersAndRender();
+    
+    // Center map on the location
+    MAP.setCenter({ lat: location.lat, lng: location.lng });
+    MAP.setZoom(10);
+    
+    // Update status
+    locationStatsEl.textContent = `Found ${data.total_count} records within 50km of ${postcode}`;
+    statusEl.textContent = `Showing ${data.total_count} records near ${postcode}`;
+    
+  } catch (error) {
+    console.error('Error finding nearby records:', error);
+    locationStatsEl.textContent = `Error: ${error.message}`;
+  }
+}
 
 // --- Init everything ---
 (async function main() {
