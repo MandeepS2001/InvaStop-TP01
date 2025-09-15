@@ -5,8 +5,8 @@ type Props = { children: React.ReactElement };
 
 const AuthGate: React.FC<Props> = ({ children }) => {
   const location = useLocation();
-  // Use the same authentication method as authService
-  const isAuthed = typeof window !== 'undefined' && !!localStorage.getItem('access_token');
+  // Use the same authentication method as LoginPage
+  const isAuthed = typeof window !== 'undefined' && sessionStorage.getItem('tp01_auth') === 'true';
   
   if (!isAuthed) {
     // Determine the correct login path based on current location
