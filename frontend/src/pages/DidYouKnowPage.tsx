@@ -203,35 +203,38 @@ const DidYouKnowPage: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
+      <footer className="bg-green-800 text-white py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Products */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Products</h3>
-              <ul className="space-y-2">
-                <li><Link to="/education" onClick={scrollToTop} className="text-gray-300 hover:text-white transition-colors">Species Profile</Link></li>
-                <li><Link to="/map" onClick={scrollToTop} className="text-gray-300 hover:text-white transition-colors">Interactive Map</Link></li>
-                <li><Link to="/insights" onClick={scrollToTop} className="text-gray-300 hover:text-white transition-colors">Data Insights</Link></li>
-              </ul>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {/* Logo and Copyright */}
+            <div className="md:col-span-1 flex flex-col items-start">
+              <div className="flex flex-col items-start mb-3">
+                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
+              </div>
+              <p className="text-green-100 text-sm">© 2025</p>
             </div>
-            
-            {/* About Us */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">About Us</h3>
-              <p className="text-gray-300 text-sm">
-                InvaStop helps farmers and property owners identify and manage invasive species threatening their land and local ecosystems.
-              </p>
+
+            {/* Navigation Columns */}
+            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-bold mb-3 text-sm">Products</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Species Database</Link></li>
+                  <li><Link to="/education" onClick={scrollToTop} className="hover:text-white transition-colors">Educational Resources</Link></li>
+                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Mapping Tools</Link></li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 className="font-bold mb-3 text-sm">Company</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><Link to="/" onClick={scrollToTop} className="hover:text-white transition-colors">About Us</Link></li>
+                  <li><Link to="/insights" onClick={scrollToTop} className="hover:text-white transition-colors">Data Insights</Link></li>
+                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Contact</Link></li>
+                </ul>
+              </div>
+              
             </div>
-            
-            {/* Logo */}
-            <div className="flex justify-center md:justify-end">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-16 w-16 object-contain" />
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-            <p className="text-gray-400 text-sm">&copy; 2024 InvaStop. All rights reserved.</p>
           </div>
         </div>
       </footer>
