@@ -244,3 +244,93 @@ def get_invasive_records(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error fetching invasive records: {str(e)}"
         )
+
+@router.get("/invasive-records/near-location")
+def get_invasive_records_near_location(
+    latitude: float,
+    longitude: float,
+    radius_km: float = 50.0,
+    species: str = None,
+    year_start: int = None,
+    year_end: int = None,
+    limit: int = 1000,
+    db: Session = Depends(get_db)
+):
+    """Get invasive species occurrence records near a specific location"""
+    try:
+        from app.models.biodiversity_impact import InvasiveRecord
+        from sqlalchemy import func
+        
+        # Calculate bounding box for the radius (approximate)
+        # 1 degree latitude ≈ 111 km
+        # 1 degree longitude ≈ 111 km * cos(latitude)
+        lat_delta = radius_km / 111.0
+        lng_delta = radius_km / (111.0 * func.cos(func.radians(latitude)))
+        
+        # Build query for invasive_records table within bounding box
+        query = db.query(InvasiveRecord).filter(
+            InvasiveRecord.decimalLatitude.between(latitude - lat_delta, latitude + lat_delta),
+            InvasiveRecord.decimalLongitude.between(longitude - lng_delta, longitude + lng_delta)
+        )
+        
+        # Apply species filter if provided
+        if species:
+            query = query.filter(InvasiveRecord.vernacularName.ilike(f"%{species}%"))
+        
+        # Apply year range filter if provided
+        if year_start:
+            query = query.filter(InvasiveRecord.eventDate >= f"{year_start}-01-01")
+        if year_end:
+            query = query.filter(InvasiveRecord.eventDate <= f"{year_end}-12-31")
+        
+        # Apply limit
+        if limit is not None:
+            query = query.limit(limit)
+        
+        # Execute query
+        records = query.all()
+        
+        # Format records for frontend
+        formatted_records = []
+        for record in records:
+            # Calculate distance from center point
+            import math
+            lat_diff = float(record.decimalLatitude) - latitude
+            lng_diff = float(record.decimalLongitude) - longitude
+            distance_km = math.sqrt(lat_diff**2 + lng_diff**2) * 111.0  # Approximate
+            
+            formatted_records.append({
+                "vernacularName": record.vernacularName,
+                "decimalLatitude": float(record.decimalLatitude),
+                "decimalLongitude": float(record.decimalLongitude),
+                "eventDate": record.eventDate.isoformat() if record.eventDate else None,
+                "stateProvince": record.stateProvince,
+                "scientificName": record.scientificName,
+                "country": record.country,
+                "countryCode": record.occurrenceStatus,
+                "distance_km": round(distance_km, 2)
+            })
+        
+        # Sort by distance
+        formatted_records.sort(key=lambda x: x["distance_km"])
+        
+        return {
+            "records": formatted_records,
+            "total_count": len(formatted_records),
+            "center_location": {
+                "latitude": latitude,
+                "longitude": longitude,
+                "radius_km": radius_km
+            },
+            "filters_applied": {
+                "species": species,
+                "year_start": year_start,
+                "year_end": year_end,
+                "limit": limit
+            }
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching invasive records near location: {str(e)}"
+        )
