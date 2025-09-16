@@ -35,11 +35,22 @@ try {
     function copyRecursive(src, dest) {
       const stats = fs.statSync(src);
       if (stats.isDirectory()) {
+        // Skip copying if we're trying to copy into the iteration1 directory itself
+        if (src === targetDir || dest.startsWith(targetDir + path.sep)) {
+          console.log('Skipping recursive copy of iteration1 directory');
+          return;
+        }
+        
         if (!fs.existsSync(dest)) {
           fs.mkdirSync(dest, { recursive: true });
         }
         const files = fs.readdirSync(src);
         files.forEach(file => {
+          // Skip the iteration1 directory to prevent recursion
+          if (file === 'iteration1') {
+            console.log('Skipping iteration1 directory to prevent recursion');
+            return;
+          }
           copyRecursive(path.join(src, file), path.join(dest, file));
         });
       } else {
@@ -47,9 +58,14 @@ try {
       }
     }
 
-    // Copy all files from build to build/iteration1
+    // Copy all files from build to build/iteration1, excluding the iteration1 directory itself
     const files = fs.readdirSync(sourceDir);
     files.forEach(file => {
+      // Skip the iteration1 directory to prevent recursion
+      if (file === 'iteration1') {
+        console.log('Skipping iteration1 directory to prevent recursion');
+        return;
+      }
       copyRecursive(path.join(sourceDir, file), path.join(targetDir, file));
     });
     
