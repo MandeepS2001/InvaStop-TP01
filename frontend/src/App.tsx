@@ -8,6 +8,7 @@ import EducationPage from './pages/EducationPage';
 import SpeciesDetailPage from './pages/SpeciesDetailPage';
 import MapPage from './pages/MapPage';
 import DidYouKnowPage from './pages/DidYouKnowPage';
+import Epic5Page from './pages/Epic5Page';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="species-detail/:speciesName" element={<SpeciesDetailPage />} />
         <Route path="map" element={<MapPage />} />
         <Route path="insights" element={<DidYouKnowPage />} />
+        <Route path="epic5" element={<Epic5Page />} />
         <Route path="more" element={<div>More Page - Coming Soon</div>} />
       </Route>
     </Routes>

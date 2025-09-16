@@ -627,6 +627,7 @@ const SpeciesDetailPage: React.FC = () => {
               <Link to="/education" onClick={scrollToTop} className={`px-4 py-2 text-white rounded-md transition-all duration-200 font-medium ${fromPage === 'education' ? 'bg-green-600/60 border-green-500 shadow-md' : 'hover:text-gray-200 hover:bg-gray-700/50 border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30'}`}>Species Profile</Link>
               <Link to="/insights" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Did you Know?</Link>
               <Link to="/map" onClick={scrollToTop} className={`px-4 py-2 text-white rounded-md transition-all duration-200 font-medium ${fromPage === 'map' ? 'bg-green-600/60 border-green-500 shadow-md' : 'hover:text-gray-200 hover:bg-gray-700/50 border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30'}`}>Map</Link>
+              <Link to="/epic5" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Seasonal</Link>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -682,6 +683,16 @@ const SpeciesDetailPage: React.FC = () => {
                 }}
               >
                 Map
+              </Link>
+              <Link 
+                to="/epic5" 
+                className="block px-4 py-3 text-white hover:text-gray-200 hover:bg-gray-600/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 shadow-sm bg-gray-800/30"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToTop();
+                }}
+              >
+                Seasonal
               </Link>
             </div>
           </div>
