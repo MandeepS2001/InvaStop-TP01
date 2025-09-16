@@ -334,3 +334,150 @@ def get_invasive_records_near_location(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error fetching invasive records near location: {str(e)}"
         )
+
+@router.get("/seasonal-risk")
+def get_seasonal_risk_data(
+    season: str,
+    postcode: str = None,
+    radius_km: float = 50.0,
+    db: Session = Depends(get_db)
+):
+    """Get seasonal invasive species risk data based on season and location"""
+    try:
+        from app.models.biodiversity_impact import InvasiveRecord
+        from sqlalchemy import func, and_, or_
+        import math
+        
+        # Map seasons to date ranges (using month ranges)
+        season_months = {
+            "Spring": [9, 10, 11],  # Sep, Oct, Nov (Australian spring)
+            "Summer": [12, 1, 2],   # Dec, Jan, Feb (Australian summer)
+            "Autumn": [3, 4, 5],    # Mar, Apr, May (Australian autumn)
+            "Winter": [6, 7, 8]     # Jun, Jul, Aug (Australian winter)
+        }
+        
+        if season not in season_months:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid season. Must be one of: Spring, Summer, Autumn, Winter"
+            )
+        
+        months = season_months[season]
+        
+        # Build base query for seasonal data
+        query = db.query(InvasiveRecord)
+        
+        # Filter by season (month)
+        if len(months) == 3:
+            # Handle year transition for summer (Dec, Jan, Feb)
+            if season == "Summer":
+                query = query.filter(
+                    or_(
+                        func.month(InvasiveRecord.eventDate) == 12,
+                        func.month(InvasiveRecord.eventDate) == 1,
+                        func.month(InvasiveRecord.eventDate) == 2
+                    )
+                )
+            else:
+                query = query.filter(func.month(InvasiveRecord.eventDate).in_(months))
+        
+        # If postcode is provided, filter by location
+        if postcode:
+            # Simple geocoding for major Australian cities (for demo purposes)
+            # In production, you'd use a proper geocoding service
+            city_coords = {
+                "3000": {"lat": -37.8136, "lng": 144.9631},  # Melbourne
+                "2000": {"lat": -33.8688, "lng": 151.2093},  # Sydney
+                "4000": {"lat": -27.4698, "lng": 153.0251},  # Brisbane
+                "6000": {"lat": -31.9505, "lng": 115.8605},  # Perth
+                "5000": {"lat": -34.9285, "lng": 138.6007},  # Adelaide
+                "7000": {"lat": -42.8821, "lng": 147.3272},  # Hobart
+                "2600": {"lat": -35.2809, "lng": 149.1300},  # Canberra
+                "0800": {"lat": -12.4634, "lng": 130.8456},  # Darwin
+            }
+            
+            if postcode in city_coords:
+                coords = city_coords[postcode]
+                lat_delta = radius_km / 111.0
+                lng_delta = radius_km / (111.0 * func.cos(func.radians(coords["lat"])))
+                
+                query = query.filter(
+                    and_(
+                        InvasiveRecord.decimalLatitude.between(
+                            coords["lat"] - lat_delta, 
+                            coords["lat"] + lat_delta
+                        ),
+                        InvasiveRecord.decimalLongitude.between(
+                            coords["lng"] - lng_delta, 
+                            coords["lng"] + lng_delta
+                        )
+                    )
+                )
+        
+        # Get records
+        records = query.all()
+        
+        # Analyze data by species
+        species_data = {}
+        total_records = len(records)
+        
+        for record in records:
+            species_name = record.vernacularName or "Unknown"
+            if species_name not in species_data:
+                species_data[species_name] = {
+                    "count": 0,
+                    "locations": set(),
+                    "months": set(),
+                    "risk_level": "Medium"
+                }
+            
+            species_data[species_name]["count"] += 1
+            if record.stateProvince:
+                species_data[species_name]["locations"].add(record.stateProvince)
+            if record.eventDate:
+                species_data[species_name]["months"].add(record.eventDate.month)
+        
+        # Convert sets to lists and determine risk levels
+        for species, data in species_data.items():
+            data["locations"] = list(data["locations"])
+            data["months"] = list(data["months"])
+            
+            # Simple risk assessment based on count and spread
+            if data["count"] >= 100 or len(data["locations"]) >= 3:
+                data["risk_level"] = "High"
+            elif data["count"] >= 50 or len(data["locations"]) >= 2:
+                data["risk_level"] = "Medium"
+            else:
+                data["risk_level"] = "Low"
+        
+        # Sort species by count (highest risk first)
+        sorted_species = sorted(
+            species_data.items(), 
+            key=lambda x: x[1]["count"], 
+            reverse=True
+        )
+        
+        # Get top 5 species for the season
+        top_species = dict(sorted_species[:5])
+        
+        # Create seasonal insights
+        seasonal_insights = {
+            "season": season,
+            "total_sightings": total_records,
+            "top_species": top_species,
+            "risk_summary": {
+                "high_risk": len([s for s in species_data.values() if s["risk_level"] == "High"]),
+                "medium_risk": len([s for s in species_data.values() if s["risk_level"] == "Medium"]),
+                "low_risk": len([s for s in species_data.values() if s["risk_level"] == "Low"])
+            },
+            "location": postcode if postcode else "Australia-wide",
+            "radius_km": radius_km if postcode else None
+        }
+        
+        return seasonal_insights
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching seasonal risk data: {str(e)}"
+        )

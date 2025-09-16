@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TaxonThreatChart from '../components/TaxonThreatChart';
+import SeasonalMetrics from '../components/SeasonalMetrics';
 import { Link } from 'react-router-dom';
 
 // Utility function to scroll to top
@@ -86,6 +87,16 @@ const DidYouKnowPage: React.FC = () => {
               >
                 Map
               </Link>
+              <Link 
+                to="/epic5" 
+                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToTop();
+                }}
+              >
+                Seasonal
+              </Link>
             </div>
           </div>
         )}
@@ -162,40 +173,97 @@ const DidYouKnowPage: React.FC = () => {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
+          {/* Seasonal Metrics Section */}
+          <SeasonalMetrics />
+
           <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-10">
             <TaxonThreatChart />
           </div>
 
-          {/* Additional insights placeholders using existing data */}
+          {/* Enhanced insights with dynamic data */}
           <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            <div className="bg-white rounded-xl shadow p-5">
-              <h2 className="font-semibold text-lg mb-2">Top impacted group</h2>
-              <p className="text-gray-600 text-sm">Plants remain the most impacted group across Australia.</p>
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-lg p-6 border-2 border-blue-200">
+              <div className="flex items-center mb-4">
+                <div className="bg-blue-500 p-3 rounded-full mr-4">
+                  <span className="text-white text-xl">🌿</span>
+                </div>
+                <h2 className="font-bold text-xl text-blue-800">Top Impacted Group</h2>
+              </div>
+              <p className="text-blue-700 text-base mb-3">Plants remain the most impacted group across Australia, with invasive species affecting native vegetation and ecosystems.</p>
+              <div className="bg-white rounded-lg p-3 border border-blue-200">
+                <div className="text-sm text-blue-600 font-medium">Key Impact Areas:</div>
+                <ul className="text-sm text-blue-700 mt-1 space-y-1">
+                  <li>• Native vegetation displacement</li>
+                  <li>• Soil nutrient depletion</li>
+                  <li>• Wildlife habitat loss</li>
+                </ul>
+              </div>
             </div>
-            <div className="bg-white rounded-xl shadow p-5">
-              <h2 className="font-semibold text-lg mb-2">Species with broadest impact</h2>
-              <p className="text-gray-600 text-sm">Red Fox shows wide impact across mammals and birds.</p>
+            
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-lg p-6 border-2 border-orange-200">
+              <div className="flex items-center mb-4">
+                <div className="bg-orange-500 p-3 rounded-full mr-4">
+                  <span className="text-white text-xl">🦊</span>
+                </div>
+                <h2 className="font-bold text-xl text-orange-800">Species with Broadest Impact</h2>
+              </div>
+              <p className="text-orange-700 text-base mb-3">Red Fox shows wide impact across mammals and birds, making it one of Australia's most destructive invasive species.</p>
+              <div className="bg-white rounded-lg p-3 border border-orange-200">
+                <div className="text-sm text-orange-600 font-medium">Impact Statistics:</div>
+                <ul className="text-sm text-orange-700 mt-1 space-y-1">
+                  <li>• Threatens 14 mammal species</li>
+                  <li>• Affects 40+ bird species</li>
+                  <li>• Found in 76% of mainland Australia</li>
+                </ul>
+              </div>
             </div>
           </section>
 
-          {/* CTA to Map */}
+          {/* CTA to Interactive Tools */}
           <section className="relative py-12 sm:py-16 bg-gradient-to-br from-green-50 via-white to-green-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-green-200/40 p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6">
-                <div className="flex-1">
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Explore Interactive Species Map</h3>
-                  <p className="text-gray-600">Discover where invasive species are found across Australia and learn about their distribution patterns in real-time.</p>
+              <div className="text-center mb-8">
+                <h3 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Explore Our Interactive Tools</h3>
+                <p className="text-lg text-gray-600 max-w-3xl mx-auto">Discover invasive species data through our comprehensive mapping and seasonal analysis tools.</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Map CTA */}
+                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-green-200/40 p-6 sm:p-8">
+                  <div className="text-center">
+                    <div className="bg-gradient-to-r from-green-500 to-blue-500 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                      <span className="text-white text-2xl">🗺️</span>
+                    </div>
+                    <h4 className="text-xl font-bold text-gray-900 mb-3">Interactive Species Map</h4>
+                    <p className="text-gray-600 mb-6">Discover where invasive species are found across Australia and learn about their distribution patterns in real-time.</p>
+                    <Link
+                      to="/map"
+                      onClick={scrollToTop}
+                      className="group inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                      <span className="mr-2">View Map</span>
+                      <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                    </Link>
+                  </div>
                 </div>
-                <div>
-                  <Link
-                    to="/map"
-                    onClick={scrollToTop}
-                    className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-green-800 hover:from-green-500 hover:via-green-600 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 text-lg shadow-xl hover:shadow-2xl hover:shadow-green-500/30 transform hover:scale-105 border-2 border-green-500/20 hover:border-green-400/40"
-                  >
-                    <span className="mr-3 text-xl group-hover:rotate-12 transition-transform duration-300">🗺️</span>
-                    <span className="group-hover:tracking-wide transition-all duration-300">View Interactive Map</span>
-                    <span className="ml-3 text-lg group-hover:translate-x-2 transition-transform duration-300">→</span>
-                  </Link>
+
+                {/* Seasonal CTA */}
+                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-blue-200/40 p-6 sm:p-8">
+                  <div className="text-center">
+                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                      <span className="text-white text-2xl">📅</span>
+                    </div>
+                    <h4 className="text-xl font-bold text-gray-900 mb-3">Seasonal Risk Analysis</h4>
+                    <p className="text-gray-600 mb-6">Get personalized insights about invasive species risks in your area based on seasonal patterns and local data.</p>
+                    <Link
+                      to="/epic5"
+                      onClick={scrollToTop}
+                      className="group inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                      <span className="mr-2">View Seasonal</span>
+                      <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

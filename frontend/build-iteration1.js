@@ -4,50 +4,45 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// Build iteration1-deployment frontend first, then copy to main build directory
-const iteration1FrontendDir = path.join(__dirname, '..', 'iteration1-deployment', 'frontend');
-const sourceDir = path.join(iteration1FrontendDir, 'build');
 const targetDir = path.join(__dirname, 'build', 'iteration1');
+const projectRoot = path.join(__dirname, '..', '..');
 
-console.log('Building iteration1-deployment frontend...');
-console.log('Iteration1 frontend dir:', iteration1FrontendDir);
+console.log('Building iteration1 version from iteration1-sept5 branch...');
 
 try {
-  // Check if iteration1-deployment frontend exists
-  if (!fs.existsSync(iteration1FrontendDir)) {
-    console.log('⚠️  iteration1-deployment frontend not found, skipping...');
-    process.exit(0);
-  }
-
-  // Build the iteration1-deployment frontend
-  console.log('Running npm install in iteration1-deployment frontend...');
-  execSync('npm install', { 
-    cwd: iteration1FrontendDir, 
-    stdio: 'inherit' 
-  });
-
-  console.log('Running npm run build:iteration1 in iteration1-deployment frontend...');
-  execSync('npm run build:iteration1', { 
-    cwd: iteration1FrontendDir, 
-    stdio: 'inherit' 
-  });
-
-  // Check if build was successful
-  if (!fs.existsSync(sourceDir)) {
-    console.error('❌ iteration1-deployment build failed - build directory not found');
-    process.exit(1);
-  }
-
-  console.log('Copying iteration1-deployment build files...');
-  console.log('Source:', sourceDir);
-  console.log('Target:', targetDir);
-
-  // Create target directory if it doesn't exist
+  // Create target directory
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
   }
 
-  // Copy all files from source to target
+  // Store current branch
+  const currentBranch = execSync('git branch --show-current', { 
+    cwd: projectRoot, 
+    encoding: 'utf8' 
+  }).trim();
+
+  console.log('Current branch:', currentBranch);
+
+  // Switch to iteration1-sept5 branch
+  console.log('Switching to iteration1-sept5 branch...');
+  execSync('git checkout iteration1-sept5', { 
+    cwd: projectRoot, 
+    stdio: 'inherit' 
+  });
+
+  // Build the iteration1 version with PUBLIC_URL=/iteration1
+  console.log('Building iteration1 version with PUBLIC_URL=/iteration1...');
+  execSync('CI=false PUBLIC_URL=/iteration1 react-scripts build', { 
+    cwd: path.join(__dirname, '..'), 
+    stdio: 'inherit' 
+  });
+
+  // Copy the built files to the iteration1 subdirectory
+  const sourceDir = path.join(__dirname, '..', 'build');
+  console.log('Copying build files to iteration1 subdirectory...');
+  console.log('Source:', sourceDir);
+  console.log('Target:', targetDir);
+
   function copyRecursive(src, dest) {
     const stats = fs.statSync(src);
     if (stats.isDirectory()) {
@@ -63,9 +58,37 @@ try {
     }
   }
 
-  copyRecursive(sourceDir, targetDir);
-  console.log('✅ Successfully built and copied iteration1-deployment build files');
+  // Copy all files from build to build/iteration1
+  const files = fs.readdirSync(sourceDir);
+  files.forEach(file => {
+    copyRecursive(path.join(sourceDir, file), path.join(targetDir, file));
+  });
+
+  // Switch back to original branch
+  console.log('Switching back to', currentBranch, 'branch...');
+  execSync(`git checkout ${currentBranch}`, { 
+    cwd: projectRoot, 
+    stdio: 'inherit' 
+  });
+
+  console.log('✅ Successfully built iteration1 version');
 } catch (error) {
-  console.error('❌ Error building/copying files:', error);
+  console.error('❌ Error building iteration1 version:', error);
+  
+  // Try to switch back to original branch in case of error
+  try {
+    const currentBranch = execSync('git branch --show-current', { 
+      cwd: projectRoot, 
+      encoding: 'utf8' 
+    }).trim();
+    console.log('Switching back to', currentBranch, 'branch...');
+    execSync(`git checkout ${currentBranch}`, { 
+      cwd: projectRoot, 
+      stdio: 'inherit' 
+    });
+  } catch (switchError) {
+    console.error('❌ Error switching back to original branch:', switchError);
+  }
+  
   process.exit(1);
 }
