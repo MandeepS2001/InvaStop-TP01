@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, MapPin, AlertTriangle, Calendar } from 'lucide-react';
+import { TrendingUp, AlertTriangle, Calendar } from 'lucide-react';
 
 interface SeasonalMetricsData {
   season: string;
