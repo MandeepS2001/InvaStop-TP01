@@ -1,5 +1,5 @@
 // src/components/InteractiveMap.tsx
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { GoogleMap, useJsApiLoader, InfoWindow, Marker } from "@react-google-maps/api";
 import { useNavigate } from "react-router-dom";
 
@@ -94,6 +94,7 @@ const stateClickAreas = [
 
 const InteractiveMap: React.FC = () => {
   const navigate = useNavigate();
+  const clickInsideInfoWindowRef = useRef<boolean>(false);
   const [infoWindow, setInfoWindow] = useState<InfoState>(null);
   const [stateMeta, setStateMeta] = useState<StateMetaMap>({});
   const [loading, setLoading] = useState(true);
@@ -171,6 +172,17 @@ const InteractiveMap: React.FC = () => {
     
     // Add click listener to the map
     map.addListener('click', (event: google.maps.MapMouseEvent) => {
+      // If a UI element inside the info window handled the click, ignore this map click
+      if (clickInsideInfoWindowRef.current) {
+        clickInsideInfoWindowRef.current = false;
+        return;
+      }
+      // If the click originated inside our InfoWindow container, ignore it
+      const target = (event as any)?.domEvent?.target as Node | null;
+      const iw = document.querySelector('.invastop-iw');
+      if (target && iw && iw.contains(target)) {
+        return;
+      }
       const clickedLat = event.latLng!.lat();
       const clickedLng = event.latLng!.lng();
       
@@ -185,8 +197,12 @@ const InteractiveMap: React.FC = () => {
       if (clickedState) {
         if (stateMeta[clickedState.name]) {
           // If we have API data, show the full InfoWindow
+          // If re-clicking the same state while open, keep current species index
+          const isSameStateOpen = selectedState?.name === clickedState.name && infoWindow;
           setSelectedState(stateMeta[clickedState.name]);
-          setCurrentSpeciesIndex(0);
+          if (!isSameStateOpen) {
+            setCurrentSpeciesIndex(0);
+          }
           setInfoWindow({
             position: clickedState.center,
             featureName: clickedState.name
@@ -205,7 +221,9 @@ const InteractiveMap: React.FC = () => {
               risk: "Unknown"
             }] : []
           });
-          setCurrentSpeciesIndex(0);
+          if (selectedState?.name !== clickedState.name) {
+            setCurrentSpeciesIndex(0);
+          }
           setInfoWindow({
             position: clickedState.center,
             featureName: clickedState.name
@@ -474,7 +492,13 @@ const InteractiveMap: React.FC = () => {
                   }
                 }}
               >
-                  <div className="p-3 sm:p-4 max-w-xs sm:max-w-md bg-white rounded-lg" style={{ minHeight: '400px', maxHeight: '500px' }}>
+                  <div
+                    className="invastop-iw p-3 sm:p-4 max-w-xs sm:max-w-md bg-white rounded-lg"
+                    style={{ minHeight: '400px', maxHeight: '500px' }}
+                    onMouseDownCapture={() => { clickInsideInfoWindowRef.current = true; }}
+                    onPointerDownCapture={() => { clickInsideInfoWindowRef.current = true; }}
+                    onTouchStartCapture={() => { clickInsideInfoWindowRef.current = true; }}
+                  >
                     {/* Header Row - State and Species Counter */}
                     <div className="flex items-center justify-between mb-3">
                       <h5 className="font-semibold text-gray-800 text-xs sm:text-sm">{infoWindow.featureName}</h5>
@@ -507,7 +531,11 @@ const InteractiveMap: React.FC = () => {
                         {selected.species.length > 1 && (
                           <>
                             <button
-                              onClick={prevSpecies}
+                              type="button"
+                              onClick={(e) => { clickInsideInfoWindowRef.current = true; e.preventDefault(); e.stopPropagation(); prevSpecies(); }}
+                              onMouseDown={(e) => e.stopPropagation()}
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onTouchStart={(e) => e.stopPropagation()}
                               className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800 p-1.5 rounded-full shadow-lg transition-all duration-200"
                             >
                               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -516,7 +544,11 @@ const InteractiveMap: React.FC = () => {
                             </button>
                             
                             <button
-                              onClick={nextSpecies}
+                              type="button"
+                              onClick={(e) => { clickInsideInfoWindowRef.current = true; e.preventDefault(); e.stopPropagation(); nextSpecies(); }}
+                              onMouseDown={(e) => e.stopPropagation()}
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onTouchStart={(e) => e.stopPropagation()}
                               className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800 p-1.5 rounded-full shadow-lg transition-all duration-200"
                             >
                               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

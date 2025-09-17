@@ -402,7 +402,7 @@ const MapPage: React.FC = () => {
             {/* Modal Content - Interactive Map */}
             <div className="flex-1 overflow-hidden">
               <iframe
-                src={`/map.html?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}`}
+                src={`/map.html?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}&_=${Date.now()}`}
                 className="w-full h-full border-0"
                 title="Interactive Species Distribution Map"
               />

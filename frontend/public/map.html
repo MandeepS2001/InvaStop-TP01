@@ -302,17 +302,24 @@ async function loadData() {
   const yrMin = years.length ? Math.min(...years) : 2015;
   const yrMax = years.length ? Math.max(...years) : new Date().getFullYear();
   minYear = Math.max(2015, yrMin);
-  maxYear = Math.max(minYear, yrMax);
+  // Cap the inferred max year at 2025
+  maxYear = Math.min(2025, Math.max(minYear, yrMax));
 
   yearMinEl.value = minYear;
   yearMaxEl.value = maxYear;
+  // Enforce input limits (2015–2025)
+  yearMinEl.setAttribute('min', '2015');
+  yearMinEl.setAttribute('max', '2025');
+  yearMaxEl.setAttribute('min', '2015');
+  yearMaxEl.setAttribute('max', '2025');
   yearStatsEl.textContent = `Data years: ${minYear}–${maxYear}`;
 }
 
 // --- Filtering + render markers ---
 function applyFiltersAndRender() {
   const yMin = parseInt(yearMinEl.value, 10);
-  const yMax = parseInt(yearMaxEl.value, 10);
+  // Clamp yMax to 2025 even if input tries to exceed
+  const yMax = Math.min(parseInt(yearMaxEl.value, 10), 2025);
   
   // If year fields are empty, don't filter by year (show all records)
   const useYearFilter = !isNaN(yMin) && !isNaN(yMax);
@@ -473,9 +480,14 @@ async function findNearbyRecords(postcode) {
 
 // --- Init everything ---
 (async function main() {
-  // Load Google Maps using API key from ?key= query param
+  // Load Google Maps using API key from ?key= query param or #key= hash
   const params = new URLSearchParams(location.search);
-  const apiKey = params.get('key');
+  let apiKey = params.get('key');
+  if (!apiKey && location.hash) {
+    const hash = location.hash.startsWith('#') ? location.hash.slice(1) : location.hash;
+    const hashParams = new URLSearchParams(hash);
+    apiKey = hashParams.get('key');
+  }
   const apiOverride = params.get('api');
   if (apiOverride) CONFIG.jsonUrl = apiOverride;
   if (!apiKey) {
