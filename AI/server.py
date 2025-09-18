@@ -4,7 +4,7 @@ import os, shutil
 from fastapi import FastAPI, status, File, UploadFile
 from fastapi.responses import JSONResponse
 
-app = FastAPI()
+app = FastAPI(redoc_url=None, docs_url=None)
 
 @app.post("/predict")
 def detect(img: UploadFile, model:str=None):
@@ -33,7 +33,7 @@ def detect(img: UploadFile, model:str=None):
         f.write(img.file.read())
     print(f"Start predicting: <{img.filename}> with model [{model}].")
     payload = predict(model=model, img=img.filename, visualize=False)
-    rmtree(img.filename)
+    os.remove(img.filename)
 
     return JSONResponse(status_code=status.HTTP_200_OK, content=payload)
 
