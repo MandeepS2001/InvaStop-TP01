@@ -214,16 +214,14 @@ function renderChips() {
     }
   };
   
+  // Lightweight reset: do not reload data to avoid UI hang
   document.getElementById("resetView").onclick = () => {
-    // Reset to full dataset
-    loadData().then(() => {
-      applyFiltersAndRender();
-      MAP.setCenter(AU_CENTER);
-      MAP.setZoom(AU_ZOOM);
-      locationStatsEl.textContent = "";
-      postcodeEl.value = "";
-      statusEl.textContent = `Live data loaded (${rawRows.length.toLocaleString()} rows)`;
-    });
+    MAP.setCenter({ lat: AU_CENTER[0], lng: AU_CENTER[1] });
+    MAP.setZoom(AU_ZOOM);
+    locationStatsEl.textContent = "";
+    postcodeEl.value = "";
+    // Reapply current filters to ensure markers are in sync
+    applyFiltersAndRender();
   };
 }
 
