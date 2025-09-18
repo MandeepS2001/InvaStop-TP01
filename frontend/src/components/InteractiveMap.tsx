@@ -102,6 +102,7 @@ const InteractiveMap: React.FC = () => {
   const [selectedState, setSelectedState] = useState<StateMeta | null>(null);
   const [currentSpeciesIndex, setCurrentSpeciesIndex] = useState(0);
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [comparison, setComparison] = useState<any | null>(null);
 
   // Fetch real state data from Epic 1.0 API
   useEffect(() => {
@@ -172,6 +173,10 @@ const InteractiveMap: React.FC = () => {
     
     // Add click listener to the map
     map.addListener('click', (event: google.maps.MapMouseEvent) => {
+      // If an info window is open, ignore map clicks entirely so inner UI works reliably
+      if (infoWindow) {
+        return;
+      }
       // If a UI element inside the info window handled the click, ignore this map click
       if (clickInsideInfoWindowRef.current) {
         clickInsideInfoWindowRef.current = false;
@@ -249,6 +254,23 @@ const InteractiveMap: React.FC = () => {
       setCurrentSpeciesIndex((prev) => (prev - 1 + selectedState.species.length) % selectedState.species.length);
     }
   };
+
+  // Fetch state vs national comparison when a state is selected
+  useEffect(() => {
+    const fetchComparison = async () => {
+      if (!infoWindow?.featureName) { setComparison(null); return; }
+      try {
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://invastopbackend.vercel.app/api/v1';
+        const res = await fetch(`${apiUrl}/epic1/compare/state-vs-national?state=${encodeURIComponent(infoWindow.featureName)}`);
+        if (!res.ok) throw new Error(String(res.status));
+        const data = await res.json();
+        setComparison(data);
+      } catch (e) {
+        setComparison(null);
+      }
+    };
+    fetchComparison();
+  }, [infoWindow?.featureName]);
 
   const getSpeciesImage = (speciesName: string) => {
     // Use images from the top10 folder in public - updated to match actual file names
@@ -543,6 +565,24 @@ const InteractiveMap: React.FC = () => {
                               </svg>
                             </button>
                             
+                            {/* Fallback Next/Prev Controls (text buttons) */}
+                            <div className="absolute -bottom-2 left-0 right-0 flex justify-between px-2">
+                              <button
+                                type="button"
+                                onClick={(e) => { clickInsideInfoWindowRef.current = true; e.preventDefault(); e.stopPropagation(); prevSpecies(); }}
+                                className="text-[10px] bg-white/90 hover:bg-white text-gray-700 px-2 py-0.5 rounded border border-gray-200 shadow"
+                              >
+                                Prev
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => { clickInsideInfoWindowRef.current = true; e.preventDefault(); e.stopPropagation(); nextSpecies(); }}
+                                className="text-[10px] bg-white/90 hover:bg-white text-gray-700 px-2 py-0.5 rounded border border-gray-200 shadow"
+                              >
+                                Next
+                              </button>
+                            </div>
+
                             <button
                               type="button"
                               onClick={(e) => { clickInsideInfoWindowRef.current = true; e.preventDefault(); e.stopPropagation(); nextSpecies(); }}
@@ -624,6 +664,23 @@ const InteractiveMap: React.FC = () => {
                           <p className="text-sm text-gray-600">Most invasive species in this state</p>
                           <p className="text-xs text-gray-500 mt-1">Data loading...</p>
                         </div>
+                      </div>
+                    )}
+                    {/* State vs Australia comparison mini-widget */}
+                    {comparison && comparison.top && (
+                      <div className="mt-3 p-2 bg-gray-50 rounded border">
+                        <div className="text-[11px] font-semibold text-gray-700 mb-1">{`Top species in ${comparison.state}: state vs Australia`}</div>
+                        <div className="space-y-1 max-h-28 overflow-auto pr-1">
+                          {comparison.top.map((row: any) => (
+                            <div key={row.species} className="text-[10px]">
+                              <div className="flex justify-between"><span className="font-medium">{row.species}</span><span>{row.stateCount}/{row.nationalCount}</span></div>
+                              <div className="h-1.5 w-full bg-gray-200 rounded">
+                                <div className="h-1.5 bg-green-500 rounded" style={{ width: `${Math.min(100, row.stateSharePct)}%` }}></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="text-[10px] text-gray-600 mt-1">Share = state records / national records</div>
                       </div>
                     )}
                     

@@ -41,6 +41,14 @@ def test_connection():
                             print(f"    Sample: {sample_data[:2]}")
                     except Exception as e:
                         print(f"  ❌ Error reading {table_name}: {str(e)}")
+
+            # Show a couple of quiz_records specifically
+            try:
+                result = conn.execute(text('SELECT id, `Species Name`, `Nature`, `Brief Explanation` FROM `quiz_records` LIMIT 2'))
+                sample = result.fetchall()
+                print(f"\n🧠 quiz_records preview: {sample}")
+            except Exception as e:
+                print(f"\n❌ Error previewing quiz_records: {str(e)}")
             
     except Exception as e:
         print(f"❌ Database connection failed: {str(e)}")

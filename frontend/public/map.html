@@ -431,7 +431,7 @@ async function findNearbyRecords(postcode) {
     const location = await geocodePostcode(postcode);
     
     // Fetch nearby records from API
-    const apiUrl = `${CONFIG.jsonUrl}/near-location?latitude=${location.lat}&longitude=${location.lng}&radius_km=50`;
+    const apiUrl = `${CONFIG.jsonUrl}/near-location?latitude=${location.lat}&longitude=${location.lng}&radius_km=20`;
     const response = await fetch(apiUrl);
     
     if (!response.ok) {
@@ -469,7 +469,7 @@ async function findNearbyRecords(postcode) {
     MAP.setZoom(10);
     
     // Update status
-    locationStatsEl.textContent = `Found ${data.total_count} records within 50km of ${postcode}`;
+    locationStatsEl.textContent = `Found ${data.total_count} records within 20km of ${postcode}`;
     statusEl.textContent = `Showing ${data.total_count} records near ${postcode}`;
     
   } catch (error) {

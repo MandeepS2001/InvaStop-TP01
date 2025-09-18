@@ -9,6 +9,7 @@ import SpeciesDetailPage from './pages/SpeciesDetailPage';
 import MapPage from './pages/MapPage';
 import DidYouKnowPage from './pages/DidYouKnowPage';
 import Epic5Page from './pages/Epic5Page';
+import QuizPage from './pages/QuizPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="map" element={<MapPage />} />
         <Route path="insights" element={<DidYouKnowPage />} />
         <Route path="epic5" element={<Epic5Page />} />
+        <Route path="quiz" element={<QuizPage />} />
         <Route path="more" element={<div>More Page - Coming Soon</div>} />
       </Route>
     </Routes>

@@ -45,7 +45,7 @@ const SeasonalMetrics: React.FC = () => {
       setError(null);
       
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/v1';
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://invastopbackend.vercel.app/api/v1';
         const response = await fetch(`${apiUrl}/epic1/seasonal-risk?season=${currentSeason}`);
         
         if (!response.ok) {

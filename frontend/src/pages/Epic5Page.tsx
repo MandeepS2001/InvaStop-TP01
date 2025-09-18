@@ -48,7 +48,7 @@ const Epic5Page: React.FC = () => {
       setError(null);
       
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/v1';
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://invastopbackend.vercel.app/api/v1';
         const params = new URLSearchParams({
           season: selectedSeason,
           ...(postcode && { postcode })

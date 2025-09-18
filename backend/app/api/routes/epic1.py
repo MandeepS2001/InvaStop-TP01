@@ -165,6 +165,70 @@ def get_map_state_data(db: Session = Depends(get_db)):
             detail=f"Error fetching map state data: {str(e)}"
         )
 
+@router.get("/compare/state-vs-national")
+def compare_state_vs_national(state: str, top_n: int = 5, db: Session = Depends(get_db)):
+    """
+    Compare top species counts in a given state vs nationally using invasive_records.
+    Returns unified list of species with stateCount, nationalCount, and stateShare (% of national).
+    """
+    try:
+        from app.models.biodiversity_impact import InvasiveRecord
+        # State counts
+        state_counts = db.query(
+            InvasiveRecord.vernacularName.label('name'),
+            func.count(InvasiveRecord.id).label('count')
+        ).filter(
+            InvasiveRecord.stateProvince.ilike(f"%{state}%")
+        ).group_by(
+            InvasiveRecord.vernacularName
+        ).order_by(func.count(InvasiveRecord.id).desc()).all()
+
+        # National counts
+        national_counts = db.query(
+            InvasiveRecord.vernacularName.label('name'),
+            func.count(InvasiveRecord.id).label('count')
+        ).group_by(
+            InvasiveRecord.vernacularName
+        ).order_by(func.count(InvasiveRecord.id).desc()).all()
+
+        # Build dicts
+        state_map = {row.name or 'Unknown': int(row.count) for row in state_counts}
+        nat_map = {row.name or 'Unknown': int(row.count) for row in national_counts}
+
+        # Take union of top species across state and national, then pick top_n by state count where available
+        combined_species = set(list(state_map.keys())[:top_n] + list(nat_map.keys())[:top_n])
+        rows = []
+        for sp in combined_species:
+            s = state_map.get(sp, 0)
+            n = nat_map.get(sp, 0)
+            share = round((s / n * 100.0), 2) if n > 0 else 0.0
+            rows.append({
+                'species': sp,
+                'stateCount': s,
+                'nationalCount': n,
+                'stateSharePct': share
+            })
+
+        # Sort by stateCount desc and trim
+        rows.sort(key=lambda r: r['stateCount'], reverse=True)
+        rows = rows[:top_n]
+
+        totals = {
+            'stateTotal': int(sum(state_map.values())),
+            'nationalTotal': int(sum(nat_map.values()))
+        }
+
+        return {
+            'state': state,
+            'top': rows,
+            'totals': totals
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error comparing state vs national: {str(e)}"
+        )
+
 def get_risk_level_for_state(species_count: int) -> str:
     """Determine risk level based on species count"""
     if species_count >= 4:

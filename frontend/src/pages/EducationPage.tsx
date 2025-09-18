@@ -444,6 +444,77 @@ const EducationPage: React.FC = () => {
             )}
           </div>
         </section>
+
+        {/* Quiz Section */}
+        <section className="py-16 bg-gradient-to-br from-green-50 via-white to-blue-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Test Your Knowledge
+              </h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+                Ready to put your plant identification skills to the test? Take our interactive quiz and see how well you can identify invasive species!
+              </p>
+            </div>
+
+            <div className="flex justify-center max-w-4xl mx-auto">
+              {/* Quiz Card */}
+              <div className="bg-white rounded-2xl shadow-xl border-2 border-green-100 p-8 hover:shadow-2xl transition-shadow duration-300">
+                <div className="text-center">
+                  <div className="bg-gradient-to-r from-green-500 to-blue-500 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                    <span className="text-white text-2xl">🎯</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Spot the Invader</h3>
+                  <p className="text-gray-600 mb-6">
+                    Test your ability to identify invasive plants in this interactive quiz. Build confidence before encountering them in real life.
+                  </p>
+                  <Link
+                    to="/quiz"
+                    onClick={scrollToTop}
+                    className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    <span className="mr-2">Start</span>
+                    <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                  </Link>
+                </div>
+              </div>
+              {/* Removed secondary card per request */}
+            </div>
+
+            {/* Features */}
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center p-6">
+                <div className="bg-green-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-green-600 text-2xl">🏆</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-3">Earn Achievements</h4>
+                <p className="text-gray-600">
+                  Unlock badges and track your progress as you become more skilled at plant identification
+                </p>
+              </div>
+
+              <div className="text-center p-6">
+                <div className="bg-blue-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-blue-600 text-2xl">🎓</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-3">Build Confidence</h4>
+                <p className="text-gray-600">
+                  Practice in a safe environment before encountering invasive plants in real life
+                </p>
+              </div>
+
+              <div className="text-center p-6">
+                <div className="bg-purple-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-purple-600 text-2xl">🌱</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-3">Make a Difference</h4>
+                <p className="text-gray-600">
+                  Every correct identification helps protect Australia's unique biodiversity
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
