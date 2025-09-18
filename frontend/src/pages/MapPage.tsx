@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import InteractiveMap from '../components/InteractiveMap';
 
 // Utility function to scroll to top
@@ -8,6 +8,7 @@ const scrollToTop = () => {
 };
 
 const MapPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showInteractiveMap, setShowInteractiveMap] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +37,22 @@ const MapPage: React.FC = () => {
     const timer = setTimeout(() => setIsLoading(false), 600);
     return () => clearTimeout(timer);
   }, []);
+
+  // Check for URL parameter to auto-open interactive map
+  useEffect(() => {
+    const openInteractive = searchParams.get('openInteractive');
+    if (openInteractive === 'true') {
+      // Small delay to ensure page is loaded
+      const timer = setTimeout(() => {
+        setShowInteractiveMap(true);
+        // Remove the parameter from URL without causing a page reload
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete('openInteractive');
+        window.history.replaceState({}, '', newUrl.toString());
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
   return (
     <div className="min-h-screen">
       {/* Header */}

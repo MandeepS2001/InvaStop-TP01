@@ -34,11 +34,154 @@ const Epic5Page: React.FC = () => {
   const [seasonalData, setSeasonalData] = useState<SeasonalData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [locationLoading, setLocationLoading] = useState(false);
   const postcodeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleClearPostcode = () => {
     setPostcodeInput('');
     setPostcode('');
+  };
+
+  // Fallback function to approximate postcode from coordinates
+  const getApproximatePostcode = (lat: number, lng: number): string | null => {
+    // Major Australian city coordinates and their primary postcodes
+    const cityData = [
+      { lat: -37.8136, lng: 144.9631, postcode: '3000', name: 'Melbourne' },
+      { lat: -33.8688, lng: 151.2093, postcode: '2000', name: 'Sydney' },
+      { lat: -27.4698, lng: 153.0251, postcode: '4000', name: 'Brisbane' },
+      { lat: -31.9505, lng: 115.8605, postcode: '6000', name: 'Perth' },
+      { lat: -34.9285, lng: 138.6007, postcode: '5000', name: 'Adelaide' },
+      { lat: -42.8821, lng: 147.3272, postcode: '7000', name: 'Hobart' },
+      { lat: -35.2809, lng: 149.1300, postcode: '2600', name: 'Canberra' },
+      { lat: -12.4634, lng: 130.8456, postcode: '0800', name: 'Darwin' }
+    ];
+
+    // Find the closest city
+    let closestCity = cityData[0];
+    let minDistance = Math.sqrt(
+      Math.pow(lat - closestCity.lat, 2) + Math.pow(lng - closestCity.lng, 2)
+    );
+
+    for (const city of cityData) {
+      const distance = Math.sqrt(
+        Math.pow(lat - city.lat, 2) + Math.pow(lng - city.lng, 2)
+      );
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestCity = city;
+      }
+    }
+
+    // If within reasonable distance (roughly 50km), return the postcode
+    if (minDistance < 0.5) { // Approximately 50km
+      return closestCity.postcode;
+    }
+
+    return null;
+  };
+
+  const handleUseMyLocation = () => {
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by this browser');
+      return;
+    }
+
+    setLocationLoading(true);
+    setError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          
+          // Use reverse geocoding to get postcode
+          const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+          if (!apiKey) {
+            throw new Error('Google Maps API key not configured');
+          }
+          
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
+          );
+          
+          if (!response.ok) {
+            throw new Error(`Geocoding failed: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          
+          if (data.status === 'OK' && data.results && data.results.length > 0) {
+            // Look for postcode in address components
+            const result = data.results[0];
+            const postcodeComponent = result.address_components.find(
+              (component: any) => component.types.includes('postal_code')
+            );
+            
+            if (postcodeComponent) {
+              const detectedPostcode = postcodeComponent.long_name;
+              setPostcodeInput(detectedPostcode);
+              setPostcode(detectedPostcode);
+              setError(null); // Clear any previous errors
+            } else {
+              // Fallback: try to find postcode in formatted address
+              const formattedAddress = result.formatted_address;
+              const postcodeMatch = formattedAddress.match(/\b\d{4}\b/);
+              if (postcodeMatch) {
+                const detectedPostcode = postcodeMatch[0];
+                setPostcodeInput(detectedPostcode);
+                setPostcode(detectedPostcode);
+                setError(null);
+              } else {
+                setError('Could not determine postcode for your location. Please enter it manually.');
+              }
+            }
+          } else {
+            if (data.status === 'REQUEST_DENIED') {
+              console.log('Geocoding API access denied. Using fallback method...');
+              // Fallback: Use approximate postcode based on coordinates
+              const approximatePostcode = getApproximatePostcode(latitude, longitude);
+              if (approximatePostcode) {
+                setPostcodeInput(approximatePostcode);
+                setPostcode(approximatePostcode);
+                setError(null);
+                console.log(`Using approximate postcode: ${approximatePostcode}`);
+              } else {
+                setError('Could not determine postcode for your location. Please enter it manually or try a major city postcode (e.g., 3000 for Melbourne, 2000 for Sydney).');
+              }
+            } else {
+              throw new Error(`Geocoding failed: ${data.status || 'No results'}`);
+            }
+          }
+        } catch (err) {
+          console.error('Geocoding error:', err);
+          setError('Could not determine postcode for your location. Please enter it manually or try a major city postcode (e.g., 3000 for Melbourne, 2000 for Sydney).');
+        } finally {
+          setLocationLoading(false);
+        }
+      },
+      (error) => {
+        setLocationLoading(false);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            setError('Location access denied. Please allow location access and try again.');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            setError('Location information unavailable.');
+            break;
+          case error.TIMEOUT:
+            setError('Location request timed out.');
+            break;
+          default:
+            setError('An unknown error occurred while retrieving location.');
+            break;
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000 // 5 minutes
+      }
+    );
   };
 
   // Fetch seasonal data when season or postcode changes (with debounce for postcode)
@@ -239,19 +382,36 @@ const Epic5Page: React.FC = () => {
                       }}
                       className="px-6 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 pr-12 text-lg font-semibold shadow-md"
                       placeholder="3000"
-                      disabled={loading}
+                      disabled={loading || locationLoading}
                       maxLength={4}
                     />
                     {postcodeInput && (
                       <button
                         onClick={handleClearPostcode}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                        disabled={loading}
+                        disabled={loading || locationLoading}
                       >
                         <X className="h-5 w-5" />
                       </button>
                     )}
                   </div>
+                  <button
+                    onClick={handleUseMyLocation}
+                    disabled={loading || locationLoading}
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-semibold shadow-md transition-all duration-200 flex items-center space-x-2"
+                  >
+                    {locationLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Detecting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <MapPin className="h-5 w-5" />
+                        <span>Use my location</span>
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
@@ -274,8 +434,22 @@ const Epic5Page: React.FC = () => {
               </div>
             )}
 
+            {/* No Data State */}
+            {!loading && !error && (!seasonalData || seasonalData.total_sightings === 0) && (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-8 mb-12 text-center">
+                <div className="text-6xl mb-4">🌱</div>
+                <h3 className="text-2xl font-bold text-yellow-800 mb-2">No Data Available</h3>
+                <p className="text-yellow-700 mb-4">
+                  No invasive species sightings found for {selectedSeason} in the selected area.
+                </p>
+                <p className="text-sm text-yellow-600">
+                  Try selecting a different season or entering a different postcode.
+                </p>
+              </div>
+            )}
+
             {/* Dynamic Content */}
-            {seasonalData && !loading && (
+            {seasonalData && !loading && seasonalData.total_sightings > 0 && (
               <>
                 {/* Risk Summary */}
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-8 mb-12 shadow-lg">
@@ -625,44 +799,37 @@ const Epic5Page: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-green-800 text-white py-12">
+      <footer className="bg-green-800 text-white py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Logo and Copyright */}
-            <div className="md:col-span-1">
-              <div className="flex items-center space-x-2 mb-4">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-8 w-8" />
-                <span className="text-xl font-bold">invastop</span>
+            <div className="md:col-span-1 flex flex-col items-start">
+              <div className="flex flex-col items-start mb-3">
+                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
               </div>
-              <p className="text-green-100">© 2025</p>
+              <p className="text-green-100 text-sm">© 2025</p>
             </div>
 
             {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-bold mb-4">Produtos</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="#" className="hover:text-white transition-colors">Ervas</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Flores</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Cactos</a></li>
+                <h3 className="font-bold mb-3 text-sm">Products</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Species Database</Link></li>
+                  <li><Link to="/education" onClick={scrollToTop} className="hover:text-white transition-colors">Educational Resources</Link></li>
+                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Mapping Tools</Link></li>
                 </ul>
               </div>
-
+              
               <div>
-                <h3 className="font-bold mb-4">Sobre nós</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="#" className="hover:text-white transition-colors">Quem somos?</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
+                <h3 className="font-bold mb-3 text-sm">About Us</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><span className="hover:text-white transition-colors cursor-pointer">Who We Are</span></li>
+                  <li><span className="hover:text-white transition-colors cursor-pointer">FAQ</span></li>
+                  <li><span className="hover:text-white transition-colors cursor-pointer">Our Mission</span></li>
                 </ul>
               </div>
-
-              <div>
-                <h3 className="font-bold mb-4">Trabalhe com a gente</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="#" className="hover:text-white transition-colors">Entre em contato com nosso email</a></li>
-                  <li><a href="mailto:EnvironmentalHealth@hv.sistem.com" className="hover:text-white transition-colors">EnvironmentalHealth@hv.sistem.com</a></li>
-                </ul>
-              </div>
+              
             </div>
           </div>
         </div>

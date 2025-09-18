@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, AlertTriangle, Shield, Target, MapPin, Calendar, Leaf, Zap, Info, Wrench, TrendingUp, Search, Eye } from 'lucide-react';
+import { AlertTriangle, Shield, Target, MapPin, Calendar, Leaf, Info, Wrench, TrendingUp, Search, Eye } from 'lucide-react';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
@@ -807,6 +807,19 @@ const SpeciesDetailPage: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-purple-600" />
                   <span className="text-sm text-gray-600">First Detected: <span className="font-medium">{species.firstDetected}</span></span>
+                </div>
+                
+                {/* CTA for Interactive Map */}
+                <div className="mt-4">
+                  <Link
+                    to="/map?openInteractive=true"
+                    onClick={scrollToTop}
+                    className="group inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-blue-500/30 transform hover:scale-105"
+                  >
+                    <MapPin className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                    <span className="group-hover:tracking-wide transition-all duration-300">See the Spread</span>
+                    <span className="ml-2 text-xs group-hover:translate-x-1 transition-transform duration-300">→</span>
+                  </Link>
                 </div>
               </div>
             </div>

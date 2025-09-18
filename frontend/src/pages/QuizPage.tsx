@@ -30,7 +30,6 @@ const QuizPage: React.FC = () => {
               <Link to="/insights" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Did you Know?</Link>
               <Link to="/map" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Map</Link>
               <Link to="/epic5" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Seasonal</Link>
-              <Link to="/quiz" onClick={scrollToTop} className="px-4 py-2 text-white bg-green-600/60 border-green-500 rounded-md transition-all duration-200 font-medium shadow-md">Quiz</Link>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -98,16 +97,6 @@ const QuizPage: React.FC = () => {
                 }}
               >
                 Seasonal
-              </Link>
-              <Link 
-                to="/quiz" 
-                className="block px-3 py-2 text-green-200 font-medium hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Quiz
               </Link>
             </div>
           </div>
@@ -214,7 +203,6 @@ const QuizPage: React.FC = () => {
                 <h3 className="font-bold mb-4">Learn</h3>
                 <ul className="space-y-2 text-green-100">
                   <li><Link to="/education" className="hover:text-white transition-colors">Species Profiles</Link></li>
-                  <li><Link to="/quiz" className="hover:text-white transition-colors">Plant ID Quiz</Link></li>
                   <li><Link to="/insights" className="hover:text-white transition-colors">Did You Know?</Link></li>
                 </ul>
               </div>

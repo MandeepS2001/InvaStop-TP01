@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import SeasonalRiskIndicator from '../components/SeasonalRiskIndicator';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
@@ -399,6 +400,11 @@ const EducationPage: React.FC = () => {
                         <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-green-700 transition-colors duration-300">
                           {sp.name}
                         </h3>
+                        
+                        {/* Seasonal Risk Indicator */}
+                        <div className="mb-2">
+                          <SeasonalRiskIndicator speciesName={sp.name} />
+                        </div>
                         
                         {/* Quick Facts Preview */}
                         <div className="mb-3 space-y-1">

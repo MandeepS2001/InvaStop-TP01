@@ -447,33 +447,55 @@ def get_seasonal_risk_data(
         
         # If postcode is provided, filter by location
         if postcode:
-            # Simple geocoding for major Australian cities (for demo purposes)
-            # In production, you'd use a proper geocoding service
-            city_coords = {
-                "3000": {"lat": -37.8136, "lng": 144.9631},  # Melbourne
-                "2000": {"lat": -33.8688, "lng": 151.2093},  # Sydney
-                "4000": {"lat": -27.4698, "lng": 153.0251},  # Brisbane
-                "6000": {"lat": -31.9505, "lng": 115.8605},  # Perth
-                "5000": {"lat": -34.9285, "lng": 138.6007},  # Adelaide
-                "7000": {"lat": -42.8821, "lng": 147.3272},  # Hobart
-                "2600": {"lat": -35.2809, "lng": 149.1300},  # Canberra
-                "0800": {"lat": -12.4634, "lng": 130.8456},  # Darwin
-            }
-            
-            if postcode in city_coords:
-                coords = city_coords[postcode]
+            # Try to resolve coordinates from au_localities table first
+            from sqlalchemy import text as sql_text
+            resolved_coords = None
+            try:
+                # Fetch multiple locality rows for the postcode and average valid coords
+                rows = db.execute(
+                    sql_text(
+                        "SELECT latitude, longitude FROM au_localities WHERE postcode = :pc LIMIT 50"
+                    ),
+                    {"pc": str(postcode)}
+                ).fetchall()
+
+                lats = [float(r[0]) for r in rows if r[0] is not None]
+                lngs = [float(r[1]) for r in rows if r[1] is not None]
+                # Filter out zeros which indicate missing values in some rows
+                lats = [v for v in lats if v != 0.0]
+                lngs = [v for v in lngs if v != 0.0]
+                if lats and lngs:
+                    resolved_coords = {"lat": sum(lats) / len(lats), "lng": sum(lngs) / len(lngs)}
+            except Exception:
+                resolved_coords = None
+
+            # Fallback to city centroid map if au_localities has no usable coords
+            if resolved_coords is None:
+                city_coords = {
+                    "3000": {"lat": -37.8136, "lng": 144.9631},  # Melbourne
+                    "2000": {"lat": -33.8688, "lng": 151.2093},  # Sydney
+                    "4000": {"lat": -27.4698, "lng": 153.0251},  # Brisbane
+                    "6000": {"lat": -31.9505, "lng": 115.8605},  # Perth
+                    "5000": {"lat": -34.9285, "lng": 138.6007},  # Adelaide
+                    "7000": {"lat": -42.8821, "lng": 147.3272},  # Hobart
+                    "2600": {"lat": -35.2809, "lng": 149.1300},  # Canberra
+                    "0800": {"lat": -12.4634, "lng": 130.8456},  # Darwin
+                }
+                resolved_coords = city_coords.get(str(postcode))
+
+            # Apply bounding box filter if we have coordinates
+            if resolved_coords is not None:
                 lat_delta = radius_km / 111.0
-                lng_delta = radius_km / (111.0 * func.cos(func.radians(coords["lat"])))
-                
+                lng_delta = radius_km / (111.0 * func.cos(func.radians(resolved_coords["lat"])))
                 query = query.filter(
                     and_(
                         InvasiveRecord.decimalLatitude.between(
-                            coords["lat"] - lat_delta, 
-                            coords["lat"] + lat_delta
+                            resolved_coords["lat"] - lat_delta,
+                            resolved_coords["lat"] + lat_delta
                         ),
                         InvasiveRecord.decimalLongitude.between(
-                            coords["lng"] - lng_delta, 
-                            coords["lng"] + lng_delta
+                            resolved_coords["lng"] - lng_delta,
+                            resolved_coords["lng"] + lng_delta
                         )
                     )
                 )
