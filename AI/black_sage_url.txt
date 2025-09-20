@@ -1,7 +1,7 @@
 https://inaturalist-open-data.s3.amazonaws.com/photos/501873903/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/566290319/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/558530814/large.jpg
-https://inaturalist-open-data.s3.amazonaws.com/photos/501873903/large.jpg
+https://inaturalist-open-data.s3.amazonaws.com/photos/486130926/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/557370464/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/557370485/large.jpg
 https://inaturalist-open-data.s3.amazonaws.com/photos/557366229/large.jpg
