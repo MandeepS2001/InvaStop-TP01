@@ -237,12 +237,12 @@ const HomePage: React.FC = () => {
             <div className="text-center lg:text-left">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
                 <span className="inline-block">
-                  Play your part in protecting the environment.
+                  Stop problem plants from taking over your property.
                 </span>
               </h1>
               <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-green-100">
                 <span className="inline-block">
-                  Record sightings of invasive species on your farm or property and learn how to protect your land.
+                  InvaStop helps you spot unwanted plants on your land, learn what to do about them, and keep your property healthy.
                 </span>
               </p>
               <button 
@@ -252,7 +252,7 @@ const HomePage: React.FC = () => {
                 }}
                 className="group relative bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl border border-green-400/30 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto font-semibold shadow-lg hover:shadow-xl hover:shadow-green-500/25 hover:scale-105 transform"
               >
-                <span className="relative z-10">Identify Your Invaders →</span>
+                <span className="relative z-10">Protect Your Patch →</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
             </div>
@@ -282,10 +282,10 @@ const HomePage: React.FC = () => {
           {/* Section Header */}
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
-              See what's happening around you.
+              Why this matters to your property.
             </h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-              Discover how many native species are being affected by invasive plants and animals across different groups.
+              Problem plants cost Australian farmers billions each year and can spread quickly from one property to the next. See how widespread this issue really is.
             </p>
           </div>
 
@@ -352,12 +352,8 @@ const HomePage: React.FC = () => {
                             </p>
                             
                             {/* Citation */}
-                            <div className="text-xs text-green-200 border-t border-green-600 pt-2 mb-2 sm:mb-3">
+                            <div className="text-xs text-green-200 border-t border-green-600 pt-2">
                               {stat.expandedInfo.citation}
-                            </div>
-                            
-                            <div className="text-center text-xs sm:text-sm text-green-200">
-                              Hover away to flip back
                             </div>
                           </div>
                         </div>
@@ -375,8 +371,8 @@ const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-green-200/40 p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6">
             <div className="flex-1">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">See the Impact on Australian Wildlife</h3>
-              <p className="text-gray-600">Explore interactive charts and data stories about how invasive species impact Australia — all in one place.</p>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Learn More About the Problem</h3>
+              <p className="text-gray-600">See pictures and stories about how problem plants affect farms and properties across Australia.</p>
             </div>
             <div>
               <Link

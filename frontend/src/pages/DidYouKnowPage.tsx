@@ -155,7 +155,7 @@ const DidYouKnowPage: React.FC = () => {
               </h1>
               <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-green-100">
                 <span className="inline-block">
-                  Discover the real impact of invasive species on Australian wildlife through data-driven insights and visualizations.
+                  Learn about problem plants that affect farms and properties across Australia. See real stories and pictures of the impact.
                 </span>
               </p>
             </div>
@@ -173,98 +173,102 @@ const DidYouKnowPage: React.FC = () => {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Seasonal Metrics Section */}
+          {/* Seasonal Information Section */}
           <SeasonalMetrics />
 
+          {/* Simple Chart Section */}
           <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-10">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">How Problem Plants Affect Australia</h2>
+              <p className="text-gray-600">See which types of plants cause the most problems across the country</p>
+            </div>
             <TaxonThreatChart />
           </div>
 
-          {/* Enhanced insights with dynamic data */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-lg p-6 border-2 border-blue-200">
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-500 p-3 rounded-full mr-4">
-                  <span className="text-white text-xl">🌿</span>
-                </div>
-                <h2 className="font-bold text-xl text-blue-800">Top Impacted Group</h2>
-              </div>
-              <p className="text-blue-700 text-base mb-3">Plants remain the most impacted group across Australia, with invasive species affecting native vegetation and ecosystems.</p>
-              <div className="bg-white rounded-lg p-3 border border-blue-200">
-                <div className="text-sm text-blue-600 font-medium">Key Impact Areas:</div>
-                <ul className="text-sm text-blue-700 mt-1 space-y-1">
-                  <li>• Native vegetation displacement</li>
-                  <li>• Soil nutrient depletion</li>
-                  <li>• Wildlife habitat loss</li>
-                </ul>
-              </div>
+          {/* Simple Plant Stories */}
+          <section className="mb-12">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Real Stories from Australian Farms</h2>
+              <p className="text-lg text-gray-600">See how problem plants affect properties just like yours</p>
             </div>
-            
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-lg p-6 border-2 border-orange-200">
-              <div className="flex items-center mb-4">
-                <div className="bg-orange-500 p-3 rounded-full mr-4">
-                  <span className="text-white text-xl">🦊</span>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Story 1 */}
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div className="text-center mb-4">
+                  <div className="bg-red-100 p-4 rounded-full w-16 h-16 mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-red-600 text-2xl">🌿</span>
+                  </div>
+                  <h3 className="font-bold text-lg text-gray-900">Lantana Takes Over</h3>
                 </div>
-                <h2 className="font-bold text-xl text-orange-800">Species with Broadest Impact</h2>
+                <p className="text-gray-600 text-sm mb-4">"Within two years, Lantana had covered half my property. It was impossible to walk through some areas."</p>
+                <div className="text-xs text-gray-500">- Farmer from Queensland</div>
               </div>
-              <p className="text-orange-700 text-base mb-3">Red Fox shows wide impact across mammals and birds, making it one of Australia's most destructive invasive species.</p>
-              <div className="bg-white rounded-lg p-3 border border-orange-200">
-                <div className="text-sm text-orange-600 font-medium">Impact Statistics:</div>
-                <ul className="text-sm text-orange-700 mt-1 space-y-1">
-                  <li>• Threatens 14 mammal species</li>
-                  <li>• Affects 40+ bird species</li>
-                  <li>• Found in 76% of mainland Australia</li>
-                </ul>
+
+              {/* Story 2 */}
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div className="text-center mb-4">
+                  <div className="bg-orange-100 p-4 rounded-full w-16 h-16 mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-orange-600 text-2xl">🌿</span>
+                  </div>
+                  <h3 className="font-bold text-lg text-gray-900">Blackberry Bush Problem</h3>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">"The blackberry bushes got so thick, they blocked access to my dam. I had to cut a new path."</p>
+                <div className="text-xs text-gray-500">- Property owner from Victoria</div>
+              </div>
+
+              {/* Story 3 */}
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div className="text-center mb-4">
+                  <div className="bg-yellow-100 p-4 rounded-full w-16 h-16 mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-yellow-600 text-2xl">🌿</span>
+                  </div>
+                  <h3 className="font-bold text-lg text-gray-900">Gorse Spreading Fast</h3>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">"Gorse started in one corner and now it's spreading to my neighbor's property too."</p>
+                <div className="text-xs text-gray-500">- Landowner from Tasmania</div>
               </div>
             </div>
           </section>
 
-          {/* CTA to Interactive Tools */}
+          {/* Simple Next Steps */}
           <section className="relative py-12 sm:py-16 bg-gradient-to-br from-green-50 via-white to-green-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-8">
-                <h3 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Explore Our Interactive Tools</h3>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto">Discover invasive species data through our comprehensive mapping and seasonal analysis tools.</p>
-              </div>
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Ready to Help Your Property?</h3>
+              <p className="text-lg text-gray-600 mb-8">Here's what you can do next:</p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Map CTA */}
-                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-green-200/40 p-6 sm:p-8">
-                  <div className="text-center">
-                    <div className="bg-gradient-to-r from-green-500 to-blue-500 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                      <span className="text-white text-2xl">🗺️</span>
-                    </div>
-                    <h4 className="text-xl font-bold text-gray-900 mb-3">Interactive Species Map</h4>
-                    <p className="text-gray-600 mb-6">Discover where invasive species are found across Australia and learn about their distribution patterns in real-time.</p>
-                    <Link
-                      to="/map"
-                      onClick={scrollToTop}
-                      className="group inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                    >
-                      <span className="mr-2">View Map</span>
-                      <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-                    </Link>
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 mb-6">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="bg-green-100 p-3 rounded-full mr-4">
+                    <span className="text-green-600 text-xl">🗺️</span>
                   </div>
+                  <h4 className="text-xl font-bold text-gray-900">Check Your Area</h4>
                 </div>
+                <p className="text-gray-600 mb-4">See what problem plants are found near your property</p>
+                <Link
+                  to="/map"
+                  onClick={scrollToTop}
+                  className="inline-flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-all duration-300"
+                >
+                  View Map
+                </Link>
+              </div>
 
-                {/* Seasonal CTA */}
-                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-blue-200/40 p-6 sm:p-8">
-                  <div className="text-center">
-                    <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                      <span className="text-white text-2xl">📅</span>
-                    </div>
-                    <h4 className="text-xl font-bold text-gray-900 mb-3">Seasonal Risk Analysis</h4>
-                    <p className="text-gray-600 mb-6">Get personalized insights about invasive species risks in your area based on seasonal patterns and local data.</p>
-                    <Link
-                      to="/epic5"
-                      onClick={scrollToTop}
-                      className="group inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                    >
-                      <span className="mr-2">View Seasonal</span>
-                      <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-                    </Link>
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="bg-blue-100 p-3 rounded-full mr-4">
+                    <span className="text-blue-600 text-xl">📅</span>
                   </div>
+                  <h4 className="text-xl font-bold text-gray-900">Know the Seasons</h4>
                 </div>
+                <p className="text-gray-600 mb-4">Learn when problem plants are most active in your area</p>
+                <Link
+                  to="/epic5"
+                  onClick={scrollToTop}
+                  className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all duration-300"
+                >
+                  Check Seasons
+                </Link>
               </div>
             </div>
           </section>
@@ -298,7 +302,7 @@ const DidYouKnowPage: React.FC = () => {
                 <h3 className="font-bold mb-3 text-sm">Company</h3>
                 <ul className="space-y-2 text-green-100 text-sm">
                   <li><Link to="/" onClick={scrollToTop} className="hover:text-white transition-colors">About Us</Link></li>
-                  <li><Link to="/insights" onClick={scrollToTop} className="hover:text-white transition-colors">Data Insights</Link></li>
+                  <li><Link to="/insights" onClick={scrollToTop} className="hover:text-white transition-colors">Plant Information</Link></li>
                   <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Contact</Link></li>
                 </ul>
               </div>

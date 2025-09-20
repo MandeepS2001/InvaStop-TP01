@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { X, Target, TrendingUp, Trophy } from 'lucide-react';
+import { Target, TrendingUp, Trophy } from 'lucide-react';
 import PlantIdentificationQuiz from '../components/PlantIdentificationQuiz';
 
 // Utility function to scroll to top

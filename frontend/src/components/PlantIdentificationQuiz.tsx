@@ -28,13 +28,6 @@ interface BackendQuizRecord {
   createdAt: string;
 }
 
-interface QuizResult {
-  score: number;
-  totalQuestions: number;
-  correctAnswers: number;
-  timeSpent: number;
-  achievements: string[];
-}
 
 const PlantIdentificationQuiz: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);

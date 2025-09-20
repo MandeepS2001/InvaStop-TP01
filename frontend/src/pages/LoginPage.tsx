@@ -71,30 +71,30 @@ const LoginPage: React.FC = () => {
         </div>
       </div>
       {/* Dark overlay for readability */}
-      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-black/40" />
 
       {/* Page logo top-left */}
       <img
         src="/Invastop-Logo.png"
         alt="InvaStop"
-        className="absolute top-6 left-6 z-10 h-44 w-44 object-contain drop-shadow-xl"
+        className="absolute top-6 left-6 z-10 h-64 w-64 object-contain drop-shadow-xl"
       />
 
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
-        <div className="relative w-full max-w-md bg-white/5 backdrop-blur-none rounded-xl shadow-2xl p-6 sm:p-8 border border-white/20">
+        <div className="relative w-full max-w-md bg-white/20 backdrop-blur-md rounded-xl shadow-2xl p-6 sm:p-8 border border-white/30">
         <div className="mb-6 mt-4 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Sign in</h1>
+          <h1 className="text-2xl font-bold text-white drop-shadow-lg">Sign in</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <label className="block text-sm font-medium text-white drop-shadow-md mb-1">Username</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter your username"
-              className="w-full rounded-lg border border-white/40 bg-white/70 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-white/50 bg-white/90 px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-white transition-all"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
@@ -104,25 +104,25 @@ const LoginPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-white drop-shadow-md mb-1">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="w-full rounded-lg border border-white/40 bg-white/70 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-white/50 bg-white/90 px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:bg-white transition-all"
               autoComplete="new-password"
               required
             />
           </div>
 
           {error && (
-            <div className="text-sm text-red-600">{error}</div>
+            <div className="text-sm text-red-200 bg-red-900/30 px-3 py-2 rounded-lg border border-red-500/30 backdrop-blur-sm">{error}</div>
           )}
 
           <button
             type="submit"
-            className="w-full bg-green-700 hover:bg-green-600 text-white font-semibold rounded-lg px-4 py-2 transition-colors"
+            className="w-full bg-green-700 hover:bg-green-600 text-white font-semibold rounded-lg px-4 py-2 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Continue
           </button>
