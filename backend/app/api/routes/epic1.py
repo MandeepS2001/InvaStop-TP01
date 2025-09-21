@@ -567,3 +567,80 @@ def get_seasonal_risk_data(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error fetching seasonal risk data: {str(e)}"
         )
+
+@router.get("/postcode-lookup/{postcode}")
+def get_postcode_area_name(
+    postcode: str,
+    db: Session = Depends(get_db)
+):
+    """Get area name for a given postcode"""
+    try:
+        from sqlalchemy import text as sql_text
+        
+        # First try to get data from au_localities table
+        try:
+            rows = db.execute(
+                sql_text(
+                    "SELECT locality, state, latitude, longitude FROM au_localities WHERE postcode = :pc LIMIT 1"
+                ),
+                {"pc": str(postcode)}
+            ).fetchall()
+            
+            if rows and len(rows) > 0:
+                row = rows[0]
+                locality = row[0]
+                state = row[1]
+                lat = float(row[2]) if row[2] else None
+                lng = float(row[3]) if row[3] else None
+                
+                # If we have valid coordinates, use the locality data
+                if lat and lng and lat != 0.0 and lng != 0.0:
+                    return {
+                        "postcode": postcode,
+                        "area_name": f"{locality}, {state}",
+                        "state": state,
+                        "latitude": lat,
+                        "longitude": lng,
+                        "source": "database"
+                    }
+        except Exception:
+            pass
+        
+        # Fallback to hardcoded major cities
+        major_cities = {
+            "2000": {"name": "Sydney NSW", "state": "NSW", "lat": -33.8688, "lng": 151.2093},
+            "3000": {"name": "Melbourne VIC", "state": "VIC", "lat": -37.8136, "lng": 144.9631},
+            "4000": {"name": "Brisbane QLD", "state": "QLD", "lat": -27.4698, "lng": 153.0251},
+            "5000": {"name": "Adelaide SA", "state": "SA", "lat": -34.9285, "lng": 138.6007},
+            "6000": {"name": "Perth WA", "state": "WA", "lat": -31.9505, "lng": 115.8605},
+            "7000": {"name": "Hobart TAS", "state": "TAS", "lat": -42.8821, "lng": 147.3272},
+            "2600": {"name": "Canberra ACT", "state": "ACT", "lat": -35.2809, "lng": 149.1300},
+            "0800": {"name": "Darwin NT", "state": "NT", "lat": -12.4634, "lng": 130.8456},
+        }
+        
+        if postcode in major_cities:
+            city_data = major_cities[postcode]
+            return {
+                "postcode": postcode,
+                "area_name": city_data["name"],
+                "state": city_data["state"],
+                "latitude": city_data["lat"],
+                "longitude": city_data["lng"],
+                "source": "fallback"
+            }
+        
+        # If no data found, return a generic response
+        return {
+            "postcode": postcode,
+            "area_name": f"Area {postcode}",
+            "state": "Unknown",
+            "latitude": None,
+            "longitude": None,
+            "source": "unknown"
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error looking up postcode: {str(e)}"
+        )
