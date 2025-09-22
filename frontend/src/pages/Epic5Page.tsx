@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { X, AlertTriangle, TrendingUp, MapPin } from 'lucide-react';
-import SimpleBarChart from '../components/SimpleBarChart';
+import LiquidEther from '../components/LiquidEther';
+import SimpleHeader from '../components/SimpleHeader';
+import { X, AlertTriangle, TrendingUp, MapPin, Sun, Thermometer } from 'lucide-react';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
@@ -30,16 +31,40 @@ const Epic5Page: React.FC = () => {
   const [selectedSeason, setSelectedSeason] = useState('Summer');
   const [postcode, setPostcode] = useState('3000');
   const [postcodeInput, setPostcodeInput] = useState('3000');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [seasonalData, setSeasonalData] = useState<SeasonalData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [locationLoading, setLocationLoading] = useState(false);
+  const [areaName, setAreaName] = useState<string>('');
   const postcodeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleClearPostcode = () => {
     setPostcodeInput('');
     setPostcode('');
+    setAreaName('');
+  };
+
+  // Function to fetch area name for a postcode
+  const fetchAreaName = async (postcode: string) => {
+    if (!postcode) {
+      setAreaName('');
+      return;
+    }
+
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || 'https://invastopbackend.vercel.app/api/v1';
+      const response = await fetch(`${apiUrl}/epic1/postcode-lookup/${postcode}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAreaName(data.area_name || '');
+      } else {
+        setAreaName('');
+      }
+    } catch (err) {
+      console.error('Error fetching area name:', err);
+      setAreaName('');
+    }
   };
 
   // Fallback function to approximate postcode from coordinates
@@ -121,6 +146,7 @@ const Epic5Page: React.FC = () => {
               const detectedPostcode = postcodeComponent.long_name;
               setPostcodeInput(detectedPostcode);
               setPostcode(detectedPostcode);
+              fetchAreaName(detectedPostcode);
               setError(null); // Clear any previous errors
             } else {
               // Fallback: try to find postcode in formatted address
@@ -130,6 +156,7 @@ const Epic5Page: React.FC = () => {
                 const detectedPostcode = postcodeMatch[0];
                 setPostcodeInput(detectedPostcode);
                 setPostcode(detectedPostcode);
+                fetchAreaName(detectedPostcode);
                 setError(null);
               } else {
                 setError('Could not determine postcode for your location. Please enter it manually.');
@@ -143,6 +170,7 @@ const Epic5Page: React.FC = () => {
               if (approximatePostcode) {
                 setPostcodeInput(approximatePostcode);
                 setPostcode(approximatePostcode);
+                fetchAreaName(approximatePostcode);
                 setError(null);
                 console.log(`Using approximate postcode: ${approximatePostcode}`);
               } else {
@@ -185,6 +213,12 @@ const Epic5Page: React.FC = () => {
   };
 
   // Fetch seasonal data when season or postcode changes (with debounce for postcode)
+  // Fetch area name on component mount
+  useEffect(() => {
+    fetchAreaName(postcode);
+  }, [postcode]);
+
+
   useEffect(() => {
     const fetchSeasonalData = async () => {
       setLoading(true);
@@ -243,112 +277,72 @@ const Epic5Page: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
-        <div className="px-3 sm:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo */}
-            <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 object-contain" />
-            </Link>
-
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-2">
-              <Link to="/" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Home</Link>
-              <Link to="/education" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Species Profile</Link>
-              <Link to="/insights" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Did you Know?</Link>
-              <Link to="/map" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Map</Link>
-              <Link to="/epic5" onClick={scrollToTop} className="px-4 py-2 text-white bg-green-600/60 border-green-500 rounded-md transition-all duration-200 font-medium shadow-md">Seasonal</Link>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden p-2 text-white hover:text-green-200 transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-green-700 border-t border-green-600">
-            <div className="px-4 py-2 space-y-1">
-              <Link 
-                to="/" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/education" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Species Profile
-              </Link>
-              <Link 
-                to="/insights" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Did you Know?
-              </Link>
-              <Link 
-                to="/map" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Map
-              </Link>
-              <Link 
-                to="/epic5" 
-                className="block px-3 py-2 text-green-200 font-medium hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Seasonal
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
+      {/* Simple Header */}
+      <SimpleHeader />
 
       {/* Main Content Area */}
       <div className="pt-24">
-        {/* Hero Section */}
-        <section className="bg-gray-100 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-12 text-center">
-              Seasonal Invasive Plant Risk
+        {/* Hero Section with LiquidEther */}
+        <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 py-12 sm:py-16 lg:py-20 overflow-hidden">
+          {/* LiquidEther Background */}
+          <div className="absolute inset-0 w-full h-full z-0">
+            <LiquidEther
+              colors={['#22c55e', '#16a34a', '#15803d', '#166534']}
+              mouseForce={15}
+              cursorSize={120}
+              isViscous={false}
+              viscous={20}
+              iterationsViscous={16}
+              iterationsPoisson={16}
+              dt={0.016}
+              BFECC={true}
+              resolution={0.6}
+              isBounce={false}
+              autoDemo={true}
+              autoSpeed={0.3}
+              autoIntensity={1.8}
+              takeoverDuration={0.3}
+              autoResumeDelay={2000}
+              autoRampDuration={0.8}
+            />
+          </div>
+          
+          {/* Dark overlay for text readability - with pointer-events-none to allow mouse events through */}
+          <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
+          
+          {/* Content */}
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            {/* Removed pill label for slimmer hero */}
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-green-200 to-green-100 bg-clip-text text-transparent">
+                Plants to Watch This Season
+              </span>
             </h1>
             
+            <p className="text-lg md:text-xl lg:text-2xl text-green-100 max-w-4xl mx-auto leading-relaxed">
+              Get ahead of invasive plants with seasonal forecasts tailored to your area. 
+              Know what to watch for before problems take root.
+            </p>
+            {/* Slim hero: removed quick stat cards and CTAs for a cleaner, shorter header */}
+          </div>
+        </section>
+
+        {/* Main Content Section */}
+        <section className="bg-gray-100 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
+              Seasonal Risk Assessment
+            </h2>
+            
             {/* Controls */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-100 mb-16">
+            <div id="controls-section" className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-100 mb-16">
               <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
-                <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4">
                   <label className="text-xl font-bold text-gray-800">🌱 Select Season:</label>
-                  <select 
-                    value={selectedSeason} 
-                    onChange={(e) => setSelectedSeason(e.target.value)}
+                <select 
+                  value={selectedSeason} 
+                  onChange={(e) => setSelectedSeason(e.target.value)}
                     className="px-6 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg font-semibold bg-white shadow-md"
                     disabled={loading}
                   >
@@ -356,14 +350,14 @@ const Epic5Page: React.FC = () => {
                     <option value="Summer">☀️ Summer</option>
                     <option value="Autumn">🍂 Autumn</option>
                     <option value="Winter">❄️ Winter</option>
-                  </select>
-                </div>
-                
-                <div className="flex items-center space-x-4">
+                </select>
+              </div>
+              
+              <div className="flex items-center space-x-4">
                   <label className="text-xl font-bold text-gray-800">📍 Enter Postcode:</label>
-                  <div className="relative">
-                    <input
-                      type="text"
+                <div className="relative">
+                  <input
+                    type="text"
                       value={postcodeInput}
                       onChange={(e) => {
                         const value = e.target.value;
@@ -375,25 +369,26 @@ const Epic5Page: React.FC = () => {
                           clearTimeout(postcodeTimeoutRef.current);
                         }
                         
-                        // Set new timeout to update postcode
+                        // Set new timeout to update postcode and fetch area name
                         postcodeTimeoutRef.current = setTimeout(() => {
                           setPostcode(value);
+                          fetchAreaName(value);
                         }, 500);
                       }}
                       className="px-6 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 pr-12 text-lg font-semibold shadow-md"
-                      placeholder="3000"
+                    placeholder="3000"
                       disabled={loading || locationLoading}
                       maxLength={4}
-                    />
+                  />
                     {postcodeInput && (
-                      <button
-                        onClick={handleClearPostcode}
+                    <button
+                      onClick={handleClearPostcode}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                         disabled={loading || locationLoading}
-                      >
+                    >
                         <X className="h-5 w-5" />
-                      </button>
-                    )}
+                    </button>
+                  )}
                   </div>
                   <button
                     onClick={handleUseMyLocation}
@@ -461,10 +456,12 @@ const Epic5Page: React.FC = () => {
                       <h2 className="text-2xl font-bold text-blue-900">
                         {selectedSeason} Risk Summary
                       </h2>
-                      <p className="text-blue-700 text-lg">for {seasonalData.location}</p>
+                      <p className="text-blue-700 text-lg">
+                        {areaName ? `for ${areaName}` : `for ${seasonalData.location}`}
+                      </p>
                     </div>
-                  </div>
-                  
+              </div>
+              
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="bg-white rounded-xl p-6 text-center shadow-md border-2 border-gray-100 hover:border-blue-300 transition-all">
                       <div className="text-4xl font-bold text-gray-800 mb-2">
@@ -523,11 +520,11 @@ const Epic5Page: React.FC = () => {
                                <div className="bg-yellow-400 rounded-full px-6 py-3 shadow-lg">
                                  <div className="text-red-800 text-xl font-bold">{speciesName}</div>
                                </div>
-                             </div>
-                             
-                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                               {/* Image */}
-                               <div className="flex justify-center">
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                {/* Image */}
+                <div className="flex justify-center">
                                  <div className="w-80 h-64 bg-white rounded-2xl flex items-center justify-center shadow-lg border-4 border-yellow-300 overflow-hidden">
                                    <img 
                                      src={imagePath} 
@@ -545,11 +542,11 @@ const Epic5Page: React.FC = () => {
                                      <div className="text-6xl mb-3">🌿</div>
                                      <div className="text-green-800 font-bold text-xl">{speciesName}</div>
                                      <div className="text-green-600 text-sm">Invasive plant species</div>
-                                   </div>
-                                 </div>
-                               </div>
-                               
-                               {/* Content */}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Content */}
                                <div className="space-y-6">
                                  <div className="flex items-center space-x-3 text-white">
                                    <div className="w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
@@ -558,43 +555,43 @@ const Epic5Page: React.FC = () => {
                                    <span className="text-xl font-semibold">
                                      {speciesData.locations.length > 0 ? speciesData.locations.join(', ') : 'Multiple locations'}
                                    </span>
-                                 </div>
-                                 
+                  </div>
+                  
                                  <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                                    <h4 className="text-white font-bold text-lg mb-3">Risk Information:</h4>
-                                   <ul className="space-y-3 text-green-100">
+                  <ul className="space-y-3 text-green-100">
                                      <li className="flex items-start space-x-3">
                                        <span className="text-yellow-300 mt-1 text-lg">•</span>
                                        <span className="text-lg">
                                          <span className="text-yellow-300 font-bold">{speciesData.count.toLocaleString()}</span> sightings in {selectedSeason}
                                        </span>
-                                     </li>
+                    </li>
                                      <li className="flex items-start space-x-3">
                                        <span className="text-yellow-300 mt-1 text-lg">•</span>
                                        <span className="text-lg">
                                          High risk level - requires immediate attention
                                        </span>
-                                     </li>
+                    </li>
                                      <li className="flex items-start space-x-3">
                                        <span className="text-yellow-300 mt-1 text-lg">•</span>
                                        <span className="text-lg">
                                          Found in {speciesData.locations.length} location{speciesData.locations.length !== 1 ? 's' : ''}
                                        </span>
-                                     </li>
-                                   </ul>
+                    </li>
+                  </ul>
                                  </div>
-                                 
-                                 <div className="pt-4">
+                  
+                  <div className="pt-4">
                                    <button className="bg-yellow-400 hover:bg-yellow-300 text-red-800 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
                                      🚨 Report Sighting
-                                   </button>
-                                 </div>
-                               </div>
-                             </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
                            </>
                          );
                        })()}
-                     </div>
+            </div>
                    )}
                    
                    {/* No High Risk Alert - Show Medium Risk instead */}
@@ -624,8 +621,8 @@ const Epic5Page: React.FC = () => {
                                </div>
                                <div className="bg-yellow-200 rounded-full px-6 py-3 shadow-lg">
                                  <div className="text-yellow-800 text-xl font-bold">{speciesName}</div>
-                               </div>
-                             </div>
+                    </div>
+                  </div>
                              
                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                                {/* Image */}
@@ -646,10 +643,10 @@ const Epic5Page: React.FC = () => {
                                      <div className="text-6xl mb-3">🌿</div>
                                      <div className="text-green-800 font-bold text-xl">{speciesName}</div>
                                      <div className="text-green-600 text-sm">Invasive plant species</div>
-                                   </div>
-                                 </div>
-                               </div>
-                               
+                    </div>
+                  </div>
+                </div>
+
                                {/* Content */}
                                <div className="space-y-6">
                                  <div className="flex items-center space-x-3 text-white">
@@ -689,13 +686,13 @@ const Epic5Page: React.FC = () => {
                                    <button className="bg-yellow-200 hover:bg-yellow-100 text-yellow-800 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
                                      📍 Report Sighting
                                    </button>
-                                 </div>
-                               </div>
-                             </div>
+                    </div>
+                  </div>
+                    </div>
                            </>
                          );
                        })()}
-                     </div>
+                  </div>
                    )}
 
             {/* Dynamic Species Cards */}
@@ -705,7 +702,9 @@ const Epic5Page: React.FC = () => {
                   <h2 className="text-3xl font-bold text-gray-900 mb-2">
                     Top Invasive Species in {selectedSeason}
                   </h2>
-                  <p className="text-gray-600 text-lg">Based on sighting data for {seasonalData.location}</p>
+                  <p className="text-gray-600 text-lg">
+                    Based on sighting data for {areaName || seasonalData.location}
+                  </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {Object.entries(seasonalData.top_species).slice(0, 6).map(([speciesName, data], index) => {
@@ -719,8 +718,8 @@ const Epic5Page: React.FC = () => {
                             <span className="text-white text-sm font-bold">
                               {getRiskIcon(data.risk_level)}
                             </span>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
                         
                         {/* Species Image */}
                         <div className="h-48 bg-gray-100 relative overflow-hidden">
@@ -737,12 +736,12 @@ const Epic5Page: React.FC = () => {
                             }}
                           />
                           <div className="absolute inset-0 bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center hidden">
-                            <div className="text-center">
+                    <div className="text-center">
                               <div className="text-4xl mb-2">🌿</div>
                               <div className="text-green-800 font-bold text-lg">{speciesName}</div>
-                            </div>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
+                </div>
                         
                         <div className="p-6">
                           <div className="flex items-center justify-between mb-4">
@@ -754,14 +753,14 @@ const Epic5Page: React.FC = () => {
                             }`}>
                               {data.risk_level} Risk
                             </span>
-                          </div>
+              </div>
                           
                           <div className="space-y-3">
                             <div className="flex items-center bg-gray-50 rounded-lg p-3">
                               <MapPin className="h-5 w-5 mr-2 text-blue-600" />
                               <span className="font-semibold text-gray-700">{data.count.toLocaleString()} sightings</span>
-                            </div>
-                            
+            </div>
+
                             {data.locations.length > 0 && (
                               <div className="bg-blue-50 rounded-lg p-3">
                                 <span className="font-medium text-blue-800">Found in:</span>
@@ -777,23 +776,6 @@ const Epic5Page: React.FC = () => {
               </div>
             )}
 
-                   {/* Interactive Chart Section */}
-                   {seasonalData && !loading && (
-                     <div className="mb-12">
-                       <SimpleBarChart
-                         data={Object.entries(seasonalData.top_species).slice(0, 5).map(([name, data], index) => ({
-                           name: name,
-                           value: data.count,
-                           color: data.risk_level === 'High' ? '#ef4444' : 
-                                  data.risk_level === 'Medium' ? '#f59e0b' : '#10b981',
-                           risk_level: data.risk_level,
-                           locations: data.locations
-                         }))}
-                         title={`Top 5 Invasive Species in ${selectedSeason}`}
-                         season={selectedSeason}
-                       />
-                     </div>
-                   )}
           </div>
         </section>
       </div>
@@ -820,7 +802,7 @@ const Epic5Page: React.FC = () => {
                   <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Mapping Tools</Link></li>
                 </ul>
               </div>
-              
+
               <div>
                 <h3 className="font-bold mb-3 text-sm">About Us</h3>
                 <ul className="space-y-2 text-green-100 text-sm">
@@ -829,7 +811,7 @@ const Epic5Page: React.FC = () => {
                   <li><span className="hover:text-white transition-colors cursor-pointer">Our Mission</span></li>
                 </ul>
               </div>
-              
+
             </div>
           </div>
         </div>

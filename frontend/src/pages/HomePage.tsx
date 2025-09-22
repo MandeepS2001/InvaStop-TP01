@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import LiquidEther from '../components/LiquidEther';
+import SimpleHeader from '../components/SimpleHeader';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
@@ -66,7 +68,6 @@ const CountUp: React.FC<{ end: number; duration?: number; prefix?: string; suffi
 
 const HomePage: React.FC = () => {
   const [expandedStat, setExpandedStat] = useState<number | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   // Static statistics - no API call needed
@@ -110,128 +111,38 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
-        <div className="px-3 sm:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-16 sm:h-20 lg:h-24">
-            {/* Logo */}
-            <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 object-contain" />
-            </Link>
-
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-2">
-              <Link to="/" onClick={scrollToTop} className="px-4 py-2 text-white bg-green-600/60 border-green-500 rounded-md transition-all duration-200 font-medium shadow-md">Home</Link>
-              <Link to="/education" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Species Profile</Link>
-              <Link to="/insights" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Did you Know?</Link>
-              <Link to="/map" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Map</Link>
-              <Link to="/epic5" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Seasonal</Link>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden p-2 text-white hover:text-green-200 transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-green-700 border-t border-green-600">
-            <div className="px-4 py-2 space-y-1">
-              <Link 
-                to="/" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/education" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Species Profile
-              </Link>
-              <Link 
-                to="/map" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Map
-              </Link>
-              <Link 
-                to="/epic5" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Seasonal
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
+            {/* Simple Header */}
+            <SimpleHeader />
 
       {/* Hero Section - Edge to Edge */}
       <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 pt-20 sm:pt-24 lg:pt-32 w-full overflow-visible">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-green-300/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-500/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-          
-          {/* Floating Particles */}
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-green-300/30 rounded-full animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`
-              }}
-            ></div>
-          ))}
-          
-          {/* Larger Floating Elements */}
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`large-${i}`}
-              className="absolute w-2 h-2 bg-green-400/20 rounded-full animate-float-slow"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 8}s`,
-                animationDuration: `${6 + Math.random() * 6}s`
-              }}
-            ></div>
-          ))}
-          
-          {/* Morphing Background Shapes */}
-          <div className="absolute top-20 right-10 w-32 h-32 bg-green-500/10 animate-morph"></div>
-          <div className="absolute bottom-20 left-10 w-24 h-24 bg-green-400/15 animate-morph" style={{animationDelay: '2s'}}></div>
-          <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-green-300/20 animate-morph" style={{animationDelay: '4s'}}></div>
+        {/* LiquidEther Background */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <LiquidEther
+            colors={['#22c55e', '#16a34a', '#15803d', '#166534']}
+            mouseForce={20}
+            cursorSize={150}
+            isViscous={false}
+            viscous={25}
+            iterationsViscous={20}
+            iterationsPoisson={20}
+            dt={0.018}
+            BFECC={true}
+            resolution={0.7}
+            isBounce={false}
+            autoDemo={true}
+            autoSpeed={0.4}
+            autoIntensity={2.0}
+            takeoverDuration={0.25}
+            autoResumeDelay={1500}
+            autoRampDuration={0.6}
+          />
         </div>
         
-        <div className="relative px-4 sm:px-6 lg:px-8">
+        {/* Dark overlay for text readability - with pointer-events-none to allow mouse events through */}
+        <div className="absolute inset-0 bg-black/15 pointer-events-none"></div>
+        
+        <div className="relative z-10 px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side Content */}
             <div className="text-center lg:text-left">
@@ -270,7 +181,7 @@ const HomePage: React.FC = () => {
         />
       </div>
 
-      {/* Statistics Section */}
+      {/* Interactive Cards Section */}
       <section className="relative bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 py-12 sm:py-16 lg:py-20 pt-12 sm:pt-16 lg:pt-20 mt-0 overflow-hidden" id="stats-section">
         {/* Parallax Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
@@ -278,6 +189,7 @@ const HomePage: React.FC = () => {
           <div className="absolute bottom-10 right-10 w-80 h-80 bg-green-300/15 rounded-full blur-3xl animate-parallax-down"></div>
           <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-green-400/10 rounded-full blur-3xl animate-parallax-up" style={{animationDelay: '5s'}}></div>
         </div>
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
@@ -288,8 +200,6 @@ const HomePage: React.FC = () => {
               Problem plants cost Australian farmers billions each year and can spread quickly from one property to the next. See how widespread this issue really is.
             </p>
           </div>
-
-          
 
           {/* Statistics Cards */}
           <div className="relative">
@@ -365,6 +275,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+
 
       {/* CTA to Insights */}
       <section className="relative py-12 sm:py-16 bg-gradient-to-br from-green-50 via-white to-green-50">

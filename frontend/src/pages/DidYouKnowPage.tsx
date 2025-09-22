@@ -1,150 +1,121 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TaxonThreatChart from '../components/TaxonThreatChart';
 import SeasonalMetrics from '../components/SeasonalMetrics';
+import MagicBento, { CardData } from '../components/MagicBento';
 import { Link } from 'react-router-dom';
+import LiquidEther from '../components/LiquidEther';
+import SimpleHeader from '../components/SimpleHeader';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
+const getAustralianSeason = (date: Date): 'Summer' | 'Autumn' | 'Winter' | 'Spring' => {
+  const month = date.getMonth() + 1; // 1-12
+  if (month === 12 || month === 1 || month === 2) return 'Summer';
+  if (month >= 3 && month <= 5) return 'Autumn';
+  if (month >= 6 && month <= 8) return 'Winter';
+  return 'Spring';
+};
+
 const DidYouKnowPage: React.FC = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const currentSeason = getAustralianSeason(new Date());
+  // Seasonal data for the MagicBento cards (uses currentSeason for copy)
+  const springCardData: CardData[] = [
+    {
+      color: '#1a1a1a',
+      title: 'Lantana',
+      description: `This plant has been found thousands of times this ${currentSeason.toLowerCase()}.`,
+      label: 'High Risk',
+      imageSrc: '/top10/Lantana.png',
+      priority: 'High Priority',
+      statLine: `Found 5,574 times across 6 different areas this ${currentSeason.toLowerCase()}.`,
+      substats: ['#1 most common', 'Found in 6 locations'],
+      size: 'xl'
+    },
+    {
+      color: '#1a1a1a',
+      title: 'Buffel Grass',
+      description: `Widespread ${currentSeason.toLowerCase()} growth with active spread risk.`,
+      label: 'High Risk',
+      imageSrc: '/top10/BuffelGrass.png',
+      priority: 'High Priority',
+      statLine: `Found 4,103 times across 6 different areas this ${currentSeason.toLowerCase()}.`,
+      substats: ['#2 most common', 'Found in 6 locations'],
+      size: 'xl',
+      imageHeight: 220
+    },
+    {
+      color: '#1a1a1a',
+      title: 'Gamba Grass',
+      description: `Rapid ${currentSeason.toLowerCase()} activity observed across multiple regions.`,
+      label: 'High Risk',
+      imageSrc: '/top10/GambaGrass.png',
+      priority: 'High Priority',
+      statLine: `Found 2,175 times across 2 different areas this ${currentSeason.toLowerCase()}.`,
+      substats: ['#3 most common', 'Found in 2 locations'],
+      size: 'xl',
+      imageHeight: 280
+    },
+    {
+      color: '#1a1a1a',
+      title: 'Bitou Bush',
+      description: 'Peak flowering season with spread potential.',
+      label: 'Medium Risk',
+      imageSrc: '/top10/BitouBush.png',
+      priority: 'Medium Priority',
+      statLine: `Observed frequently near coasts during ${currentSeason.toLowerCase()}.`,
+      substats: ['Common along dunes'],
+      size: 'lg'
+    },
+    {
+      color: '#1a1a1a',
+      title: 'Gorse',
+      description: `${currentSeason} growth surge; monitor hedgerows closely.`,
+      label: 'Medium Risk',
+      imageSrc: '/top10/Gorse.png',
+      priority: 'Medium Priority',
+      statLine: `Increasing presence in rural edges this ${currentSeason.toLowerCase()}.`,
+      size: 'md'
+    }
+  ];
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
-        <div className="px-3 sm:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-16 sm:h-20 lg:h-24">
-            {/* Logo */}
-            <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 object-contain" />
-            </Link>
+    <div className="relative min-h-screen bg-neutral-50">
 
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-2">
-              <Link to="/" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Home</Link>
-              <Link to="/education" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Species Profile</Link>
-              <Link to="/insights" onClick={scrollToTop} className="px-4 py-2 text-white bg-green-600/60 border-green-500 rounded-md transition-all duration-200 font-medium shadow-md">Did you Know?</Link>
-              <Link to="/map" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Map</Link>
-              <Link to="/epic5" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Seasonal</Link>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden p-2 text-white hover:text-green-200 transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-green-700 border-t border-green-600">
-            <div className="px-4 py-2 space-y-1">
-              <Link 
-                to="/" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/education" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Species Profile
-              </Link>
-              <Link 
-                to="/insights" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Did you Know?
-              </Link>
-              <Link 
-                to="/map" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Map
-              </Link>
-              <Link 
-                to="/epic5" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Seasonal
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
+            {/* Simple Header */}
+            <SimpleHeader />
 
       {/* Hero Section - Edge to Edge */}
       <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 pt-20 sm:pt-24 lg:pt-32 w-full overflow-visible">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-green-300/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-500/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-          
-          {/* Floating Particles */}
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-green-300/30 rounded-full animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`
-              }}
-            ></div>
-          ))}
-          
-          {/* Larger Floating Elements */}
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`large-${i}`}
-              className="absolute w-2 h-2 bg-green-400/20 rounded-full animate-float-slow"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 8}s`,
-                animationDuration: `${6 + Math.random() * 6}s`
-              }}
-            ></div>
-          ))}
-          
-          {/* Morphing Background Shapes */}
-          <div className="absolute top-20 right-10 w-32 h-32 bg-green-500/10 animate-morph"></div>
-          <div className="absolute bottom-20 left-10 w-24 h-24 bg-green-400/15 animate-morph" style={{animationDelay: '2s'}}></div>
-          <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-green-300/20 animate-morph" style={{animationDelay: '4s'}}></div>
+        {/* LiquidEther Background */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <LiquidEther
+            colors={['#22c55e', '#16a34a', '#15803d', '#166534']}
+            mouseForce={16}
+            cursorSize={130}
+            isViscous={false}
+            viscous={20}
+            iterationsViscous={16}
+            iterationsPoisson={16}
+            dt={0.016}
+            BFECC={true}
+            resolution={0.6}
+            isBounce={false}
+            autoDemo={true}
+            autoSpeed={0.3}
+            autoIntensity={1.8}
+            takeoverDuration={0.3}
+            autoResumeDelay={2000}
+            autoRampDuration={0.8}
+          />
         </div>
         
-        <div className="relative px-4 sm:px-6 lg:px-8">
+        {/* Dark overlay for text readability - with pointer-events-none to allow mouse events through */}
+        <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
+        
+        <div className="relative z-10 px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side Content */}
             <div className="text-center lg:text-left">
@@ -159,6 +130,82 @@ const DidYouKnowPage: React.FC = () => {
                 </span>
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What's Happening This Spring - MagicBento + Summary/CTA */}
+      <section className="relative py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              What's Happening This Season
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Discover which problem plants are most active during spring and what you need to watch for on your property.
+            </p>
+          </div>
+
+          {/* Summary banner */}
+          <div className="mb-10">
+            <div className="rounded-2xl border border-green-200 bg-green-50 p-6 sm:p-8 text-center">
+              <div className="flex items-center justify-center gap-4 mb-2">
+                <span className="text-3xl" role="img" aria-label="leaf">🌿</span>
+                <div className="text-4xl sm:text-5xl font-extrabold text-green-700">13,865</div>
+              </div>
+              <div className="text-green-800 text-lg sm:text-xl mb-2">problem plants found this {currentSeason.toLowerCase()}</div>
+              <div className="text-green-700">That's a lot of plants causing problems for farmers and property owners across Australia!</div>
+            </div>
+          </div>
+          
+          <div className="flex justify-center">
+            <MagicBento
+              cardData={springCardData}
+              textAutoHide={false}
+              enableStars={true}
+              enableSpotlight={true}
+              enableBorderGlow={true}
+              glowColor="22, 197, 94"
+              particleCount={8}
+              enableTilt={false}
+              clickEffect={true}
+              enableMagnetism={false}
+            />
+          </div>
+
+          {/* Urgency trio */}
+          <div className="mt-12 rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+            <h3 className="text-center text-2xl font-semibold text-gray-900 mb-6">How Urgent Are These Plants?</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="rounded-xl border border-red-200 bg-red-100 p-6 text-center">
+                <div className="text-3xl mb-2">⚠️</div>
+                <div className="text-4xl font-bold text-red-700">5</div>
+                <div className="mt-1 font-semibold text-red-800">Act Now</div>
+                <p className="mt-2 text-sm text-red-700">These plants need quick action to stop them spreading</p>
+              </div>
+              <div className="rounded-xl border border-amber-200 bg-amber-100 p-6 text-center">
+                <div className="text-3xl mb-2">👀</div>
+                <div className="text-4xl font-bold text-amber-700">0</div>
+                <div className="mt-1 font-semibold text-amber-800">Keep Watch</div>
+                <p className="mt-2 text-sm text-amber-700">Check on these plants regularly to make sure they don't spread</p>
+              </div>
+              <div className="rounded-xl border border-emerald-200 bg-emerald-100 p-6 text-center">
+                <div className="text-3xl mb-2">✅</div>
+                <div className="text-4xl font-bold text-emerald-700">0</div>
+                <div className="mt-1 font-semibold text-emerald-800">Under Control</div>
+                <p className="mt-2 text-sm text-emerald-700">These plants are being managed well and aren't spreading</p>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA panel */}
+          <div className="mt-6 rounded-2xl border border-green-200 bg-green-100 p-6 sm:p-8 text-center">
+            <div className="text-2xl font-semibold text-green-900 mb-2">Want to Check Your Local Area?</div>
+            <p className="text-green-800 max-w-3xl mx-auto mb-6">See what problem plants are active in your specific area and when they're most likely to spread.</p>
+            <a href="/epic5" className="inline-flex items-center px-6 py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition-colors">
+              Check My Area
+              <span className="ml-2">➜</span>
+            </a>
           </div>
         </div>
       </section>

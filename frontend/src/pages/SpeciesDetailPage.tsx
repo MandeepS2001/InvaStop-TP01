@@ -75,13 +75,20 @@ const SpeciesDetailPage: React.FC = () => {
     const imageMap: Record<string, string> = {
       'Lantana': '/top10/Lantana.png',
       'Bitou Bush': '/top10/BitouBush.png',
-      'Common Myna': '/top10/CommonMyna.png',
       'Gorse': '/top10/Gorse.png',
       'Buffel Grass': '/top10/BuffelGrass.png',
-      'Cane Toad': '/top10/CaneToad.png',
-      'Red Fox': '/top10/RedFox.png',
       'Gamba Grass': '/top10/GambaGrass.png',
+      // Native species
+      'Eucalyptus': '/top10/Eucalyptus.png',
+      'Acacia/Wattle': '/top10/Acacia:Wattle.jpg',
+      'Banksia': '/top10/Banksia.jpg',
+      'Melaleuca': '/top10/Melaleuca.jpg',
+      'Grevillea': '/top10/Grevillea.png',
+      // Animal species
+      'Common Myna': '/top10/CommonMyna.png',
       'European Rabbit': '/top10/EuropeanRabbit.jpg',
+      'Red Fox': '/top10/RedFox.png',
+      'Cane Toad': '/top10/CaneToad.png',
       'Feral Pig': '/top10/FeralPig.png'
     };
     
@@ -206,52 +213,52 @@ const SpeciesDetailPage: React.FC = () => {
         legalStatus: 'Declared noxious weed in most Australian states. Control is mandatory for landowners.',
         reporting: 'Report new infestations to local coastal authorities or state biosecurity agencies.'
       },
-      'common-myna': {
-        name: 'Common Myna',
-        scientificName: 'Acridotheres tristis',
-        type: 'Bird',
-        nativeRange: 'South Asia',
-        firstDetected: '1862',
-        impact: 'High',
-        spread: 'High',
-        risk: 'High',
-        description: 'Common Mynas are highly adaptable birds that compete aggressively with native species for food and nesting sites. They can displace native birds and spread diseases.',
+      'eucalyptus': {
+        name: 'Eucalyptus',
+        scientificName: 'Eucalyptus spp.',
+        type: 'Tree',
+        nativeRange: 'Australia',
+        firstDetected: 'Native',
+        impact: 'Beneficial',
+        spread: 'Natural',
+        risk: 'Low',
+        description: 'Eucalyptus trees are iconic Australian natives that form the backbone of many ecosystems. They provide essential habitat, food, and environmental services.',
         controlMethods: [
-          'Habitat modification: Remove food sources and nesting sites',
-          'Exclusion methods: Install bird-proofing on buildings',
-          'Trapping programs: Use approved trapping methods',
-          'Community education: Reduce feeding and nesting opportunities',
-          'Monitoring and assessment: Track population changes'
+          'No control needed: Eucalyptus are native and beneficial',
+          'Conservation: Protect existing trees and their ecosystems',
+          'Restoration: Plant native eucalypts in appropriate areas',
+          'Management: Prune for safety while maintaining ecological value',
+          'Education: Learn about local eucalyptus species and their benefits'
         ],
-        economicImpact: 'Costs associated with damage to crops, property damage, and impacts on native biodiversity. Can affect tourism and agricultural productivity.',
-        ecologicalImpact: 'Competes with native birds for resources, displaces native species, spreads diseases, and can alter ecosystem dynamics.',
+        economicImpact: 'Eucalyptus provide significant economic benefits through timber production, honey production, tourism, and ecosystem services like carbon storage.',
+        ecologicalImpact: 'Essential for native wildlife, providing food, shelter, and nesting sites. Eucalyptus forests support diverse ecosystems and help maintain soil health.',
         managementStrategies: [
-          'Urban bird management programs',
-          'Community education and awareness',
-          'Habitat modification and exclusion',
-          'Population monitoring and control',
-          'Collaboration with local authorities'
+          'Conservation of existing populations',
+          'Restoration of degraded eucalyptus forests',
+          'Protection from invasive species',
+          'Sustainable harvesting practices',
+          'Community education and engagement'
         ],
         preventionTips: [
-          'Avoid feeding birds in urban areas',
-          'Secure garbage and food waste',
-          'Modify buildings to prevent nesting',
-          'Report large populations to authorities',
-          'Support native bird conservation'
+          'Plant native eucalyptus species in your garden',
+          'Avoid removing healthy native trees',
+          'Support local conservation efforts',
+          'Learn to identify local species',
+          'Protect trees from invasive weeds'
         ],
         identification: [
-          'Brown body with black head and yellow eye patch',
-          'Yellow legs and bill',
-          'White patches on wings visible in flight',
-          'Aggressive behavior towards other birds',
-          'Loud, varied calls and mimicry abilities'
+          'Variable leaf shapes (lanceolate to ovate)',
+          'Distinctive bark patterns and textures',
+          'Unique flower structures with prominent stamens',
+          'Distinctive eucalyptus aroma',
+          'Capsule fruits that open to release seeds'
         ],
-        seasonalBehavior: 'Active year-round, with increased breeding activity in spring and summer. More visible during feeding times.',
-        habitat: 'Urban areas, agricultural lands, parks, and gardens. Prefers areas with food sources and nesting opportunities.',
-        reproduction: 'Breed multiple times per year, laying 3-6 eggs per clutch. Can raise several broods annually.',
-        distribution: 'Widespread across eastern Australia, particularly in urban and agricultural areas.',
-        legalStatus: 'Declared pest animal in most Australian states. Control programs are actively managed.',
-        reporting: 'Report large populations or unusual behavior to local authorities or wildlife agencies.'
+        seasonalBehavior: 'Flowering varies by species, with many flowering in winter and spring. Seed dispersal occurs after capsule opening.',
+        habitat: 'Adaptable to various Australian environments including forests, woodlands, and coastal areas.',
+        reproduction: 'Reproduces by seed. Many species require fire for optimal seed germination and regeneration.',
+        distribution: 'Throughout Australia in diverse habitats from coastal regions to inland areas.',
+        legalStatus: 'Protected native species in most areas. Removal may require permits.',
+        reporting: 'Report illegal removal or damage to native vegetation authorities. Share sightings of rare species with conservation groups.'
       },
       'gorse': {
         name: 'Gorse',
@@ -347,99 +354,99 @@ const SpeciesDetailPage: React.FC = () => {
         legalStatus: 'Declared noxious weed in most Australian states. Control is mandatory for landowners.',
         reporting: 'Report new infestations to local authorities or state biosecurity agencies.'
       },
-      'cane-toad': {
-        name: 'Cane Toad',
-        scientificName: 'Rhinella marina',
-        type: 'Amphibian',
-        nativeRange: 'Central and South America',
-        firstDetected: '1935',
-        impact: 'High',
-        spread: 'High',
-        risk: 'High',
-        description: 'Cane Toads are highly toxic amphibians that pose a serious threat to native wildlife. They compete with native species for food and habitat, and their toxins can kill predators that attempt to eat them.',
+      'melaleuca': {
+        name: 'Melaleuca',
+        scientificName: 'Melaleuca spp.',
+        type: 'Tree/Shrub',
+        nativeRange: 'Australia',
+        firstDetected: 'Native',
+        impact: 'Beneficial',
+        spread: 'Natural',
+        risk: 'Low',
+        description: 'Melaleuca species are important Australian natives that provide essential habitat and food for native wildlife. They are known for their papery bark and aromatic oils.',
         controlMethods: [
-          'Physical removal: Hand collection and euthanasia',
-          'Barrier installation: Fencing to prevent movement',
-          'Habitat modification: Remove water sources and shelter',
-          'Biological control: Research into natural predators',
-          'Community trapping programs: Organized removal efforts'
+          'No control needed: Melaleuca are native and beneficial',
+          'Conservation: Protect existing populations and ecosystems',
+          'Restoration: Plant native melaleuca species in appropriate areas',
+          'Management: Prune for safety while maintaining ecological value',
+          'Education: Learn about local melaleuca species and their benefits'
         ],
-        economicImpact: 'Cane Toads cause significant economic losses through impacts on tourism, agriculture, and native wildlife populations. They also increase management and control costs.',
-        ecologicalImpact: 'Prey on native insects and small animals, compete with native amphibians, and poison native predators. They can significantly reduce populations of native species.',
+        economicImpact: 'Melaleuca provide economic benefits through essential oils (tea tree oil), timber, honey production, and ecosystem services.',
+        ecologicalImpact: 'Essential for wetland ecosystems, provide habitat and food for native wildlife, and help maintain water quality through filtration.',
         managementStrategies: [
-          'Prevention of further spread',
-          'Community education and awareness',
-          'Research into control methods',
-          'Habitat restoration programs',
-          'Monitoring and assessment programs'
+          'Conservation of existing populations',
+          'Restoration of degraded melaleuca wetlands',
+          'Protection from invasive species',
+          'Sustainable harvesting practices',
+          'Community education and engagement'
         ],
         preventionTips: [
-          'Prevent accidental transport in vehicles',
-          'Clean equipment and materials',
-          'Report new populations immediately',
-          'Support community control programs',
-          'Learn to identify Cane Toads correctly'
+          'Plant native melaleuca species in your garden',
+          'Avoid removing healthy native trees',
+          'Support local conservation efforts',
+          'Learn to identify local species',
+          'Protect trees from invasive weeds'
         ],
         identification: [
-          'Large, warty brown toad',
-          'Distinctive parotoid glands behind eyes',
-          'Creamy underside with dark spots',
-          'Adult size 10-15cm',
-          'Distinctive call: loud, continuous croaking'
+          'Papery bark that peels in strips',
+          'Small white or cream bottlebrush flowers',
+          'Narrow, aromatic leaves',
+          'Variable growth forms from shrubs to large trees',
+          'Distinctive seed capsules'
         ],
-        seasonalBehavior: 'Most active during wet seasons and at night. Breed in standing water during summer months.',
-        habitat: 'Prefers moist environments near water sources. Common in gardens, agricultural areas, and urban environments.',
-        reproduction: 'Lay thousands of eggs in water. Tadpoles develop quickly and can survive in various water conditions.',
-        distribution: 'Widespread across northern Australia, particularly in Queensland and Northern Territory.',
-        legalStatus: 'Declared pest animal in most Australian states. Control programs are actively managed.',
-        reporting: 'Report sightings to local authorities or use citizen science apps. Include location and photos.'
+        seasonalBehavior: 'Flowering varies by species, with many flowering in spring and summer. Seeds are released after fire or capsule opening.',
+        habitat: 'Common in wetlands, swamps, and coastal areas. Some species are highly drought tolerant.',
+        reproduction: 'Reproduces by seed. Many species require fire for optimal seed release and germination.',
+        distribution: 'Throughout Australia with high diversity in coastal and wetland areas.',
+        legalStatus: 'Protected native species in most areas. Removal may require permits.',
+        reporting: 'Report illegal removal or damage to native vegetation authorities. Share sightings of rare species with conservation groups.'
       },
-      'red-fox': {
-        name: 'Red Fox',
-        scientificName: 'Vulpes vulpes',
-        type: 'Mammal',
-        nativeRange: 'Europe, Asia, and North America',
-        firstDetected: '1855',
-        impact: 'High',
-        spread: 'High',
-        risk: 'High',
-        description: 'Red Foxes are highly adaptable predators that pose a serious threat to native wildlife. They prey on native mammals, birds, and reptiles, and can significantly impact biodiversity.',
+      'banksia': {
+        name: 'Banksia',
+        scientificName: 'Banksia spp.',
+        type: 'Tree/Shrub',
+        nativeRange: 'Australia',
+        firstDetected: 'Native',
+        impact: 'Beneficial',
+        spread: 'Natural',
+        risk: 'Low',
+        description: 'Banksia species are iconic Australian natives with distinctive flower spikes that provide essential food for native birds and mammals. They are vital for ecosystem health.',
         controlMethods: [
-          'Baiting programs: Use approved poisons in strategic locations',
-          'Trapping and shooting: Professional control programs',
-          'Exclusion fencing: Protect sensitive areas',
-          'Habitat modification: Remove food sources and shelter',
-          'Community education: Reduce food availability'
+          'No control needed: Banksia are native and beneficial',
+          'Conservation: Protect existing populations and ecosystems',
+          'Restoration: Plant native banksia species in appropriate areas',
+          'Management: Prune for safety while maintaining ecological value',
+          'Education: Learn about local banksia species and their benefits'
         ],
-        economicImpact: 'Significant costs in livestock protection, biodiversity conservation, and control programs. Can affect agricultural productivity and tourism.',
-        ecologicalImpact: 'Prey on native species, compete with native predators, spread diseases, and can significantly reduce populations of native wildlife.',
+        economicImpact: 'Banksia provide economic benefits through honey production, cut flowers, and ecotourism. They support pollinator populations essential for agriculture.',
+        ecologicalImpact: 'Critical food source for native birds and mammals, provide habitat and nesting sites, and support diverse pollinator communities.',
         managementStrategies: [
-          'Integrated pest management programs',
-          'Community education and awareness',
-          'Habitat protection and restoration',
-          'Regular monitoring and assessment',
-          'Collaboration with neighboring landowners'
+          'Conservation of existing populations',
+          'Restoration of degraded banksia woodlands',
+          'Protection from invasive species',
+          'Sustainable harvesting practices',
+          'Community education and engagement'
         ],
         preventionTips: [
-          'Secure livestock and poultry at night',
-          'Remove food sources and garbage',
-          'Report sightings to authorities',
-          'Support native wildlife conservation',
-          'Learn to identify fox signs and tracks'
+          'Plant native banksia species in your garden',
+          'Avoid removing healthy native trees',
+          'Support local conservation efforts',
+          'Learn to identify local species',
+          'Protect trees from invasive weeds'
         ],
         identification: [
-          'Reddish-brown fur with white underside',
-          'Bushy tail with white tip',
-          'Pointed ears and muzzle',
-          'Adult size similar to medium dog',
-          'Distinctive tracks and scats'
+          'Distinctive cylindrical flower spikes',
+          'Serrated or entire leaves with prominent veins',
+          'Cone-like fruiting structures',
+          'Variable growth forms from ground covers to large trees',
+          'Distinctive bark patterns and textures'
         ],
-        seasonalBehavior: 'Most active at dawn and dusk, with increased activity during breeding season. More visible during winter months.',
-        habitat: 'Adaptable to various environments including urban areas, agricultural lands, forests, and coastal regions.',
-        reproduction: 'Breed once per year, producing 4-6 pups. Young disperse in autumn to find new territories.',
-        distribution: 'Widespread across southern and eastern Australia, particularly in New South Wales, Victoria, and South Australia.',
-        legalStatus: 'Declared pest animal in most Australian states. Control programs are actively managed.',
-        reporting: 'Report sightings and damage to local authorities or wildlife agencies.'
+        seasonalBehavior: 'Flowering varies by species, with many flowering in autumn and winter when nectar is scarce for wildlife.',
+        habitat: 'Adaptable to various Australian environments including heathlands, woodlands, forests, and coastal areas.',
+        reproduction: 'Reproduces by seed. Many species require fire for seed release and optimal germination.',
+        distribution: 'Throughout Australia with high diversity in Western Australia and eastern coastal regions.',
+        legalStatus: 'Protected native species in most areas. Removal may require permits.',
+        reporting: 'Report illegal removal or damage to native vegetation authorities. Share sightings of rare species with conservation groups.'
       },
       'gamba-grass': {
         name: 'Gamba Grass',
@@ -488,6 +495,148 @@ const SpeciesDetailPage: React.FC = () => {
         legalStatus: 'Declared noxious weed in most Australian states. Control is mandatory for landowners.',
         reporting: 'Report new infestations to local authorities or state biosecurity agencies.'
       },
+      'acacia-wattle': {
+        name: 'Acacia/Wattle',
+        scientificName: 'Acacia spp.',
+        type: 'Tree/Shrub',
+        nativeRange: 'Australia',
+        firstDetected: 'Native',
+        impact: 'Beneficial',
+        spread: 'Natural',
+        risk: 'Low',
+        description: 'Acacia (Wattle) species are vital Australian natives that fix nitrogen in soil and provide essential food and habitat for native wildlife. They are Australia\'s floral emblem.',
+        controlMethods: [
+          'No control needed: Acacia are native and beneficial',
+          'Conservation: Protect existing populations and ecosystems',
+          'Restoration: Plant native acacia species in appropriate areas',
+          'Management: Prune for safety while maintaining ecological value',
+          'Education: Learn about local acacia species and their benefits'
+        ],
+        economicImpact: 'Acacia provide economic benefits through timber, tannins, gum arabic, and ecosystem services. They improve soil fertility through nitrogen fixation.',
+        ecologicalImpact: 'Essential for soil health through nitrogen fixation, provide food and habitat for native wildlife, and support diverse ecosystems.',
+        managementStrategies: [
+          'Conservation of existing populations',
+          'Restoration of degraded acacia woodlands',
+          'Protection from invasive species',
+          'Sustainable harvesting practices',
+          'Community education and engagement'
+        ],
+        preventionTips: [
+          'Plant native acacia species in your garden',
+          'Avoid removing healthy native trees',
+          'Support local conservation efforts',
+          'Learn to identify local species',
+          'Protect trees from invasive weeds'
+        ],
+        identification: [
+          'Compound leaves (phyllodes in many species)',
+          'Golden yellow flower balls or spikes',
+          'Pod-like fruits that split open',
+          'Variable growth forms from shrubs to large trees',
+          'Distinctive bark patterns and textures'
+        ],
+        seasonalBehavior: 'Many species flower in winter and spring, providing important nectar sources when other plants are dormant.',
+        habitat: 'Adaptable to diverse Australian environments including woodlands, forests, grasslands, and coastal areas.',
+        reproduction: 'Reproduces by seed. Many species require fire or scarification for optimal seed germination.',
+        distribution: 'Throughout Australia in various habitats, with high diversity in arid and semi-arid regions.',
+        legalStatus: 'Protected native species in most areas. Removal may require permits.',
+        reporting: 'Report illegal removal or damage to native vegetation authorities. Share sightings of rare species with conservation groups.'
+      },
+      'grevillea': {
+        name: 'Grevillea',
+        scientificName: 'Grevillea spp.',
+        type: 'Tree/Shrub',
+        nativeRange: 'Australia',
+        firstDetected: 'Native',
+        impact: 'Beneficial',
+        spread: 'Natural',
+        risk: 'Low',
+        description: 'Grevillea species are beautiful Australian natives with distinctive flowers that attract native birds and insects. They are excellent garden plants and provide important ecosystem services.',
+        controlMethods: [
+          'No control needed: Grevillea are native and beneficial',
+          'Conservation: Protect existing populations and ecosystems',
+          'Restoration: Plant native grevillea species in appropriate areas',
+          'Management: Prune for safety while maintaining ecological value',
+          'Education: Learn about local grevillea species and their benefits'
+        ],
+        economicImpact: 'Grevillea provide economic benefits through horticulture, cut flowers, and ecotourism. They attract beneficial insects and birds to gardens.',
+        ecologicalImpact: 'Essential for native bird and insect populations, provide habitat and food sources, and support diverse pollinator communities.',
+        managementStrategies: [
+          'Conservation of existing populations',
+          'Restoration of degraded grevillea habitats',
+          'Protection from invasive species',
+          'Sustainable cultivation practices',
+          'Community education and engagement'
+        ],
+        preventionTips: [
+          'Plant native grevillea species in your garden',
+          'Avoid removing healthy native plants',
+          'Support local conservation efforts',
+          'Learn to identify local species',
+          'Protect plants from invasive weeds'
+        ],
+        identification: [
+          'Distinctive spider-like or toothbrush flower clusters',
+          'Variable leaf shapes from simple to deeply divided',
+          'Flowers in various colors (red, pink, yellow, orange)',
+          'Variable growth forms from ground covers to small trees',
+          'Distinctive seed pods'
+        ],
+        seasonalBehavior: 'Flowering varies by species, with many flowering in winter and spring when other nectar sources are scarce.',
+        habitat: 'Adaptable to various Australian environments including heathlands, woodlands, forests, and coastal areas.',
+        reproduction: 'Reproduces by seed. Many species are bird-pollinated and have specialized seed dispersal mechanisms.',
+        distribution: 'Throughout Australia with high diversity in Western Australia and eastern coastal regions.',
+        legalStatus: 'Protected native species in most areas. Removal may require permits.',
+        reporting: 'Report illegal removal or damage to native vegetation authorities. Share sightings of rare species with conservation groups.'
+      },
+      // Animal species
+      'common-myna': {
+        name: 'Common Myna',
+        scientificName: 'Acridotheres tristis',
+        type: 'Bird',
+        nativeRange: 'South Asia',
+        firstDetected: '1862',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Common Mynas are highly adaptable birds that compete aggressively with native species for food and nesting sites. They can displace native birds and spread diseases.',
+        controlMethods: [
+          'Habitat modification: Remove food sources and nesting sites',
+          'Exclusion methods: Install bird-proofing on buildings',
+          'Trapping programs: Use approved trapping methods',
+          'Community education: Reduce feeding and nesting opportunities',
+          'Monitoring and assessment: Track population changes'
+        ],
+        economicImpact: 'Costs associated with damage to crops, property damage, and impacts on native biodiversity. Can affect tourism and agricultural productivity.',
+        ecologicalImpact: 'Competes with native birds for resources, displaces native species, spreads diseases, and can alter ecosystem dynamics.',
+        managementStrategies: [
+          'Urban bird management programs',
+          'Community education and awareness',
+          'Habitat modification and exclusion',
+          'Population monitoring and control',
+          'Collaboration with local authorities'
+        ],
+        preventionTips: [
+          'Avoid feeding birds in urban areas',
+          'Secure garbage and food waste',
+          'Modify buildings to prevent nesting',
+          'Report large populations to authorities',
+          'Support native bird conservation'
+        ],
+        identification: [
+          'Brown body with black head and yellow eye patch',
+          'Yellow legs and bill',
+          'White patches on wings visible in flight',
+          'Aggressive behavior towards other birds',
+          'Loud, varied calls and mimicry abilities'
+        ],
+        seasonalBehavior: 'Active year-round, with increased breeding activity in spring and summer. More visible during feeding times.',
+        habitat: 'Urban areas, agricultural lands, parks, and gardens. Prefers areas with food sources and nesting opportunities.',
+        reproduction: 'Breed multiple times per year, laying 3-6 eggs per clutch. Can raise several broods annually.',
+        distribution: 'Widespread across eastern Australia, particularly in urban and agricultural areas.',
+        legalStatus: 'Declared pest animal in most Australian states. Control programs are actively managed.',
+        reporting: 'Report large populations or unusual behavior to local authorities or wildlife agencies.'
+      },
       'european-rabbit': {
         name: 'European Rabbit',
         scientificName: 'Oryctolagus cuniculus',
@@ -534,6 +683,100 @@ const SpeciesDetailPage: React.FC = () => {
         distribution: 'Widespread across Australia, particularly in agricultural and pastoral areas.',
         legalStatus: 'Declared pest animal in most Australian states. Control programs are actively managed.',
         reporting: 'Report large populations and damage to local authorities or agricultural agencies.'
+      },
+      'red-fox': {
+        name: 'Red Fox',
+        scientificName: 'Vulpes vulpes',
+        type: 'Mammal',
+        nativeRange: 'Europe, Asia, and North America',
+        firstDetected: '1855',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Red Foxes are highly adaptable predators that pose a serious threat to native wildlife. They prey on native mammals, birds, and reptiles, and can significantly impact biodiversity.',
+        controlMethods: [
+          'Baiting programs: Use approved poisons in strategic locations',
+          'Trapping and shooting: Professional control programs',
+          'Exclusion fencing: Protect sensitive areas',
+          'Habitat modification: Remove food sources and shelter',
+          'Community education: Reduce food availability'
+        ],
+        economicImpact: 'Significant costs in livestock protection, biodiversity conservation, and control programs. Can affect agricultural productivity and tourism.',
+        ecologicalImpact: 'Prey on native species, compete with native predators, spread diseases, and can significantly reduce populations of native wildlife.',
+        managementStrategies: [
+          'Integrated pest management programs',
+          'Community education and awareness',
+          'Habitat protection and restoration',
+          'Regular monitoring and assessment',
+          'Collaboration with neighboring landowners'
+        ],
+        preventionTips: [
+          'Secure livestock and poultry at night',
+          'Remove food sources and garbage',
+          'Report sightings to authorities',
+          'Support native wildlife conservation',
+          'Learn to identify fox signs and tracks'
+        ],
+        identification: [
+          'Reddish-brown fur with white underside',
+          'Bushy tail with white tip',
+          'Pointed ears and muzzle',
+          'Adult size similar to medium dog',
+          'Distinctive tracks and scats'
+        ],
+        seasonalBehavior: 'Most active at dawn and dusk, with increased activity during breeding season. More visible during winter months.',
+        habitat: 'Adaptable to various environments including urban areas, agricultural lands, forests, and coastal regions.',
+        reproduction: 'Breed once per year, producing 4-6 pups. Young disperse in autumn to find new territories.',
+        distribution: 'Widespread across southern and eastern Australia, particularly in New South Wales, Victoria, and South Australia.',
+        legalStatus: 'Declared pest animal in most Australian states. Control programs are actively managed.',
+        reporting: 'Report sightings and damage to local authorities or wildlife agencies.'
+      },
+      'cane-toad': {
+        name: 'Cane Toad',
+        scientificName: 'Rhinella marina',
+        type: 'Amphibian',
+        nativeRange: 'Central and South America',
+        firstDetected: '1935',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Cane Toads are highly toxic amphibians that pose a serious threat to native wildlife. They compete with native species for food and habitat, and their toxins can kill predators that attempt to eat them.',
+        controlMethods: [
+          'Physical removal: Hand collection and euthanasia',
+          'Barrier installation: Fencing to prevent movement',
+          'Habitat modification: Remove water sources and shelter',
+          'Biological control: Research into natural predators',
+          'Community trapping programs: Organized removal efforts'
+        ],
+        economicImpact: 'Cane Toads cause significant economic losses through impacts on tourism, agriculture, and native wildlife populations. They also increase management and control costs.',
+        ecologicalImpact: 'Prey on native insects and small animals, compete with native amphibians, and poison native predators. They can significantly reduce populations of native species.',
+        managementStrategies: [
+          'Prevention of further spread',
+          'Community education and awareness',
+          'Research into control methods',
+          'Habitat restoration programs',
+          'Monitoring and assessment programs'
+        ],
+        preventionTips: [
+          'Prevent accidental transport in vehicles',
+          'Clean equipment and materials',
+          'Report new populations immediately',
+          'Support community control programs',
+          'Learn to identify Cane Toads correctly'
+        ],
+        identification: [
+          'Large, warty brown toad',
+          'Distinctive parotoid glands behind eyes',
+          'Creamy underside with dark spots',
+          'Adult size 10-15cm',
+          'Distinctive call: loud, continuous croaking'
+        ],
+        seasonalBehavior: 'Most active during wet seasons and at night. Breed in standing water during summer months.',
+        habitat: 'Prefers moist environments near water sources. Common in gardens, agricultural areas, and urban environments.',
+        reproduction: 'Lay thousands of eggs in water. Tadpoles develop quickly and can survive in various water conditions.',
+        distribution: 'Widespread across northern Australia, particularly in Queensland and Northern Territory.',
+        legalStatus: 'Declared pest animal in most Australian states. Control programs are actively managed.',
+        reporting: 'Report sightings to local authorities or use citizen science apps. Include location and photos.'
       },
       'feral-pig': {
         name: 'Feral Pig',
@@ -602,7 +845,14 @@ const SpeciesDetailPage: React.FC = () => {
     );
   }
 
-  const tabs = [
+  // Different tabs for native vs invasive species
+  const tabs = species.impact === 'Beneficial' ? [
+    { id: 'overview', label: 'Overview', icon: Info },
+    { id: 'control', label: 'Conservation Tips', icon: Wrench },
+    { id: 'impact', label: 'Benefits', icon: TrendingUp },
+    { id: 'identification', label: 'Identification', icon: Search },
+    { id: 'prevention', label: 'Protection', icon: Shield }
+  ] : [
     { id: 'overview', label: 'Overview', icon: Info },
     { id: 'control', label: 'Prevention Tips', icon: Wrench },
     { id: 'impact', label: 'Impact', icon: TrendingUp },
@@ -811,65 +1061,112 @@ const SpeciesDetailPage: React.FC = () => {
                 
                 {/* CTA for Interactive Map */}
                 <div className="mt-4">
-                  <Link
+                  <Link 
                     to="/map?openInteractive=true"
                     onClick={scrollToTop}
                     className="group inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-blue-500/30 transform hover:scale-105"
                   >
                     <MapPin className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                    <span className="group-hover:tracking-wide transition-all duration-300">See the Spread</span>
+                    <span className="group-hover:tracking-wide transition-all duration-300">
+                      {species.impact === 'Beneficial' ? 'See Distribution' : 'See the Spread'}
+                    </span>
                     <span className="ml-2 text-xs group-hover:translate-x-1 transition-transform duration-300">→</span>
                   </Link>
                 </div>
               </div>
             </div>
 
-            {/* Middle Column - Enhanced Risk Assessment */}
+            {/* Middle Column - Enhanced Assessment (Different for Native vs Invasive) */}
             <div className="space-y-3 sm:space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
-                <AlertTriangle className="w-5 h-5 text-orange-500" />
-                <span>How Much of a Problem?</span>
-              </h3>
-              <div className="space-y-3 sm:space-y-4">
-                <div 
-                  className="group flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-gray-100 hover:to-gray-200 transition-all duration-300 cursor-pointer"
-                  onMouseEnter={() => setHoveredElement('impact')}
-                  onMouseLeave={() => setHoveredElement(null)}
-                >
-                  <span className="text-sm text-gray-600 font-medium">How much damage does it cause:</span>
-                  <span className={`px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all duration-300 transform group-hover:scale-105 ${
-                    species.impact === 'High' 
-                      ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/30' 
-                      : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-orange-500/30'
-                  }`}>
-                    {species.impact}
-                  </span>
-                </div>
-                <div 
-                  className="group flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-gray-100 hover:to-gray-200 transition-all duration-300 cursor-pointer"
-                  onMouseEnter={() => setHoveredElement('spread')}
-                  onMouseLeave={() => setHoveredElement(null)}
-                >
-                  <span className="text-sm text-gray-600 font-medium">How fast does it spread:</span>
-                  <span className={`px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all duration-300 transform group-hover:scale-105 ${
-                    species.spread === 'High' 
-                      ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/30' 
-                      : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-orange-500/30'
-                  }`}>
-                    {species.spread}
-                  </span>
-                </div>
-                <div 
-                  className="group flex items-center justify-between p-3 bg-gradient-to-r from-red-50 to-red-100 rounded-xl hover:from-red-100 hover:to-red-200 transition-all duration-300 cursor-pointer"
-                  onMouseEnter={() => setHoveredElement('risk')}
-                  onMouseLeave={() => setHoveredElement(null)}
-                >
-                  <span className="text-sm text-gray-600 font-medium">Overall threat level:</span>
-                  <span className="px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/30 transition-all duration-300 transform group-hover:scale-105">
-                    {species.risk}
-                  </span>
-                </div>
-              </div>
+              {species.impact === 'Beneficial' ? (
+                // Native Species - Positive Benefits
+                <>
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+                    <Leaf className="w-5 h-5 text-green-500" />
+                    <span>How Much of a Benefit?</span>
+                  </h3>
+                  <div className="space-y-3 sm:space-y-4">
+                    <div 
+                      className="group flex items-center justify-between p-3 bg-gradient-to-r from-green-50 to-green-100 rounded-xl hover:from-green-100 hover:to-green-200 transition-all duration-300 cursor-pointer"
+                      onMouseEnter={() => setHoveredElement('impact')}
+                      onMouseLeave={() => setHoveredElement(null)}
+                    >
+                      <span className="text-sm text-gray-600 font-medium">Ecological value:</span>
+                      <span className="px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all duration-300 transform group-hover:scale-105 bg-gradient-to-r from-green-500 to-green-600 text-white shadow-green-500/30">
+                        {species.impact}
+                      </span>
+                    </div>
+                    <div 
+                      className="group flex items-center justify-between p-3 bg-gradient-to-r from-green-50 to-green-100 rounded-xl hover:from-green-100 hover:to-green-200 transition-all duration-300 cursor-pointer"
+                      onMouseEnter={() => setHoveredElement('spread')}
+                      onMouseLeave={() => setHoveredElement(null)}
+                    >
+                      <span className="text-sm text-gray-600 font-medium">Natural distribution:</span>
+                      <span className="px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all duration-300 transform group-hover:scale-105 bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-blue-500/30">
+                        {species.spread}
+                      </span>
+                    </div>
+                    <div 
+                      className="group flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl hover:from-blue-100 hover:to-blue-200 transition-all duration-300 cursor-pointer"
+                      onMouseEnter={() => setHoveredElement('risk')}
+                      onMouseLeave={() => setHoveredElement(null)}
+                    >
+                      <span className="text-sm text-gray-600 font-medium">Conservation priority:</span>
+                      <span className="px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 transition-all duration-300 transform group-hover:scale-105">
+                        {species.risk}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                // Invasive Species - Problem Assessment
+                <>
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+                    <AlertTriangle className="w-5 h-5 text-orange-500" />
+                    <span>How Much of a Problem?</span>
+                  </h3>
+                  <div className="space-y-3 sm:space-y-4">
+                    <div 
+                      className="group flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-gray-100 hover:to-gray-200 transition-all duration-300 cursor-pointer"
+                      onMouseEnter={() => setHoveredElement('impact')}
+                      onMouseLeave={() => setHoveredElement(null)}
+                    >
+                      <span className="text-sm text-gray-600 font-medium">How much damage does it cause:</span>
+                      <span className={`px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all duration-300 transform group-hover:scale-105 ${
+                        species.impact === 'High' 
+                          ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/30' 
+                          : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-orange-500/30'
+                      }`}>
+                        {species.impact}
+                      </span>
+                    </div>
+                    <div 
+                      className="group flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-gray-100 hover:to-gray-200 transition-all duration-300 cursor-pointer"
+                      onMouseEnter={() => setHoveredElement('spread')}
+                      onMouseLeave={() => setHoveredElement(null)}
+                    >
+                      <span className="text-sm text-gray-600 font-medium">How fast does it spread:</span>
+                      <span className={`px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all duration-300 transform group-hover:scale-105 ${
+                        species.spread === 'High' 
+                          ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/30' 
+                          : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-orange-500/30'
+                      }`}>
+                        {species.spread}
+                      </span>
+                    </div>
+                    <div 
+                      className="group flex items-center justify-between p-3 bg-gradient-to-r from-red-50 to-red-100 rounded-xl hover:from-red-100 hover:to-red-200 transition-all duration-300 cursor-pointer"
+                      onMouseEnter={() => setHoveredElement('risk')}
+                      onMouseLeave={() => setHoveredElement(null)}
+                    >
+                      <span className="text-sm text-gray-600 font-medium">Overall threat level:</span>
+                      <span className="px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/30 transition-all duration-300 transform group-hover:scale-105">
+                        {species.risk}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Enhanced Image Column */}

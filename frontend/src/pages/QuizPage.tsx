@@ -25,11 +25,41 @@ const QuizPage: React.FC = () => {
 
             {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-2">
-              <Link to="/" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Home</Link>
-              <Link to="/education" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Species Profile</Link>
-              <Link to="/insights" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Did you Know?</Link>
-              <Link to="/map" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Map</Link>
-              <Link to="/epic5" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Seasonal</Link>
+              <Link 
+                to="/" 
+                onClick={scrollToTop} 
+                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
+              >
+                <span className="relative z-10">Home</span>
+              </Link>
+              <Link 
+                to="/education" 
+                onClick={scrollToTop} 
+                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
+              >
+                <span className="relative z-10">Species Profile</span>
+              </Link>
+              <Link 
+                to="/insights" 
+                onClick={scrollToTop} 
+                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
+              >
+                <span className="relative z-10">Did you Know?</span>
+              </Link>
+              <Link 
+                to="/map" 
+                onClick={scrollToTop} 
+                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
+              >
+                <span className="relative z-10">Map</span>
+              </Link>
+              <Link 
+                to="/epic5" 
+                onClick={scrollToTop} 
+                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
+              >
+                <span className="relative z-10">Seasonal</span>
+              </Link>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -128,7 +158,7 @@ const QuizPage: React.FC = () => {
                 >
                   <div className="flex items-center">
                     <Target className="h-5 w-5 mr-2" />
-                    Plant ID Quiz
+                    Spot the Invader
                   </div>
                 </button>
               </div>
@@ -143,9 +173,9 @@ const QuizPage: React.FC = () => {
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why This Matters</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why It Matters</h2>
               <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Every correct identification and removal action contributes to protecting Australia's unique biodiversity
+                Every time you spot and remove an invasive species, you help protect Australia’s unique wildlife and keep our environment healthy.
               </p>
             </div>
 

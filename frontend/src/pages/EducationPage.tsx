@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import SeasonalRiskIndicator from '../components/SeasonalRiskIndicator';
+import LiquidEther from '../components/LiquidEther';
+import SimpleHeader from '../components/SimpleHeader';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
@@ -11,7 +13,7 @@ const speciesList: {
   name: string; 
   image: string; 
   category: 'plant' | 'animal' | 'insect';
-  threatLevel: 'high' | 'medium' | 'critical';
+  threatLevel: 'high' | 'medium' | 'critical' | 'low';
   quickFacts: {
     introduced: string;
     impact: string;
@@ -41,8 +43,119 @@ const speciesList: {
       impact: 'Coastal dune invasion, biodiversity loss',
       distribution: 'NSW, VIC, SA, WA'
     },
-    relatedSpecies: ['Lantana', 'Gorse', 'Gamba Grass']
+    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Banksia']
   },
+  { 
+    name: 'Eucalyptus', 
+    image: '/top10/Eucalyptus.png',
+    category: 'plant',
+    threatLevel: 'low',
+    quickFacts: {
+      introduced: 'Native',
+      impact: 'Essential for Australian ecosystems and wildlife',
+      distribution: 'Throughout Australia'
+    },
+    relatedSpecies: ['Acacia/Wattle', 'Banksia', 'Melaleuca']
+  },
+  { 
+    name: 'Acacia/Wattle', 
+    image: '/top10/Acacia:Wattle.jpg',
+    category: 'plant',
+    threatLevel: 'low',
+    quickFacts: {
+      introduced: 'Native',
+      impact: 'Important nitrogen fixer, food for native wildlife',
+      distribution: 'Throughout Australia'
+    },
+    relatedSpecies: ['Eucalyptus', 'Banksia', 'Grevillea']
+  },
+  { 
+    name: 'Banksia', 
+    image: '/top10/Banksia.jpg',
+    category: 'plant',
+    threatLevel: 'low',
+    quickFacts: {
+      introduced: 'Native',
+      impact: 'Critical food source for native birds and mammals',
+      distribution: 'Western Australia, Eastern Australia'
+    },
+    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Grevillea']
+  },
+  { 
+    name: 'Gorse', 
+    image: '/top10/Gorse.png',
+    category: 'plant',
+    threatLevel: 'high',
+    quickFacts: {
+      introduced: '1830s',
+      impact: 'Forms impenetrable thickets, fire hazard',
+      distribution: 'VIC, TAS, NSW, SA'
+    },
+    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Melaleuca']
+  },
+  { 
+    name: 'Buffel Grass', 
+    image: '/top10/BuffelGrass.png',
+    category: 'plant',
+    threatLevel: 'high',
+    quickFacts: {
+      introduced: '1870s',
+      impact: 'Alters fire regimes, reduces biodiversity',
+      distribution: 'All mainland states'
+    },
+    relatedSpecies: ['Eucalyptus', 'Banksia', 'Grevillea']
+  },
+  { 
+    name: 'Melaleuca', 
+    image: '/top10/Melaleuca.jpg',
+    category: 'plant',
+    threatLevel: 'low',
+    quickFacts: {
+      introduced: 'Native',
+      impact: 'Provides habitat and food for native wildlife',
+      distribution: 'Throughout Australia'
+    },
+    relatedSpecies: ['Eucalyptus', 'Banksia', 'Grevillea']
+  },
+  { 
+    name: 'Grevillea', 
+    image: '/top10/Grevillea.png',
+    category: 'plant',
+    threatLevel: 'low',
+    quickFacts: {
+      introduced: 'Native',
+      impact: 'Attracts native birds and insects, supports biodiversity',
+      distribution: 'Throughout Australia'
+    },
+    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Melaleuca']
+  },
+  { 
+    name: 'Gamba Grass', 
+    image: '/top10/GambaGrass.png',
+    category: 'plant',
+    threatLevel: 'critical',
+    quickFacts: {
+      introduced: '1930s',
+      impact: 'Extreme fire risk, ecosystem transformation',
+      distribution: 'NT, QLD, WA'
+    },
+    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Banksia']
+  },
+];
+
+// Animal species data
+const animalSpeciesList: { 
+  name: string; 
+  image: string; 
+  category: 'plant' | 'animal' | 'insect';
+  threatLevel: 'high' | 'medium' | 'critical' | 'low';
+  quickFacts: {
+    introduced: string;
+    impact: string;
+    distribution: string;
+  };
+  relatedSpecies: string[];
+}[] = [
   { 
     name: 'Common Myna', 
     image: '/top10/CommonMyna.png',
@@ -80,30 +193,6 @@ const speciesList: {
     relatedSpecies: ['European Rabbit', 'Feral Pig', 'Common Myna']
   },
   { 
-    name: 'Gorse', 
-    image: '/top10/Gorse.png',
-    category: 'plant',
-    threatLevel: 'high',
-    quickFacts: {
-      introduced: '1830s',
-      impact: 'Forms impenetrable thickets, fire hazard',
-      distribution: 'VIC, TAS, NSW, SA'
-    },
-    relatedSpecies: ['Lantana', 'Bitou Bush', 'Buffel Grass']
-  },
-  { 
-    name: 'Buffel Grass', 
-    image: '/top10/BuffelGrass.png',
-    category: 'plant',
-    threatLevel: 'high',
-    quickFacts: {
-      introduced: '1870s',
-      impact: 'Alters fire regimes, reduces biodiversity',
-      distribution: 'All mainland states'
-    },
-    relatedSpecies: ['Gamba Grass', 'Lantana', 'Gorse']
-  },
-  { 
     name: 'Cane Toad', 
     image: '/top10/CaneToad.png',
     category: 'animal',
@@ -127,24 +216,12 @@ const speciesList: {
     },
     relatedSpecies: ['Red Fox', 'European Rabbit', 'Cane Toad']
   },
-  { 
-    name: 'Gamba Grass', 
-    image: '/top10/GambaGrass.png',
-    category: 'plant',
-    threatLevel: 'critical',
-    quickFacts: {
-      introduced: '1930s',
-      impact: 'Extreme fire risk, ecosystem transformation',
-      distribution: 'NT, QLD, WA'
-    },
-    relatedSpecies: ['Buffel Grass', 'Lantana', 'Bitou Bush']
-  },
 ];
 
 const EducationPage: React.FC = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'plants' | 'animals'>('plants');
   const parallaxRef = useRef<HTMLDivElement>(null);
 
   // Parallax scroll effect
@@ -199,117 +276,46 @@ const EducationPage: React.FC = () => {
   };
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
-        <div className="px-3 sm:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo */}
-            <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-16 w-16 sm:h-24 sm:w-24 md:h-40 md:w-40 lg:h-60 lg:w-60 object-contain" />
-            </Link>
-
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-2">
-              <Link to="/" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Home</Link>
-              <Link to="/education" onClick={scrollToTop} className="px-4 py-2 text-white bg-green-600/60 border-green-500 rounded-md transition-all duration-200 font-medium shadow-md">Species Profile</Link>
-              <Link to="/insights" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Did you Know?</Link>
-              <Link to="/map" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Map</Link>
-              <Link to="/epic5" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Seasonal</Link>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden p-2 text-white hover:text-green-200 transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-green-700 border-t border-green-600">
-            <div className="px-4 py-2 space-y-1">
-              <Link 
-                to="/" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/education" 
-                className="block px-3 py-2 text-green-200 font-medium hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Species Profile
-              </Link>
-              <Link 
-                to="/map" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Map
-              </Link>
-              <Link 
-                to="/epic5" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Seasonal
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
+            {/* Simple Header */}
+            <SimpleHeader />
 
       {/* Main Content */}
       <main className="pt-24">
         <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 overflow-hidden">
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400/10 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-green-300/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-500/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-            
-            {/* Floating Particles */}
-            {[...Array(15)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-1 h-1 bg-green-300/30 rounded-full animate-float"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 5}s`,
-                  animationDuration: `${3 + Math.random() * 4}s`
-                }}
-              ></div>
-            ))}
+          {/* LiquidEther Background */}
+          <div className="absolute inset-0 w-full h-full z-0">
+            <LiquidEther
+              colors={['#22c55e', '#16a34a', '#15803d', '#166534']}
+              mouseForce={18}
+              cursorSize={140}
+              isViscous={false}
+              viscous={22}
+              iterationsViscous={18}
+              iterationsPoisson={18}
+              dt={0.017}
+              BFECC={true}
+              resolution={0.65}
+              isBounce={false}
+              autoDemo={true}
+              autoSpeed={0.35}
+              autoIntensity={1.9}
+              takeoverDuration={0.28}
+              autoResumeDelay={1800}
+              autoRampDuration={0.7}
+            />
           </div>
           
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Dark overlay for text readability - with pointer-events-none to allow mouse events through */}
+          <div className="absolute inset-0 bg-black/18 pointer-events-none"></div>
+          
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
               <span className="inline-block">
                 Species Profile
               </span>
             </h1>
             <p className="text-lg sm:text-xl lg:text-2xl text-green-100 max-w-3xl mx-auto">
-              Browse the top invasive species we track. Click a card to see more details, images, and how to manage them.
+              Browse the top invasive species we track. Switch between plants and animals to explore different species profiles.
             </p>
           </div>
         </section>
@@ -324,6 +330,34 @@ const EducationPage: React.FC = () => {
           </div>
           
           <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+            {/* Tab Navigation */}
+            <div className="flex justify-center mb-8">
+              <div className="bg-white/80 backdrop-blur-md rounded-xl p-2 shadow-lg border border-white/30">
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setActiveTab('plants')}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                      activeTab === 'plants'
+                        ? 'bg-green-600 text-white shadow-md shadow-green-500/30'
+                        : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                    }`}
+                  >
+                    🌱 Plants
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('animals')}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                      activeTab === 'animals'
+                        ? 'bg-green-600 text-white shadow-md shadow-green-500/30'
+                        : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                    }`}
+                  >
+                    🐾 Animals
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {isLoading ? (
               // Skeleton Loading States
               <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
@@ -336,8 +370,19 @@ const EducationPage: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-                {speciesList.map((sp, index) => (
+              <div className="transition-all duration-500 ease-in-out">
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+                  {(
+                    activeTab === 'plants'
+                      ? // Invasive first (critical/high), then natives (low/medium)
+                        [...speciesList].sort((a, b) => {
+                          const rank = (t: string) => (t === 'critical' || t === 'high' ? 0 : 1);
+                          const rA = rank(a.threatLevel);
+                          const rB = rank(b.threatLevel);
+                          return rA - rB || a.name.localeCompare(b.name);
+                        })
+                      : animalSpeciesList
+                  ).map((sp, index) => (
                   <div 
                     key={sp.name} 
                     className="group relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-700 overflow-hidden transform hover:scale-105 hover:-rotate-1 border border-white/30"
@@ -435,7 +480,7 @@ const EducationPage: React.FC = () => {
                         </div>
                         
                         <Link 
-                          to={`/species/${sp.name.toLowerCase().replace(/\s+/g, '-')}?from=education`} 
+                          to={`/species/${sp.name.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-')}?from=education`} 
                           onClick={scrollToTop}
                           className="group/link inline-flex items-center justify-center w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white font-medium text-sm py-2 px-4 rounded-xl transition-all duration-300 transform group-hover:scale-105 shadow-lg hover:shadow-xl mt-auto"
                         >
@@ -445,7 +490,8 @@ const EducationPage: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -456,10 +502,10 @@ const EducationPage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Test Your Knowledge
+                Try Your Skills
               </h2>
               <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-                Ready to put your plant identification skills to the test? Take our interactive quiz and see how well you can identify invasive species!
+                See how good you are at spotting invasive plants with our fun quiz!
               </p>
             </div>
 

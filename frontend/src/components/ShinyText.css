@@ -1,0 +1,55 @@
+.shiny-text {
+  color: #ffffff; /* White text for visibility on dark header */
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  display: inline-block;
+  animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 100%;
+  }
+  100% {
+    background-position: -100%;
+  }
+}
+
+.shiny-text.disabled {
+  animation: none;
+}
+
+/* Custom variants for different button states */
+.shiny-text.green {
+  color: #ffffff;
+  background: linear-gradient(
+    120deg,
+    rgba(34, 197, 94, 0) 40%,
+    rgba(34, 197, 94, 0.9) 50%,
+    rgba(34, 197, 94, 0) 60%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.shiny-text.hover {
+  color: #ffffff;
+  background: linear-gradient(
+    120deg,
+    rgba(34, 197, 94, 0) 40%,
+    rgba(34, 197, 94, 0.7) 50%,
+    rgba(34, 197, 94, 0) 60%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shine 3s linear infinite;
+}
