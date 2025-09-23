@@ -666,23 +666,7 @@ const InteractiveMap: React.FC = () => {
                         </div>
                       </div>
                     )}
-                    {/* State vs Australia comparison mini-widget */}
-                    {comparison && comparison.top && (
-                      <div className="mt-3 p-2 bg-gray-50 rounded border">
-                        <div className="text-[11px] font-semibold text-gray-700 mb-1">{`Top species in ${comparison.state}: state vs Australia`}</div>
-                        <div className="space-y-1 max-h-28 overflow-auto pr-1">
-                          {comparison.top.map((row: any) => (
-                            <div key={row.species} className="text-[10px]">
-                              <div className="flex justify-between"><span className="font-medium">{row.species}</span><span>{row.stateCount}/{row.nationalCount}</span></div>
-                              <div className="h-1.5 w-full bg-gray-200 rounded">
-                                <div className="h-1.5 bg-green-500 rounded" style={{ width: `${Math.min(100, row.stateSharePct)}%` }}></div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="text-[10px] text-gray-600 mt-1">Share = state records / national records</div>
-                      </div>
-                    )}
+                    {/* Removed state vs Australia comparison mini-widget (moved to Species Details page) */}
                     
                     {/* Action Buttons */}
                     {selected.species.length > 0 && selected.species[currentSpeciesIndex] && (

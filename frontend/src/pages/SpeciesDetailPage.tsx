@@ -78,9 +78,9 @@ const SpeciesDetailPage: React.FC = () => {
       'Gorse': '/top10/Gorse.png',
       'Buffel Grass': '/top10/BuffelGrass.png',
       'Gamba Grass': '/top10/GambaGrass.png',
-      // Native species
+      // Native species - fixed image paths
       'Eucalyptus': '/top10/Eucalyptus.png',
-      'Acacia/Wattle': '/top10/Acacia:Wattle.jpg',
+      'Acacia/Wattle': '/top10/Acacia-Wattle.jpg',
       'Banksia': '/top10/Banksia.jpg',
       'Melaleuca': '/top10/Melaleuca.jpg',
       'Grevillea': '/top10/Grevillea.png',

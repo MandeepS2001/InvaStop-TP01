@@ -59,7 +59,7 @@ const speciesList: {
   },
   { 
     name: 'Acacia/Wattle', 
-    image: '/top10/Acacia:Wattle.jpg',
+    image: '/top10/Acacia-Wattle.jpg',
     category: 'plant',
     threatLevel: 'low',
     quickFacts: {
