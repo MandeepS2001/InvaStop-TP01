@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { AlertTriangle, Shield, Target, MapPin, Calendar, Leaf, Info, Wrench, TrendingUp, Search, Eye } from 'lucide-react';
+import SimpleHeader from '../components/SimpleHeader';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
@@ -862,92 +863,8 @@ const SpeciesDetailPage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
-        <div className="px-3 sm:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo */}
-            <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-16 w-16 sm:h-24 sm:w-24 md:h-40 md:w-40 lg:h-60 lg:w-60 object-contain" />
-            </Link>
-
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-2">
-              <Link to="/" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Home</Link>
-              <Link to="/education" onClick={scrollToTop} className={`px-4 py-2 text-white rounded-md transition-all duration-200 font-medium ${fromPage === 'education' ? 'bg-green-600/60 border-green-500 shadow-md' : 'hover:text-gray-200 hover:bg-gray-700/50 border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30'}`}>Species Profile</Link>
-              <Link to="/insights" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Did you Know?</Link>
-              <Link to="/map" onClick={scrollToTop} className={`px-4 py-2 text-white rounded-md transition-all duration-200 font-medium ${fromPage === 'map' ? 'bg-green-600/60 border-green-500 shadow-md' : 'hover:text-gray-200 hover:bg-gray-700/50 border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30'}`}>Map</Link>
-              <Link to="/epic5" onClick={scrollToTop} className="px-4 py-2 text-white hover:text-gray-200 hover:bg-gray-700/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 hover:shadow-md bg-gray-800/30">Seasonal</Link>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden p-2 text-white hover:text-green-200 transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-green-700 border-t border-green-600">
-            <div className="px-4 py-3 space-y-2">
-              <Link 
-                to="/" 
-                className="block px-4 py-3 text-white hover:text-gray-200 hover:bg-gray-600/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 shadow-sm bg-gray-800/30"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/education" 
-                className={`block px-4 py-3 text-white rounded-md transition-all duration-200 font-medium ${
-                  fromPage === 'education' 
-                    ? 'bg-green-600/60 border border-green-500 shadow-md' 
-                    : 'hover:text-gray-200 hover:bg-gray-600/50 border border-gray-600 hover:border-gray-500 shadow-sm bg-gray-800/30'
-                }`}
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Species Profile
-              </Link>
-              <Link 
-                to="/map" 
-                className={`block px-4 py-3 text-white rounded-md transition-all duration-200 font-medium ${
-                  fromPage === 'map' 
-                    ? 'bg-green-600/60 border border-green-500 shadow-md' 
-                    : 'hover:text-gray-200 hover:bg-gray-600/50 border border-gray-600 hover:border-gray-500 shadow-sm bg-gray-800/30'
-                }`}
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Map
-              </Link>
-              <Link 
-                to="/epic5" 
-                className="block px-4 py-3 text-white hover:text-gray-200 hover:bg-gray-600/50 rounded-md transition-all duration-200 font-medium border border-gray-600 hover:border-gray-500 shadow-sm bg-gray-800/30"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Seasonal
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
+      {/* SimpleHeader - same as homepage */}
+      <SimpleHeader />
 
       {/* Page Content */}
       <div className="pt-24">
