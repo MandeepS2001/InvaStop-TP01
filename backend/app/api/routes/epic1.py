@@ -165,6 +165,70 @@ def get_map_state_data(db: Session = Depends(get_db)):
             detail=f"Error fetching map state data: {str(e)}"
         )
 
+@router.get("/compare/state-vs-national")
+def compare_state_vs_national(state: str, top_n: int = 5, db: Session = Depends(get_db)):
+    """
+    Compare top species counts in a given state vs nationally using invasive_records.
+    Returns unified list of species with stateCount, nationalCount, and stateShare (% of national).
+    """
+    try:
+        from app.models.biodiversity_impact import InvasiveRecord
+        # State counts
+        state_counts = db.query(
+            InvasiveRecord.vernacularName.label('name'),
+            func.count(InvasiveRecord.id).label('count')
+        ).filter(
+            InvasiveRecord.stateProvince.ilike(f"%{state}%")
+        ).group_by(
+            InvasiveRecord.vernacularName
+        ).order_by(func.count(InvasiveRecord.id).desc()).all()
+
+        # National counts
+        national_counts = db.query(
+            InvasiveRecord.vernacularName.label('name'),
+            func.count(InvasiveRecord.id).label('count')
+        ).group_by(
+            InvasiveRecord.vernacularName
+        ).order_by(func.count(InvasiveRecord.id).desc()).all()
+
+        # Build dicts
+        state_map = {row.name or 'Unknown': int(row.count) for row in state_counts}
+        nat_map = {row.name or 'Unknown': int(row.count) for row in national_counts}
+
+        # Take union of top species across state and national, then pick top_n by state count where available
+        combined_species = set(list(state_map.keys())[:top_n] + list(nat_map.keys())[:top_n])
+        rows = []
+        for sp in combined_species:
+            s = state_map.get(sp, 0)
+            n = nat_map.get(sp, 0)
+            share = round((s / n * 100.0), 2) if n > 0 else 0.0
+            rows.append({
+                'species': sp,
+                'stateCount': s,
+                'nationalCount': n,
+                'stateSharePct': share
+            })
+
+        # Sort by stateCount desc and trim
+        rows.sort(key=lambda r: r['stateCount'], reverse=True)
+        rows = rows[:top_n]
+
+        totals = {
+            'stateTotal': int(sum(state_map.values())),
+            'nationalTotal': int(sum(nat_map.values()))
+        }
+
+        return {
+            'state': state,
+            'top': rows,
+            'totals': totals
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error comparing state vs national: {str(e)}"
+        )
+
 def get_risk_level_for_state(species_count: int) -> str:
     """Determine risk level based on species count"""
     if species_count >= 4:
@@ -182,3 +246,401 @@ def get_risk_color(risk_level: str) -> str:
         return "#f97316"  # Orange
     else:
         return "#facc15"  # Yellow
+
+@router.get("/invasive-records")
+def get_invasive_records(
+    species: str = None, 
+    year_start: int = None, 
+    year_end: int = None,
+    limit: int = None,
+    db: Session = Depends(get_db)
+):
+    """Get invasive species occurrence records for the interactive map overlay"""
+    try:
+        from app.models.biodiversity_impact import InvasiveRecord
+        
+        # Build query for invasive_records table
+        query = db.query(InvasiveRecord)
+        
+        # Apply species filter if provided
+        if species:
+            query = query.filter(InvasiveRecord.vernacularName.ilike(f"%{species}%"))
+        
+        # Apply year range filter if provided
+        if year_start:
+            query = query.filter(InvasiveRecord.eventDate >= f"{year_start}-01-01")
+        if year_end:
+            query = query.filter(InvasiveRecord.eventDate <= f"{year_end}-12-31")
+        
+        # Apply limit only if specified (default: no limit - show all records)
+        if limit is not None:
+            query = query.limit(limit)
+        
+        # Execute query
+        records = query.all()
+        
+        # Format records for frontend
+        formatted_records = []
+        for record in records:
+            formatted_records.append({
+                "vernacularName": record.vernacularName,
+                "decimalLatitude": float(record.decimalLatitude),
+                "decimalLongitude": float(record.decimalLongitude),
+                "eventDate": record.eventDate.isoformat() if record.eventDate else None,
+                "stateProvince": record.stateProvince,
+                "scientificName": record.scientificName,
+                "country": record.country,
+                "countryCode": record.occurrenceStatus  # Using occurrenceStatus as countryCode
+            })
+        
+        return {
+            "records": formatted_records,
+            "total_count": len(formatted_records),
+            "filters_applied": {
+                "species": species,
+                "year_start": year_start,
+                "year_end": year_end,
+                "limit": limit
+            }
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching invasive records: {str(e)}"
+        )
+
+@router.get("/invasive-records/near-location")
+def get_invasive_records_near_location(
+    latitude: float,
+    longitude: float,
+    radius_km: float = 50.0,
+    species: str = None,
+    year_start: int = None,
+    year_end: int = None,
+    limit: int = 1000,
+    db: Session = Depends(get_db)
+):
+    """Get invasive species occurrence records near a specific location"""
+    try:
+        from app.models.biodiversity_impact import InvasiveRecord
+        from sqlalchemy import func
+        
+        # Calculate bounding box for the radius (approximate)
+        # 1 degree latitude ≈ 111 km
+        # 1 degree longitude ≈ 111 km * cos(latitude)
+        lat_delta = radius_km / 111.0
+        lng_delta = radius_km / (111.0 * func.cos(func.radians(latitude)))
+        
+        # Build query for invasive_records table within bounding box
+        query = db.query(InvasiveRecord).filter(
+            InvasiveRecord.decimalLatitude.between(latitude - lat_delta, latitude + lat_delta),
+            InvasiveRecord.decimalLongitude.between(longitude - lng_delta, longitude + lng_delta)
+        )
+        
+        # Apply species filter if provided
+        if species:
+            query = query.filter(InvasiveRecord.vernacularName.ilike(f"%{species}%"))
+        
+        # Apply year range filter if provided
+        if year_start:
+            query = query.filter(InvasiveRecord.eventDate >= f"{year_start}-01-01")
+        if year_end:
+            query = query.filter(InvasiveRecord.eventDate <= f"{year_end}-12-31")
+        
+        # Apply limit
+        if limit is not None:
+            query = query.limit(limit)
+        
+        # Execute query
+        records = query.all()
+        
+        # Format records for frontend
+        formatted_records = []
+        for record in records:
+            # Calculate distance from center point
+            import math
+            lat_diff = float(record.decimalLatitude) - latitude
+            lng_diff = float(record.decimalLongitude) - longitude
+            distance_km = math.sqrt(lat_diff**2 + lng_diff**2) * 111.0  # Approximate
+            
+            formatted_records.append({
+                "vernacularName": record.vernacularName,
+                "decimalLatitude": float(record.decimalLatitude),
+                "decimalLongitude": float(record.decimalLongitude),
+                "eventDate": record.eventDate.isoformat() if record.eventDate else None,
+                "stateProvince": record.stateProvince,
+                "scientificName": record.scientificName,
+                "country": record.country,
+                "countryCode": record.occurrenceStatus,
+                "distance_km": round(distance_km, 2)
+            })
+        
+        # Sort by distance
+        formatted_records.sort(key=lambda x: x["distance_km"])
+        
+        return {
+            "records": formatted_records,
+            "total_count": len(formatted_records),
+            "center_location": {
+                "latitude": latitude,
+                "longitude": longitude,
+                "radius_km": radius_km
+            },
+            "filters_applied": {
+                "species": species,
+                "year_start": year_start,
+                "year_end": year_end,
+                "limit": limit
+            }
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching invasive records near location: {str(e)}"
+        )
+
+@router.get("/seasonal-risk")
+def get_seasonal_risk_data(
+    season: str,
+    postcode: str = None,
+    radius_km: float = 50.0,
+    db: Session = Depends(get_db)
+):
+    """Get seasonal invasive species risk data based on season and location"""
+    try:
+        from app.models.biodiversity_impact import InvasiveRecord
+        from sqlalchemy import func, and_, or_
+        import math
+        
+        # Map seasons to date ranges (using month ranges)
+        season_months = {
+            "Spring": [9, 10, 11],  # Sep, Oct, Nov (Australian spring)
+            "Summer": [12, 1, 2],   # Dec, Jan, Feb (Australian summer)
+            "Autumn": [3, 4, 5],    # Mar, Apr, May (Australian autumn)
+            "Winter": [6, 7, 8]     # Jun, Jul, Aug (Australian winter)
+        }
+        
+        if season not in season_months:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid season. Must be one of: Spring, Summer, Autumn, Winter"
+            )
+        
+        months = season_months[season]
+        
+        # Build base query for seasonal data
+        query = db.query(InvasiveRecord)
+        
+        # Filter by season (month)
+        if len(months) == 3:
+            # Handle year transition for summer (Dec, Jan, Feb)
+            if season == "Summer":
+                query = query.filter(
+                    or_(
+                        func.month(InvasiveRecord.eventDate) == 12,
+                        func.month(InvasiveRecord.eventDate) == 1,
+                        func.month(InvasiveRecord.eventDate) == 2
+                    )
+                )
+            else:
+                query = query.filter(func.month(InvasiveRecord.eventDate).in_(months))
+        
+        # If postcode is provided, filter by location
+        if postcode:
+            # Try to resolve coordinates from au_localities table first
+            from sqlalchemy import text as sql_text
+            resolved_coords = None
+            try:
+                # Fetch multiple locality rows for the postcode and average valid coords
+                rows = db.execute(
+                    sql_text(
+                        "SELECT latitude, longitude FROM au_localities WHERE postcode = :pc LIMIT 50"
+                    ),
+                    {"pc": str(postcode)}
+                ).fetchall()
+
+                lats = [float(r[0]) for r in rows if r[0] is not None]
+                lngs = [float(r[1]) for r in rows if r[1] is not None]
+                # Filter out zeros which indicate missing values in some rows
+                lats = [v for v in lats if v != 0.0]
+                lngs = [v for v in lngs if v != 0.0]
+                if lats and lngs:
+                    resolved_coords = {"lat": sum(lats) / len(lats), "lng": sum(lngs) / len(lngs)}
+            except Exception:
+                resolved_coords = None
+
+            # Fallback to city centroid map if au_localities has no usable coords
+            if resolved_coords is None:
+                city_coords = {
+                    "3000": {"lat": -37.8136, "lng": 144.9631},  # Melbourne
+                    "2000": {"lat": -33.8688, "lng": 151.2093},  # Sydney
+                    "4000": {"lat": -27.4698, "lng": 153.0251},  # Brisbane
+                    "6000": {"lat": -31.9505, "lng": 115.8605},  # Perth
+                    "5000": {"lat": -34.9285, "lng": 138.6007},  # Adelaide
+                    "7000": {"lat": -42.8821, "lng": 147.3272},  # Hobart
+                    "2600": {"lat": -35.2809, "lng": 149.1300},  # Canberra
+                    "0800": {"lat": -12.4634, "lng": 130.8456},  # Darwin
+                }
+                resolved_coords = city_coords.get(str(postcode))
+
+            # Apply bounding box filter if we have coordinates
+            if resolved_coords is not None:
+                lat_delta = radius_km / 111.0
+                lng_delta = radius_km / (111.0 * func.cos(func.radians(resolved_coords["lat"])))
+                query = query.filter(
+                    and_(
+                        InvasiveRecord.decimalLatitude.between(
+                            resolved_coords["lat"] - lat_delta,
+                            resolved_coords["lat"] + lat_delta
+                        ),
+                        InvasiveRecord.decimalLongitude.between(
+                            resolved_coords["lng"] - lng_delta,
+                            resolved_coords["lng"] + lng_delta
+                        )
+                    )
+                )
+        
+        # Get records
+        records = query.all()
+        
+        # Analyze data by species
+        species_data = {}
+        total_records = len(records)
+        
+        for record in records:
+            species_name = record.vernacularName or "Unknown"
+            if species_name not in species_data:
+                species_data[species_name] = {
+                    "count": 0,
+                    "locations": set(),
+                    "months": set(),
+                    "risk_level": "Medium"
+                }
+            
+            species_data[species_name]["count"] += 1
+            if record.stateProvince:
+                species_data[species_name]["locations"].add(record.stateProvince)
+            if record.eventDate:
+                species_data[species_name]["months"].add(record.eventDate.month)
+        
+        # Convert sets to lists and determine risk levels
+        for species, data in species_data.items():
+            data["locations"] = list(data["locations"])
+            data["months"] = list(data["months"])
+            
+            # Simple risk assessment based on count and spread
+            if data["count"] >= 100 or len(data["locations"]) >= 3:
+                data["risk_level"] = "High"
+            elif data["count"] >= 50 or len(data["locations"]) >= 2:
+                data["risk_level"] = "Medium"
+            else:
+                data["risk_level"] = "Low"
+        
+        # Sort species by count (highest risk first)
+        sorted_species = sorted(
+            species_data.items(), 
+            key=lambda x: x[1]["count"], 
+            reverse=True
+        )
+        
+        # Get top 5 species for the season
+        top_species = dict(sorted_species[:5])
+        
+        # Create seasonal insights
+        seasonal_insights = {
+            "season": season,
+            "total_sightings": total_records,
+            "top_species": top_species,
+            "risk_summary": {
+                "high_risk": len([s for s in species_data.values() if s["risk_level"] == "High"]),
+                "medium_risk": len([s for s in species_data.values() if s["risk_level"] == "Medium"]),
+                "low_risk": len([s for s in species_data.values() if s["risk_level"] == "Low"])
+            },
+            "location": postcode if postcode else "Australia-wide",
+            "radius_km": radius_km if postcode else None
+        }
+        
+        return seasonal_insights
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching seasonal risk data: {str(e)}"
+        )
+
+@router.get("/postcode-lookup/{postcode}")
+def get_postcode_area_name(
+    postcode: str,
+    db: Session = Depends(get_db)
+):
+    """Get area name for a given postcode"""
+    try:
+        from sqlalchemy import text as sql_text
+        
+        # First try to get data from au_localities table
+        try:
+            rows = db.execute(
+                sql_text(
+                    "SELECT locality, state, latitude, longitude FROM au_localities WHERE postcode = :pc LIMIT 1"
+                ),
+                {"pc": str(postcode)}
+            ).fetchall()
+            
+            if rows and len(rows) > 0:
+                row = rows[0]
+                locality = row[0]
+                state = row[1]
+                lat = float(row[2]) if row[2] else None
+                lng = float(row[3]) if row[3] else None
+                
+                # If we have valid coordinates, use the locality data
+                if lat and lng and lat != 0.0 and lng != 0.0:
+                    return {
+                        "postcode": postcode,
+                        "area_name": f"{locality}, {state}",
+                        "state": state,
+                        "latitude": lat,
+                        "longitude": lng,
+                        "source": "database"
+                    }
+        except Exception:
+            pass
+        
+        # Fallback to hardcoded major cities
+        major_cities = {
+            "2000": {"name": "Sydney NSW", "state": "NSW", "lat": -33.8688, "lng": 151.2093},
+            "3000": {"name": "Melbourne VIC", "state": "VIC", "lat": -37.8136, "lng": 144.9631},
+            "4000": {"name": "Brisbane QLD", "state": "QLD", "lat": -27.4698, "lng": 153.0251},
+            "5000": {"name": "Adelaide SA", "state": "SA", "lat": -34.9285, "lng": 138.6007},
+            "6000": {"name": "Perth WA", "state": "WA", "lat": -31.9505, "lng": 115.8605},
+            "7000": {"name": "Hobart TAS", "state": "TAS", "lat": -42.8821, "lng": 147.3272},
+            "2600": {"name": "Canberra ACT", "state": "ACT", "lat": -35.2809, "lng": 149.1300},
+            "0800": {"name": "Darwin NT", "state": "NT", "lat": -12.4634, "lng": 130.8456},
+        }
+        
+        if postcode in major_cities:
+            city_data = major_cities[postcode]
+            return {
+                "postcode": postcode,
+                "area_name": city_data["name"],
+                "state": city_data["state"],
+                "latitude": city_data["lat"],
+                "longitude": city_data["lng"],
+                "source": "fallback"
+            }
+        
+        # If no data found, return a generic response
+        return {
+            "postcode": postcode,
+            "area_name": f"Area {postcode}",
+            "state": "Unknown",
+            "latitude": None,
+            "longitude": None,
+            "source": "unknown"
+        }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error looking up postcode: {str(e)}"
+        )

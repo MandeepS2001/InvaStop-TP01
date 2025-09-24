@@ -1,0 +1,31 @@
+state_abb,state_name,sp_common_name,species_type,sp_scientific_name,native_range
+NSW,New South Wales,Lantana,Plant,Lantana camara,"Tropical Central and South America, Caribbean"
+NSW,New South Wales,Bitou Bush,Plant,Chrysanthemoides monilifera ssp. rotundata,South Africa (coastal dunes and shrublands)
+NSW,New South Wales,Common Myna,Animal,Acridotheres tristis,"South Asia (India, Pakistan, Banglade"
+NSW,New South Wales,European Rabbit,Animal,Oryctolagus cuniculus,Iberian Peninsula (Spain & Portugal) and Northwest Africa
+NSW,New South Wales,Red Fox,Animal,Vulpes vulpes,"Northern Hemisphere (Europe, Asia, North America, North Africa)"
+VIC,Victoria,Gorse,Plant,Ulex europaeus,"Western Europe (British Isles, France, Spain, Portugal)"
+VIC,Victoria,Lantana,Plant,Lantana camara,"Tropical Central and South America, Caribbean"
+VIC,Victoria,Common Myna,Animal,Acridotheres tristis,"South Asia (India, Pakistan, Banglade"
+VIC,Victoria,European Rabbit,Animal,Oryctolagus cuniculus,Iberian Peninsula (Spain & Portugal) and Northwest Africa
+VIC,Victoria,Red Fox,Animal,Vulpes vulpes,"Northern Hemisphere (Europe, Asia, North America, North Africa)"
+QLD,Queensland,Lantana,Plant,Lantana camara,"Tropical Central and South America, Caribbean"
+QLD,Queensland,Buffel Grass,Plant,Cenchrus ciliaris,"Africa, Middle East, South Asia"
+QLD,Queensland,Cane Toad,Animal,Rhinella marina,Central and South America
+QLD,Queensland,European Rabbit,Animal,Oryctolagus cuniculus,Iberian Peninsula (Spain & Portugal) and Northwest Africa
+QLD,Queensland,Feral Pig,Animal,Sus scrofa,Eurasia and North Africa (domesticated then feral worldwide)
+SA,South Australia,Gorse,Plant,Ulex europaeus,"Western Europe (British Isles, France, Spain, Portugal)"
+SA,South Australia,Buffel Grass,Plant,Cenchrus ciliaris,"Africa, Middle East, South Asia"
+SA,South Australia,Red Fox,Animal,Vulpes vulpes,"Northern Hemisphere (Europe, Asia, North America, North Africa)"
+SA,South Australia,European Rabbit,Animal,Oryctolagus cuniculus,Iberian Peninsula (Spain & Portugal) and Northwest Africa
+SA,South Australia,Feral Pig,Animal,Sus scrofa,Eurasia and North Africa (domesticated then feral worldwide)
+WA,Western Australia,Lantana,Plant,Lantana camara,"Tropical Central and South America, Caribbean"
+WA,Western Australia,Buffel Grass,Plant,Cenchrus ciliaris,"Africa, Middle East, South Asia"
+WA,Western Australia,Red Fox,Animal,Vulpes vulpes,"Northern Hemisphere (Europe, Asia, North America, North Africa)"
+WA,Western Australia,European Rabbit,Animal,Oryctolagus cuniculus,Iberian Peninsula (Spain & Portugal) and Northwest Africa
+WA,Western Australia,Feral Pig,Animal,Sus scrofa,Eurasia and North Africa (domesticated then feral worldwide)
+NT,Northern Territory,Buffel Grass,Plant,Cenchrus ciliaris,"Africa, Middle East, South Asia"
+NT,Northern Territory,Gamba Grass,Plant,Andropogon gayanus,"Africa (savannas of West, East, and Southern Africa)"
+NT,Northern Territory,Cane Toad,Animal,Rhinella marina,Central and South America
+NT,Northern Territory,European Rabbit,Animal,Oryctolagus cuniculus,Iberian Peninsula (Spain & Portugal) and Northwest Africa
+NT,Northern Territory,Feral Pig,Animal,Sus scrofa,Eurasia and North Africa (domesticated then feral worldwide)

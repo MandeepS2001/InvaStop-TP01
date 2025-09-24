@@ -21,6 +21,8 @@ class Settings(BaseSettings):
         "http://localhost:3000",  # React development server
         "http://localhost:3001",
         "https://invastop.com",   # Production domain (when deployed)
+        "https://invastop.vercel.app",  # Vercel deployment
+        "https://*.vercel.app",   # All Vercel deployments
     ]
     
     # File upload settings
@@ -41,5 +43,10 @@ class Settings(BaseSettings):
 # Create settings instance
 settings = Settings()
 
-# Ensure upload directory exists
-os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+# Ensure upload directory exists (skip in serverless environments)
+try:
+    os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+except OSError:
+    # In serverless environments like Vercel, file system is read-only
+    # Skip directory creation
+    pass

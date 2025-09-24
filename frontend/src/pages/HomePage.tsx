@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import LiquidEther from '../components/LiquidEther';
+import SimpleHeader from '../components/SimpleHeader';
 
-// Types for API data
-interface Epic1Statistics {
-  total_invasive_species: number;
-  total_biodiversity_impact: number;
-  high_risk_states: number;
-  annual_cost_estimate: string;
-  message: string;
-}
+// Utility function to scroll to top
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
 // Counting Animation Component
 const CountUp: React.FC<{ end: number; duration?: number; prefix?: string; suffix?: string }> = ({ end, duration = 2000, prefix = '', suffix = '' }) => {
@@ -64,78 +61,48 @@ const CountUp: React.FC<{ end: number; duration?: number; prefix?: string; suffi
 
   return (
     <span className="text-4xl font-bold">
-      {prefix}{count}{suffix}
+      {prefix}{count.toLocaleString()}{suffix}
     </span>
   );
 };
 
 const HomePage: React.FC = () => {
   const [expandedStat, setExpandedStat] = useState<number | null>(null);
-  const [apiStatistics, setApiStatistics] = useState<Epic1Statistics | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  // Fetch real statistics from Epic 1.0 API
-  useEffect(() => {
-    const fetchStatistics = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/v1/epic1/statistics/overview');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        setApiStatistics(data);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching statistics:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch statistics');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStatistics();
-  }, []);
-
-  // Dynamic statistics based on API data
-  const statistics = apiStatistics ? [
+  // Static statistics - no API call needed
+  const statistics = [
     {
       id: 1,
       icon: "/Money.png",
-      title: `${apiStatistics.annual_cost_estimate} - Cost Annually`,
-      description: `Pest plants and animals cost Australia around ${apiStatistics.annual_cost_estimate} a year`,
+      title: "$25B Cost Annually",
       expandedInfo: {
-        explanation: "Invasive species cause significant economic damage through agricultural losses, infrastructure damage, and control costs.",
+        explanation: "Pest plants and animals cost Australia around $25 billion a year. Invasive species cause economic damage through agricultural losses, infrastructure damage, and control costs.",
         visual: "chart-data",
-        citation: "Source: ABARES (Australian Bureau of Agricultural and Resource Economics and Sciences), 2023"
+        citation: "Source: Tasmanian Times, CSIRO"
       }
     },
     {
       id: 2,
       icon: "/Stop.png",
-      title: `${apiStatistics.total_invasive_species.toLocaleString()}+ - Invasive Species`,
-      description: `Australia has close to ${apiStatistics.total_invasive_species.toLocaleString()} invasive alien species`,
+      title: "3,000+ Invasive Species",
       expandedInfo: {
-        explanation: "These species threaten native biodiversity and ecosystem health across all Australian states and territories.",
+        explanation: "Australia has close to 3000 invasive alien species costing approximately $25 billion every year. These species threaten native biodiversity and ecosystem health across all Australian states and territories.",
         visual: "species-map",
-        citation: "Source: Department of Agriculture, Fisheries and Forestry, 2024"
+        citation: "Source: CSIRO"
       }
     },
     {
       id: 3,
       icon: "/Frog.png",
-      title: `${apiStatistics.total_biodiversity_impact.toLocaleString()}+ - Biodiversity Impact`,
-      description: `Over ${apiStatistics.total_biodiversity_impact.toLocaleString()} species are impacted by invasive species`,
+      title: "100+ Species Extinct",
       expandedInfo: {
-        explanation: "Invasive species are a major driver of native species decline, disrupting food chains and habitats.",
+        explanation: "Over 100 species have gone extinct in the past 200 years, with more than 1,770 listed as threatened. Invasive species are a major driver of native species decline.",
         visual: "extinction-timeline",
-        citation: "Source: CSIRO Biodiversity Data, 2024"
+        citation: "Source: CSIRO"
       }
     }
-  ] : [];
+  ];
 
 
   const handleStatClick = (statId: number) => {
@@ -144,119 +111,107 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
-        <div className="px-3 sm:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 object-contain" />
-            </div>
-
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-white hover:text-green-200 transition-colors">
-                Home
-              </Link>
-              <Link to="/education" className="text-white hover:text-green-200 transition-colors">
-                Education
-              </Link>
-              <Link to="/map" className="text-white hover:text-green-200 transition-colors">
-                Map
-              </Link>
-              <Link to="/more" className="text-white hover:text-green-200 transition-colors">
-                More
-              </Link>
-            </nav>
-
-            {/* Search Icon */}
-            <div className="flex items-center space-x-4">
-              <Search className="h-5 w-5 cursor-pointer hover:text-green-200 transition-colors" />
-            </div>
-          </div>
-        </div>
-      </header>
+            {/* Simple Header */}
+            <SimpleHeader />
 
       {/* Hero Section - Edge to Edge */}
-      <section className="relative bg-green-800 text-white py-20 pt-32 w-full overflow-visible">
-        <div className="px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 pt-20 sm:pt-24 lg:pt-32 w-full overflow-visible">
+        {/* LiquidEther Background */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <LiquidEther
+            colors={['#22c55e', '#16a34a', '#15803d', '#166534']}
+            mouseForce={20}
+            cursorSize={150}
+            isViscous={false}
+            viscous={25}
+            iterationsViscous={20}
+            iterationsPoisson={20}
+            dt={0.018}
+            BFECC={true}
+            resolution={0.7}
+            isBounce={false}
+            autoDemo={true}
+            autoSpeed={0.4}
+            autoIntensity={2.0}
+            takeoverDuration={0.25}
+            autoResumeDelay={1500}
+            autoRampDuration={0.6}
+          />
+        </div>
+        
+        {/* Dark overlay for text readability - with pointer-events-none to allow mouse events through */}
+        <div className="absolute inset-0 bg-black/15 pointer-events-none"></div>
+        
+        <div className="relative z-10 px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side Content */}
-            <div>
-              <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                Play your part in protecting the environment.
+            <div className="text-center lg:text-left">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
+                <span className="inline-block">
+                  Stop problem plants from taking over your property.
+                </span>
               </h1>
-              <p className="text-xl mb-8 text-green-100">
-                Record sightings of invasive species around you and learn how to protect your land.
+              <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-green-100">
+                <span className="inline-block">
+                  InvaStop helps you spot unwanted plants on your land, learn what to do about them, and keep your property healthy.
+                </span>
               </p>
-              <button className="bg-green-700 hover:bg-green-600 text-white px-8 py-4 rounded-lg border border-white transition-colors">
-                Click Here to Get Started !
+              <button 
+                onClick={() => {
+                  navigate('/education');
+                  scrollToTop();
+                }}
+                className="group relative bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl border border-green-400/30 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto font-semibold shadow-lg hover:shadow-xl hover:shadow-green-500/25 hover:scale-105 transform"
+              >
+                <span className="relative z-10">Protect Your Patch →</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
             </div>
           </div>
         </div>
+        
       </section>
 
       {/* Floating Tree Image - Separate Entity */}
-      <div className="pointer-events-none select-none absolute right-0 top-1/2 transform -translate-y-1/2 z-30">
+      <div className="pointer-events-none select-none absolute right-0 top-1/2 transform -translate-y-1/2 z-30 hidden lg:block" style={{ top: '58%', right: '-30px' }}>
         <img 
           src="/Tree.png" 
           alt="Tree in hand"
-          className="h-[600px] md:h-[700px] lg:h-[1100px] w-auto object-contain"
+          className="h-[550px] lg:h-[1000px] w-auto object-contain"
         />
       </div>
 
-      {/* Statistics Section */}
-      <section className="bg-gray-100 py-20 pt-20 mt-0" id="stats-section">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Interactive Cards Section */}
+      <section className="relative bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 py-12 sm:py-16 lg:py-20 pt-12 sm:pt-16 lg:pt-20 mt-0 overflow-hidden" id="stats-section">
+        {/* Parallax Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-green-200/20 rounded-full blur-3xl animate-parallax-up"></div>
+          <div className="absolute bottom-10 right-10 w-80 h-80 bg-green-300/15 rounded-full blur-3xl animate-parallax-down"></div>
+          <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-green-400/10 rounded-full blur-3xl animate-parallax-up" style={{animationDelay: '5s'}}></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Discover the hidden threats around you.
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+              Why this matters to your property.
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Explore invasive species that harm Australia's farms, wildlife, and communities — and learn how your actions can make a real difference.
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+              Problem plants cost Australian farmers billions each year and can spread quickly from one property to the next. See how widespread this issue really is.
             </p>
           </div>
-
-          {/* API Status Indicator */}
-          {loading && (
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-lg">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                Loading real-time statistics from InvaStop API...
-              </div>
-            </div>
-          )}
-          
-          {error && (
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center px-4 py-2 bg-red-100 text-red-800 rounded-lg">
-                <span className="mr-2">⚠️</span>
-                {error} - Using fallback data
-              </div>
-            </div>
-          )}
-          
-          {apiStatistics && !loading && !error && (
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-lg">
-                <span className="mr-2">✅</span>
-                Live data from InvaStop API - {apiStatistics.message}
-              </div>
-            </div>
-          )}
 
           {/* Statistics Cards */}
           <div className="relative">
             {/* Cards Container */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {statistics.length > 0 ? (
-                statistics.map((stat, index) => (
-                  <div key={stat.id} className="relative group">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+              {statistics.map((stat, index) => (
+                  <div key={stat.id} className="relative group transform transition-all duration-500 hover:scale-105" style={{animationDelay: `${index * 0.1}s`}}>
                     {/* Flippable Card Container */}
                     <div 
-                      className="relative w-full h-64 perspective-1000"
+                      className={`relative w-full perspective-1000 transition-all duration-300 ${
+                        expandedStat === stat.id ? 'h-80 sm:h-96' : 'h-64 sm:h-72'
+                      }`}
                       onMouseLeave={() => setExpandedStat(null)}
                     >
                       <div 
@@ -266,204 +221,118 @@ const HomePage: React.FC = () => {
                       >
                         {/* Front of Card */}
                         <div 
-                          className={`absolute inset-0 w-full h-full bg-green-800 text-white p-8 rounded-lg cursor-pointer transition-all duration-300 hover:shadow-lg backface-hidden ${
+                          className={`absolute inset-0 w-full h-full bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white p-4 sm:p-6 lg:p-8 rounded-xl cursor-pointer transition-all duration-300 shadow-2xl hover:shadow-3xl hover:shadow-green-400/50 hover:scale-105 sm:hover:scale-110 backface-hidden border border-green-600/30 ${
                             expandedStat === stat.id ? 'opacity-0' : 'opacity-100'
                           }`}
                           onClick={() => handleStatClick(stat.id)}
                         >
-                          <div className="flex justify-center mb-4">
+                          <div className="flex justify-center mb-3 sm:mb-4">
                             <img 
                               src={stat.icon} 
                               alt={stat.title}
-                              className="h-16 w-16 object-contain"
+                              className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 object-contain"
                             />
                           </div>
-                          <h3 className="text-center mb-2">
+                          <h3 className="text-center mb-2 text-lg sm:text-xl font-bold leading-tight">
                             {stat.id === 1 ? (
-                              <CountUp end={parseInt(apiStatistics?.annual_cost_estimate.replace('B', '000000000') || '25000000000')} prefix="$" suffix=" B - Cost Annually" />
+                              <CountUp end={25} prefix="$" suffix="B Cost Annually" />
                             ) : stat.id === 2 ? (
-                              <CountUp end={apiStatistics?.total_invasive_species || 0} suffix="+ - Invasive Species" />
+                              <CountUp end={3000} suffix="+ Invasive Species" />
                             ) : (
-                              <CountUp end={apiStatistics?.total_biodiversity_impact || 0} suffix="+ - Biodiversity Impact" />
+                              <CountUp end={100} prefix="" suffix="+ Species Extinct" />
                             )}
                           </h3>
-                          <p className="text-center text-green-100">
-                            {stat.description}
-                          </p>
-                          <div className="text-center mt-4 text-sm text-white">
-                            <span className="text-green-800 text-base font-semibold">
-                              Click to flip for more info
+                          <div className="text-center mt-3 sm:mt-4">
+                            <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold shadow-lg border-2 border-yellow-300 hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform hover:scale-105">
+                              More Info
                             </span>
                           </div>
                         </div>
 
                         {/* Back of Card */}
                         <div 
-                          className={`absolute inset-0 w-full h-full bg-green-700 text-white p-8 rounded-lg backface-hidden rotate-y-180 ${
+                          className={`absolute inset-0 w-full h-full bg-gradient-to-br from-green-700 via-green-600 to-green-800 text-white p-4 sm:p-6 lg:p-8 rounded-xl shadow-2xl backface-hidden rotate-y-180 border border-green-500/30 ${
                             expandedStat === stat.id ? 'opacity-100' : 'opacity-0'
                           }`}
                         >
                           <div className="h-full flex flex-col">
-                            <h4 className="font-semibold text-lg mb-3 text-center">Learn More</h4>
-                            <p className="text-sm mb-4 flex-grow">
+                            <h4 className="font-semibold text-base sm:text-lg mb-2 sm:mb-3 text-center">Learn More</h4>
+                            <p className="text-xs sm:text-sm mb-3 sm:mb-4 flex-grow">
                               {stat.expandedInfo.explanation}
                             </p>
                             
-                            {/* Visual Placeholder */}
-                            <div className="bg-green-600 rounded-lg p-3 mb-4 text-center">
-                              <div className="text-green-100 text-sm">
-                                📊 {stat.expandedInfo.visual} visualization
-                              </div>
-                            </div>
-                            
                             {/* Citation */}
-                            <div className="text-xs text-green-200 border-t border-green-600 pt-2 mb-3">
+                            <div className="text-xs text-green-200 border-t border-green-600 pt-2">
                               {stat.expandedInfo.citation}
-                            </div>
-                            
-                            <div className="text-center text-sm text-green-200">
-                              Hover away to flip back
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                ))
-              ) : (
-                <div className="col-span-3 text-center py-16">
-                  {loading ? (
-                    <div className="flex flex-col items-center space-y-4">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-                      <p className="text-lg text-gray-600">Loading real-time statistics...</p>
-                    </div>
-                  ) : error ? (
-                    <div className="flex flex-col items-center space-y-4">
-                      <div className="text-red-500 text-6xl">⚠️</div>
-                      <p className="text-lg text-gray-600">Failed to load statistics</p>
-                      <p className="text-sm text-gray-500">{error}</p>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center space-y-4">
-                      <div className="text-gray-400 text-6xl">📊</div>
-                      <p className="text-lg text-gray-600">No statistics available</p>
-                    </div>
-                  )}
-                </div>
-              )}
+                ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Map Call-to-Action Section */}
-      <section className="bg-white py-20">
+
+      {/* CTA to Insights */}
+      <section className="relative py-12 sm:py-16 bg-gradient-to-br from-green-50 via-white to-green-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              See Where Invasive Species Are Causing Problems
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Look at our map to see where invasive plants and animals are causing the most trouble across Australia. 
-              Click on any state to find out which species are most harmful there.
-            </p>
-            
-            {/* Map Preview Card */}
-            <div className="bg-gray-50 rounded-lg p-8 max-w-4xl mx-auto">
-              <div className="flex items-center justify-center mb-6">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-3xl">🗺️</span>
-                </div>
-              </div>
-              
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                Invasive Species Map
-              </h3>
-              
-              <p className="text-gray-600 mb-6">
-                Our map shows where invasive plants and animals are causing problems across all Australian states and territories.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-lg">🔴</span>
-                  </div>
-                  <h4 className="font-medium text-gray-900 mb-1">Many Problems</h4>
-                  <p className="text-sm text-gray-600">States with lots of invasive species causing trouble</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-lg">🟠</span>
-                  </div>
-                  <h4 className="font-medium text-gray-900 mb-1">Some Problems</h4>
-                  <p className="text-sm text-gray-600">States with some invasive species causing trouble</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span className="text-lg">🟡</span>
-                  </div>
-                  <h4 className="font-medium text-gray-900 mb-1">Few Problems</h4>
-                  <p className="text-sm text-gray-600">States with only a few invasive species causing trouble</p>
-                </div>
-              </div>
-              
-              <Link 
-                to="/map" 
-                className="inline-flex items-center px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200 text-lg"
+          <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-green-200/40 p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1">
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2">Learn More About the Problem</h3>
+              <p className="text-gray-600">See pictures and stories about how problem plants affect farms and properties across Australia.</p>
+            </div>
+            <div>
+              <Link
+                to="/insights"
+                onClick={scrollToTop}
+                className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-green-800 hover:from-green-500 hover:via-green-600 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 text-lg shadow-xl hover:shadow-2xl hover:shadow-green-500/30 transform hover:scale-105 border-2 border-green-500/20 hover:border-green-400/40"
               >
-                <span className="mr-2">🗺️</span>
-                Look at the Map
-                <span className="ml-2">→</span>
+                <span className="mr-3 text-xl group-hover:rotate-12 transition-transform duration-300">📊</span>
+                <span className="group-hover:tracking-wide transition-all duration-300">Did you Know?</span>
+                <span className="ml-3 text-lg group-hover:translate-x-2 transition-transform duration-300">→</span>
               </Link>
             </div>
           </div>
         </div>
       </section>
 
+
       {/* Footer */}
-      <footer className="bg-green-800 text-white py-12">
+      <footer className="bg-green-800 text-white py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Logo and Copyright */}
             <div className="md:col-span-1 flex flex-col items-start">
-              <div className="flex flex-col items-start mb-4">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 mb-2" />
-                <span className="text-xl font-bold">invastop</span>
+              <div className="flex flex-col items-start mb-3">
+                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
               </div>
-              <p className="text-green-100">© 2025</p>
+              <p className="text-green-100 text-sm">© 2025</p>
             </div>
 
             {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="font-bold mb-4">Products</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="#" className="hover:text-white transition-colors">Species Database</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Educational Resources</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Mapping Tools</a></li>
+                <h3 className="font-bold mb-3 text-sm">Products</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Species Database</Link></li>
+                  <li><Link to="/education" onClick={scrollToTop} className="hover:text-white transition-colors">Educational Resources</Link></li>
+                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Mapping Tools</Link></li>
                 </ul>
               </div>
               
               <div>
-                <h3 className="font-bold mb-4">About Us</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="#" className="hover:text-white transition-colors">Who We Are</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Our Mission</a></li>
+                <h3 className="font-bold mb-3 text-sm">About Us</h3>
+                <ul className="space-y-2 text-green-100 text-sm">
+                  <li><span className="hover:text-white transition-colors cursor-pointer">Who We Are</span></li>
+                  <li><span className="hover:text-white transition-colors cursor-pointer">FAQ</span></li>
+                  <li><span className="hover:text-white transition-colors cursor-pointer">Our Mission</span></li>
                 </ul>
               </div>
               
-              <div>
-                <h3 className="font-bold mb-4">Contact Us</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="mailto:EnvironmentalHealth@hv.sistem.com" className="hover:text-white transition-colors">EnvironmentalHealth@hv.sistem.com</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Report an Issue</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Partner With Us</a></li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>

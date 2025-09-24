@@ -1,0 +1,178 @@
+species_name,common_name,higher_risk_species,thematic_group,overall_risk,entry_likelihood,establishment_likelihood,spread_likelihood,environmental_impact,social_amenity_impact
+Exotic West Nile virus lineages - other than 1b (WNV Kunjin),West Nile virus infection,Yes,Animal diseases,High,Moderate,Moderate,Moderate,Major,Moderate
+Parrot bornavirus (PaBV),Proventricular dilatation disease,Yes,Animal diseases,High,Moderate,Moderate,Moderate,Moderate,Moderate
+Psittacid alphaherpesvirus-1 (PsHV-1),Pacheco’s disease and internal papillomatosis disease,Yes,Animal diseases,High,Moderate,Moderate,Moderate,Moderate,Moderate
+Pseudogymnoascus destructans ,White nose syndrome (of bats),Yes,Animal diseases,High ,Moderate,Low,Moderate,Major,Minor
+Anatid herpesvirus-1,Duck viral enteritis / duck plague,Yes,Animal diseases,High,Low,Moderate,High,Moderate,Minor
+Deformed wing virus (DWV) (family Iflaviridae),Deformed wing virus in bees,No,Animal diseases,High,Moderate,Moderate,Moderate,Moderate,Moderate
+Chrysomya bezziana and Cochliomyia hominivorax,Screwworm Fly,No,Animal diseases,High,Low,Moderate,Moderate,Moderate,Moderate
+Avian paramyxovirus-3 (PMV3) and Avian paramyxovirus-5 (PMV5),Avian paramyxovirus-3 (PMV3) and Avian paramyxovirus-5 (PMV5),No,Animal diseases,Medium,Low,Low,Moderate,Moderate,Minor
+Exotic Flaviviruses – Bagaza virus and Usutu virus,Exotic Flaviviruses (Bagaza and Usutu),No,Animal diseases,Medium,Low,Moderate,Moderate,Major,Moderate
+Psittacine pox virus (PsPoV) (genus Avipoxvirus),Psittacine pox virus,No,Animal diseases,Medium,Low,Low,Moderate,Moderate,Moderate
+Pathogenic Perkinsea clade of frogs,Severe Perkinsea infection in frogs,No,Animal diseases,Medium,Low,Low,Low,Moderate,Minor
+Ophidiomyces ophiodiicola,Snake Fungal Disease,No,Animal diseases,Medium,Moderate,Moderate,Low,Minor,Minor
+Trypanosoma evansi,Surra,No,Animal diseases,Medium,Low,Moderate,Moderate,Moderate,Minor
+Rabies virus / Rabies lyssavirus (genus Lyssavirus),Rabies virus,No,Animal diseases,Low,Low,Low,Low,Moderate,Minor
+"Exotic novel coronavirus, including python nidovirus (order Nidovirales, family Coronaviridae)",Exotic novel nidovirus strains in reptiles,No,Animal diseases,Low,Moderate,Low,Low,Major,Moderate
+"Subfamily Paramyxovirinae, genus Ferlavirus",Ophidian paramyxovirus (OPMV) / Fer-de-lance virus - infection of snakes,No,Animal diseases,Low,Low,Low,Low,Moderate,Moderate
+Exotic Highly pathogenic avian influenza viruses (HPAI),Exotic highly pathogenic avian influenza,No,Animal diseases,Low,Moderate,Low,Low,Moderate,Minor
+Yersinia pestis,Bubonic Plague,No,Animal diseases,Low,Low,Low,Low,Moderate,Moderate
+Phocine distemper virus (PDV) (genus Morbillivirus),Phocine distemper,No,Animal diseases,Low,Low,Low,Low,Moderate,Moderate
+"Family Herpesviridae, subfamily Alphaherpesvirinae",Exotic novel herpesviruses of reptiles,No,Animal diseases,Low,Low,Low,Low,Moderate,Minor
+Infectious spleen and kidney necrosis virus (ISKNV) and Red sea bream iridovirus (RSIV) (genus Megalocytivirus),Megalocytivirus,Yes,Aquatic animal diseases,High,High,Moderate,Moderate,Major,Major
+Aphanomyces astaci,Crayfish plague ,Yes,Aquatic animal diseases,High,Moderate,Moderate,Moderate,Major,Major
+White spot syndrome virus (WSSV) (genus Whispovirus),White spot syndrome,Yes,Aquatic animal diseases,High,High,Moderate,Moderate,Moderate,Moderate
+Yellow head virus genotype-1 (YHV1) (genus Okavirus),Yellow Head Disease,Yes,Aquatic animal diseases,High,Moderate,Moderate,Moderate,Moderate,Moderate
+Bonamia ostreae,Bonamiosis,Yes,Aquatic animal diseases,High,Moderate,Moderate,Moderate,Major,Moderate
+Singapore grouper iridovirus (SGIV) and Grouper iridovirus (GIV) (genus Ranavirus),Grouper iridoviral disease,No,Aquatic animal diseases,Medium,Low,Low,Low,Moderate,Moderate
+Infectious myonecrosis virus (IMNV) (genus Totivirus),Infectious myonecrosis,No,Aquatic animal diseases,Medium,Low,Low,Low,Moderate,Moderate
+Viral haemorrhagic septicaemia virus (VHSV) (genus Novirhabdovirus),Viral haemorrhagic septicaemia,No,Aquatic animal diseases,Medium,Moderate,Low,Moderate,Moderate,Minor
+‘Candidatus Xenohaliotis californiensis’,Withering syndrome (of abalones),No,Aquatic animal diseases,Medium,Very Low,Moderate,Low,Moderate,Moderate
+Taura syndrome virus (TSV) (genus Aparavirus),Taura syndrome,No,Aquatic animal diseases,Medium,Moderate,Low,Low,Minor,Minor
+Marteilia refringens,Marteiliosis (Aber disease),No,Aquatic animal diseases,Medium,Very Low,Moderate,Low,Moderate,Moderate
+‘Candidatus Hepatobacter penaei’,Necrotising hepatopancreatitis,No,Aquatic animal diseases,Low,Low,Moderate,Moderate,Moderate,Moderate
+Perkinsus marinus,Perkinsosis (Dermo disease),No,Aquatic animal diseases,Low,Low,Low,Low,Moderate,Minor
+Infectious hematopoietic necrosis virus (IHNV) (genus Rhabdovirus),Infectious hematopoietic necrosis,No,Aquatic animal diseases,Low,Low,Low,Low,Moderate,Moderate
+Infectious pancreatic necrosis virus (IPNV) (genus Aquabirnavirus),Infectious pancreatic necrosis,No,Aquatic animal diseases,Low,Low,Low,Low,Minor,Minor
+Myxobolus cerebralis / Microsporidium takedai,Protozoic Whirling disease,No,Aquatic animal diseases,Low,Very Low,Very Low,Very low,Minor,Moderate
+Mikrocytos mackini,Mikrocytosis (Denman Island disease),No,Aquatic animal diseases,Low,Low,Low,Very Low,Minor,Minor
+Pomacea canaliculata and P. maculata,Golden apple snail and Island apple snail,Yes,Freshwater invertebrates,High,High,High,Low,Major,Major
+Corbicula fluminea,Asian clam,Yes,Freshwater Invertebrates,High,Low,Moderate,Moderate,Moderate,Major
+Cipangopaludina chinensis and C. japonica,Chinese mystery snail and Japanese mystery snail,Yes,Freshwater invertebrates,High,Moderate,High,Low,Moderate,Moderate
+Tarebia granifera,Quilted melania,Yes,Freshwater invertebrates,High,Moderate,High,Moderate,Major,Minor
+Dreissena bugensis and D. polymorpha,Quagga mussel and Zebra Mussel,Yes,Freshwater Invertebrates,High,Low,Moderate,Low,Major,Major
+Biomphalaria spp.  ,Freshwater snails Biomphalaria genus,No,Freshwater invertebrates,Medium,Moderate,High,Very low,Moderate,Major
+Indoplanorbis exustus,Horn snail,No,Freshwater Invertebrates,Medium,Moderate,Moderate,Low,Moderate,Moderate
+Limnoperna fortunei,Golden mussel,No,Freshwater Invertebrates,Medium,Low,Moderate,Moderate,Moderate,Moderate
+Bulinus spp. ,Freshwater snails Bulinus genus,No,Freshwater Invertebrates,Medium,Low,Moderate,Low,Minor,Major
+Procambarus clarkii,Louisiana red crayfish/Red swamp crayfish ,No,Freshwater Invertebrates,Medium,Low,Moderate,Low,Major,Moderate
+Exotic Radix spp.,Land snails Radix genus,No,Freshwater Invertebrates,Medium,Moderate,Moderate,Low,Moderate,Minor
+Orconectes limosus,Spinycheek crayfish       ,No,Freshwater invertebrates,Medium,Low,Moderate,Low,Major,Moderate
+Pyrgophorus platyrachis,Serrate Crownsnail,No,Freshwater Invertebrates,Medium,Moderate,Low,Low,Moderate,Moderate
+Clea/Anentome spp.,-,No,Freshwater Invertebrates,Medium,Moderate,Low,Low,Moderate,Minor
+Oncomelania spp. ,-,No,Freshwater invertebrates,Low,Low,Low,Low,Moderate,Major
+Pacifastacus leniusculus,Signal crayfish,No,Freshwater invertebrates,Low,Low,Moderate,Very Low,Major,Minor
+Orconectes rusticus,Rusty crayfish,No,Freshwater invertebrates,Low,Low,Moderate,Low,Major,Moderate
+Galba truncatula,-,No,Freshwater invertebrates,Low,Low,Moderate,Very Low,Minor,Moderate
+Orconectes virilis,Northern crayfish; virile crayfish,No,Freshwater invertebrates,Low,Very Low,Moderate,Low,Moderate,Minor
+Astacus leptodactylus,"Danube crayfish, Turkish crayfish",No,Freshwater Invertebrates,Low,Very Low,Moderate,Low,Minor,Minor
+Hemimysis anomala,Bloody-red Mysid Shrimp      ,No,Freshwater Invertebrates,Low,Low,Moderate,Very Low,Moderate,Minor
+Cristaria plicata,Freshwater mussel,No,Freshwater invertebrates,Low,Very Low,Low,Very low,Moderate,Minor
+Eriocheir sinensis,Chinese mitten crab,Yes,Marine pests,High,Moderate,Moderate,Moderate,Major,Moderate
+Mytilopsis sallei,Black-striped false mussel,Yes,Marine pests,High,Moderate,Moderate,Moderate,Moderate,Major
+Perna viridis,Asian Green Mussel,Yes,Marine pests,High,Very High,Low,Low,Moderate,Minor
+Didemnum vexillum,Carpet sea squirt,Yes,Marine pests,High,Moderate,High,Moderate,Minor,Moderate
+Charybdis japonica,Lady crab/Asian paddle crab,Yes,Marine pests,High,Moderate,Moderate,Low,Moderate,Moderate
+Hemigrapsus sanguineus,Japanese shore crab ,No,Marine pests,Medium,Low,Moderate,Moderate,Moderate,Minor
+Marenzelleria neglecta,Red-gilled mudworm,No,Marine pests,Medium,Low,Moderate,Moderate,Moderate,Minor
+Perna perna,Brown mussel,No,Marine pests,Medium,Moderate,Low,Moderate,Moderate,Moderate
+Perna canaliculus,New Zealand green-lipped mussel,No,Marine pests,Medium,Moderate,Low,Low,Moderate,Minor
+Hemigrapsus takanoi ,Brush-clawed shore crab,No,Marine pests,Medium,Low,Moderate,Moderate,Minor,Minimal Concern
+Rapana venosa,Rapa whelk,No,Marine pests,Medium,Low,Moderate,Moderate,Moderate,Minor
+Caprella mutica,Japanese skeleton shrimp,No,Marine pests,Medium,Moderate,Moderate,Moderate,Minor,Minimal Concern
+Mya arenaria,Soft shelled clam,No,Marine pests,Medium,Moderate,Moderate,Moderate,Moderate,Minor
+Potamocorbula amurensis,Asian brackish-water clam / Overbite clam,No,Marine pests,Low,Low,Moderate,Low,Major,Moderate
+Dinophysis norvegica,Toxic Dinoflagellate,No,Marine pests,Low,Low,Low,Very Low,Minor,Major
+Rhithropanopeus harrisi,Harris' mud crab,No,Marine pests,Low,Low,Low,Low,Moderate,Minor
+Chaetoceros concavicornis,Centric diatom,No,Marine pests,Low,Low,Moderate,Moderate,Minor,Minimal Concern
+Mnemiopsis leidyi ,Comb Jelly,No,Marine pests,Low,Low,Moderate,Low,Moderate,Moderate
+Urosalpinx cinerea,Atlantic oyster drill ,No,Marine pests,Low,Very Low,Moderate,Very low,Minor,Moderate
+Sargassum muticum,Japanese wireweed,No,Marine pests,Low,Very Low,Low,Very low,Minor,Moderate
+Austropuccinia psidii – exotic strains,Myrtle rust (exotic strains),Yes,Plant pathogens,High,Moderate,High,High,Massive,Massive
+Xylella fastidiosa,Xylella,Yes,Plant pathogens,High,Moderate,Moderate,Moderate,Major,Major
+Phytophthora ramorum,Sudden oak death/Ramorum blight,Yes,Plant pathogens,High,Low,Moderate,Moderate,Major,Major
+Teratosphaeria zuluensis,Teratosphaeria leaf blight / Teratosphaeria stem canker,Yes,Plant pathogens,High,Moderate,Moderate,Moderate,Moderate,Moderate
+Fusarium euwallaceae,Fusarium wilt,Yes,Plant pathogens,High,Moderate,Moderate,Moderate,Major,Major
+Ceratocystis manginecans,Ceratocystis wilt,Yes,Plant pathogens,High,Low,Moderate,Moderate,Moderate,Moderate
+Teratosphaeria destructans,Teratosphaeria leaf blight / Teratosphaeria stem canker,No,Plant pathogens,High,Moderate,High,Moderate,Moderate,Minor
+Teratosphaeria gauchensis ,Teratosphaeria canker,No,Plant pathogens,Medium,Low,High,Moderate,Moderate,Moderate
+"Candidatus Liberibacter asiaticus, Candidatus Liberibacter africanus and Candidatus Liberibacter americanus",Huanglongbing/Citrus greening,No,Plant pathogens,Medium,Low,Moderate,Moderate,Moderate,Moderate
+Ceratocystis albifundus,Ceratocystis wilt,No,Plant pathogens,Medium,Low,Moderate,Moderate,Moderate,Minor
+Phytophthora kernoviae,Phytophthora blight,No,Plant pathogens,Medium,Low,Moderate,Low,Minor,Moderate
+Chrysoporthe austroafricana ,Chrysoporthe canker/Eucalyptus canker,No,Plant pathogens,Medium,Very Low,Moderate,Moderate,Major,Moderate
+Heterobasidion annosum,Annosus root and butt rot,No,Plant pathogens,Medium,Moderate,Low,Low,Minor,Moderate
+Ophiostoma ulmi sensu lato,Dutch elm disease,No,Plant pathogens,Medium,Low,Low,Moderate,Minor,Moderate
+Candidatus Phytoplasma palmae,Coconut lethal yellowing,No,Plant pathogens,Low,Low,Low,Low,Moderate,Major
+Cryphonectria parasitica,Chestnut blight,No,Plant pathogens,Low,Moderate,Moderate,Low,Minor,Moderate
+Ralstonia syzygii,Blood disease of banana and clove wilt,No,Plant pathogens,Low,Low,Moderate,Moderate,Minor,Minor
+Ceratocystis fagacearum,Oak wilt,No,Plant pathogens,Low,Very Low,Low,Low,Minor,Moderate
+Armillaria mellea ,Armillaria root rot,No,Plant pathogens,Low,Low,Low,Low,Moderate,Minor
+Candidatus phytoplasma ulmi,Elm yellows/Elm phloem necrosis,No,Plant pathogens,Low,Low,Low,Low,Minimal Concern,Moderate
+Phymatotrichopsis omnivora,Texas root rot,No,Plant pathogens,Low,Very Low,Low,Very low,Moderate,Moderate
+Solenopsis invicta,Red imported fire ant,Yes,Terrestrial invertebrates,High,Very High,High,High,Major,Major
+Achatina fulica,Giant African snail ,Yes,Terrestrial invertebrates,High,High,High,Moderate,Major,Moderate
+Coptotermes formosanus,Formosan subterranean termite,Yes,Terrestrial invertebrates,High,High,High,High,Moderate,Major
+"Lymantria dispar (Lymantria dispar asiatica, Lymantria dispar japonica and Lymantria dispar dispar)",Asian gypsy moth,Yes,Terrestrial invertebrates,High,High,Moderate,High,Major,Major
+Harmonia axyridis,Harlequin lady beetle/ Multicolored Asian lady beetle,Yes,Terrestrial invertebrates,High,High,Moderate,High,Moderate,Moderate
+Wasmannia auropunctata,Electric ant,Yes,Terrestrial invertebrates,High,High,Moderate,Moderate,Major,Major
+Halyomorpha halys,Brown marmorated stink bug,No,Terrestrial invertebrates,Medium,High,High,Moderate,Moderate,Moderate
+Vespa velutina,Asian / Yellow-legged hornet,No,Terrestrial invertebrates,Medium,Low,High,High,Major,Moderate
+Euglandina rosea,Rosy predator snail,No,Terrestrial invertebrates,Medium,Moderate,Moderate,Moderate,Major,Minor
+Incisitermes minor,Western drywood termite,No,Terrestrial invertebrates,Medium,Moderate,Moderate,Moderate,Minor,Major
+Euwallacea fornicatus complex,Shot hole borer,No,Terrestrial invertebrates,Medium,Low,Moderate,Moderate,Major,Moderate
+Apis mellifera scutellata and its hybrids,Africanised honeybee,No,Terrestrial invertebrates,Medium,Moderate,High,High,Moderate,Moderate
+Apis mellifera capensis,Cape honeybee,No,Terrestrial invertebrates,Medium,Low,Moderate,Moderate,Moderate,Moderate
+Bombus impatiens,Common eastern bumblebee      ,No,Terrestrial invertebrates,Medium,Moderate,Moderate,Moderate,Moderate,Minor
+Lyctoxylon dentatum,Oriental powder post beetle,No,Terrestrial invertebrates,Medium,Moderate,Moderate,Low,Moderate,Moderate
+Dysmicoccus neobrevipes,Annona mealybug/Pineapple mealybug,No,Terrestrial invertebrates,Low,Low,Moderate,Low,Minor,Minor
+Aulacaspis yasumatsui,Cycad aulacaspis scale,No,Terrestrial invertebrates,Low,Low,Moderate,Low,Major,Minor
+Glischrochilus fasciatus and G. quadrisignatus,Picnic beetle,No,Terrestrial invertebrates,Low,Low,Moderate,Moderate,Minor,Moderate
+Tropilaelaps mercedesae,Asian bee mite,No,Terrestrial invertebrates,Low,Low,Moderate,Low,Moderate,Minor
+Acarapis woodi,Honey bee tracheal mite,No,Terrestrial invertebrates,Low,Low,Moderate,Low,Major,Minor
+Tropilaelaps clareae,Asian bee mite,No,Terrestrial invertebrates,Low,Low,Moderate,Moderate,Minor,Minor
+Dichroplus elongatus and D. maculipennis,Dichroplus grasshoppers,No,Terrestrial invertebrates,Low,Very Low,Moderate,Moderate,Moderate,Minor
+Hypomeces squamosus ,Gold dust weevil ,No,Terrestrial invertebrates,Low,Low,Moderate,Low,Minor,Minor
+Delta pyriforme,Delta wasp,No,Terrestrial invertebrates,Low,Low,Moderate,Low,Minor,Minor
+Trachemys scripta elegans,Red-eared slider turtle,Yes,Vertebrate pests,High,High,High,Moderate,Moderate,Minor
+Anabas testudineus,Climbing perch ,Yes,Vertebrate pests,High,Moderate,Moderate,Moderate,Major,Moderate
+Boa constrictor,Boa constrictor,Yes,Vertebrate pests,High,High,Moderate,Moderate,Moderate,Moderate
+Pantherophis guttatus,Corn snake,Yes,Vertebrate pests,High,High,High,Moderate,Major,Minor
+Duttaphrynus melanostictus,Asian black-spined toad,Yes,Vertebrate pests,High,Very High,Moderate,Low,Moderate,Moderate
+Hypophthalmichthys molitrix,Silver carp,Yes,Vertebrate pests,High,Low,Moderate,Moderate,Major,Major
+Acridotheres tristis,Common Myna,Yes,Vertebrate pests,High,Very High,High,High,Major,Moderate
+Oryctolagus cuniculus,European Rabbit,Yes,Vertebrate pests,High,Very High,High,High,Massive,Major
+Vulpes vulpes,Red Fox,Yes,Vertebrate pests,High,Very High,High,High,Massive,Major
+Rhinella marina,Cane Toad,Yes,Vertebrate pests,High,Very High,High,High,Major,Moderate
+Sus scrofa,Feral Pig,Yes,Vertebrate pests,High,Very High,High,High,Massive,Major
+Channa spp. (including Channa striata),Snakeheads,No,Vertebrate pests,Medium,Moderate,Moderate,Moderate,Major,Moderate
+Rattus exulans,Pacific rat,No,Vertebrate pests,Medium,High,High,Moderate,Major,Moderate
+Python bivittatus,Burmese python ,No,Vertebrate pests,Medium,Moderate,Moderate,Moderate,Major,Minor
+Ctenopharyngodon idella,Chinese carp,No,Vertebrate pests,Medium,Low,High,High,Major,Major
+Clarias batrachus ,Walking catfish,No,Vertebrate pests,Medium,Moderate,Moderate,Moderate,Moderate,Moderate
+Oreochromis niloticus,Nile tilapia ,No,Vertebrate pests,Medium,Low,Moderate,Moderate,Moderate,Moderate
+Calotes versicolor ,Oriental garden lizard ,No,Vertebrate pests,Medium,Moderate,Moderate,Low,Moderate,Minimal Concern
+Hemidactylus platyurus,Flat tailed house gecko,No,Vertebrate pests,Medium,High,Moderate,Low,Minor,Minor
+Kaloula pulchra,Asian painted frog,No,Vertebrate pests,Medium,High,Moderate,Moderate,Minor,Minimal Concern
+Iguana iguana,Green iguana,No,Vertebrate pests,Low,High,Moderate,Low,Moderate,Moderate
+Corvus splendens,House crow,No,Vertebrate pests,Low,Very High,Low,Low,Minor,Moderate
+Chamaeleo calyptratus,Veiled chameleon,No,Vertebrate pests,Low,Moderate,Low,Low,Minor,Moderate
+Sciurus carolinensis,Gray squirrel,No,Vertebrate pests,Low,Very Low,Low,Very low,Minor,Minor
+Atelerix albiventris,African pygmy hedgehog,No,Vertebrate pests,Low,Low,Very Low,Very Low,Minor,Minor
+Chelydra serpentina,Common snapping turtle,No,Vertebrate pests,Low,Low,Low,Very Low,Minor,Minor
+Cynops orientalis,Fire bellied newt,No,Vertebrate pests,Low,Low,Very Low,Very Low,Minor,Minimal Concern
+Mustela erminea,Stoat,No,Vertebrate pests,Low,Very Low,Very Low,Very low,Major,Minor
+Didymosphenia geminata,Didymo,Yes,Weeds and freshwater algae,High,Moderate,Moderate,Moderate,Major,Major
+Pilosella officinarum,Mouse ear hawkweed,Yes,Weeds and freshwater algae,High,High,Moderate,Moderate,Major,Moderate
+Mikania micrantha,Mikania,Yes,Weeds and freshwater algae,High,Moderate,High,Moderate,Moderate,Moderate
+Lantana camara,Lantana,Yes,Weeds and freshwater algae,High,Very High,High,High,Major,Moderate
+Chrysanthemoides monilifera ssp. rotundata,Bitou Bush,Yes,Weeds and freshwater algae,High,Very High,High,High,Major,Moderate
+Ulex europaeus,Gorse,Yes,Weeds and freshwater algae,High,Very High,High,High,Major,Moderate
+Cenchrus ciliaris,Buffel Grass,Yes,Weeds and freshwater algae,High,Very High,High,High,Massive,Major
+Andropogon gayanus,Gamba Grass,Yes,Weeds and freshwater algae,High,Very High,High,High,Massive,Major
+Zizania latifolia,Manchurian wildrice,Yes,Weeds and freshwater algae,High,Moderate,Moderate,Low,Major,Moderate
+Piper aduncum ,Spiked pepper,Yes,Weeds and freshwater algae,High,Moderate,Moderate,Low,Moderate,Minor
+Lagarosiphon major,Lagarosiphon ,No,Weeds and freshwater algae,High,Low,Moderate,Low,Moderate,Moderate
+Ludwigia grandiflora ,Water Primrose,No,Weeds and freshwater algae,Medium,Very Low,High,Low,Major,Moderate
+Microstegium vimineum,Nepalese browntop,No,Weeds and freshwater algae,Medium,Low,Moderate,Low,Moderate,Minor
+Cordia curassavica,Black Sage,No,Weeds and freshwater algae,Medium,Low,Moderate,Low,Moderate,Minor
+Tibouchina herbacea,Cane tibouchina,No,Weeds and freshwater algae,Medium,Low,Moderate,Low,Major,Minor
+Seriphium plumosum ,Slangbos,No,Weeds and freshwater algae,Medium,Low,Moderate,Low,Moderate,Minor
+Najas minor,Brittle naiad,No,Weeds and freshwater algae,Medium,Low,Moderate,Low,Moderate,Minor
+Vachellia karroo,Karroo thorn,No,Weeds and freshwater algae,Medium,Low,High,Low,Moderate,Minor
+Euphorbia esula,Leafy spurge,No,Weeds and freshwater algae,Low,Very Low,Moderate,Moderate,Moderate,Minor
+Senecio inaequidens,South African ragwort,No,Weeds and freshwater algae,Low,Low,Moderate,Low,Minor,Moderate
+Carex kobomugi,Asiatic sand sedge,No,Weeds and freshwater algae,Low,Very Low,Moderate,Very low,Major,Moderate
+Halogeton glomeratus,Halogeton,No,Weeds and freshwater algae,Low,Very Low,Moderate,Low,Moderate,Minor
+Ventenata dubia,Wiregrass,No,Weeds and freshwater algae,Low,Low,Moderate,Very Low,Moderate,Moderate
+Cytisus striatus ,Portuguese broom,No,Weeds and freshwater algae,Low,Very Low,Moderate,Negligible,Moderate,Minor
+Vincetoxicum nigrum,Black swallow-wort,No,Weeds and freshwater algae,Low,Very Low,Low,Low,Moderate,Minor

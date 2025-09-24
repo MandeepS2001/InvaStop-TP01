@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "https://invastopbackend.vercel.app/api/$1"
+    },
+    {
+      "src": "/map.html",
+      "dest": "/map.html"
+    },
+    {
+      "src": "/iteration1/manifest.json",
+      "dest": "/iteration1/manifest.json"
+    },
+    {
+      "src": "/iteration1/static/(.*)",
+      "dest": "/iteration1/static/$1"
+    },
+    {
+      "src": "/iteration1/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|mp4|mov|webm))",
+      "dest": "/iteration1/$1"
+    },
+    {
+      "src": "/iteration1$",
+      "dest": "/iteration1/index.html"
+    },
+    {
+      "src": "/iteration1/(.*)",
+      "dest": "/iteration1/index.html"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|mp4|mov|webm))",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "REACT_APP_API_URL": "https://invastopbackend.vercel.app/api/v1",
+    "REACT_APP_GOOGLE_MAPS_API_KEY": "AIzaSyCh3p6V9qDsgiMUzYVySAIKJ9ZU64Zj314"
+  }
+}

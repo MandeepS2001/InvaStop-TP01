@@ -1,0 +1,15 @@
+{
+  "short_name": "InvaStop",
+  "name": "InvaStop - Invasive Species Tracker",
+  "icons": [
+    {
+      "src": "flavacon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#166534",
+  "background_color": "#ffffff"
+}
