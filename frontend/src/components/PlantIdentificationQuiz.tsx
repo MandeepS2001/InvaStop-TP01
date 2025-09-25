@@ -48,24 +48,18 @@ const PlantIdentificationQuiz: React.FC = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const imageCandidates: Record<string, string[]> = {
-    // Invasive (existing lowercase directory)
+    // Invasive species (existing lowercase directory)
     'Lantana': ['/top10/Lantana.png'],
     'Bitou Bush': ['/top10/BitouBush.png'],
     'Gamba Grass': ['/top10/GambaGrass.png'],
     'Gorse': ['/top10/Gorse.png'],
     'Buffel Grass': ['/top10/BuffelGrass.png'],
-    // Native (new capitalized Top10 images provided by user)
-    'Eucalyptus': ['/Top10/Eucalyptus.jpg', '/Top10/Eucalyptus.png', '/top10/Tree.png'],
-    'Acacia/Wattle': [
-      '/Top10/Acacia/Wattle.jpg',
-      '/Top10/Acacia-Wattle.jpg',
-      '/Top10/Acacia_Wattle.jpg',
-      '/Top10/Acacia%2FWattle.jpg',
-      '/Top10/AcaciaWattle.jpg'
-    ],
-    'Banksia': ['/Top10/Banksia.jpg'],
-    'Melaleuca': ['/Top10/Melaleuca.jpg'],
-    'Grevillea': ['/Top10/Grevillea.png']
+    // Native species (corrected paths to match actual files)
+    'Eucalyptus': ['/top10/Eucalyptus.png'],
+    'Acacia/Wattle': ['/top10/Acacia-Wattle.jpg'],
+    'Banksia': ['/top10/Banksia.jpg'],
+    'Melaleuca': ['/top10/Melaleuca.jpg'],
+    'Grevillea': ['/top10/Grevillea.png']
   };
 
   const toQuizQuestion = (r: BackendQuizRecord): QuizQuestion => {
