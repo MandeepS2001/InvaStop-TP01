@@ -458,30 +458,33 @@ def updateModel(categories:int=None, run:int=None, epoches:int=None, batch_size:
         __makeLinkFor(f"detect/{model_name}/weights/best.pt")
         return
     if (categories is not None) and (run is not None) and (epoches is not None) and (batch_size is not None):
-        model_name = f"yolo11m_c{categories}_r{run}_e{epoches}_b{batch_size}"
+        model_name = f"main_c{categories}_run{run}_yolo11m_e{epoches}_b{batch_size}"
         __makeLinkFor(f"detect/{model_name}/weights/best.pt")
         return
     
     # For other cases, find the latest model by parsing the folder names in detect/
     print(" [ Finding the latest model... ]")
+    latest_categories = 0
     latest_run = 0
     latest_epoches = 0
     latest_batch_size = 0
     for name in os.listdir("detect"):
-        match = re.match(r"yolo11m_c(\d+)_r(\d+)_e(\d+)_b(\d+)", name)
+        match = re.match(r"main_c(\d+)_run(\d+)_yolo11m_e(\d+)_b(\d+)", name)
         if match:
             c, r, e, b = map(int, match.groups())
+            latest_categories = max(latest_categories, c)
             latest_run = max(latest_run, r)
             latest_epoches = max(latest_epoches, e)
             latest_batch_size = max(latest_batch_size, b)
     
     # Overlap those not given parameters 
+    categories = latest_categories if categories is None else categories
     run = latest_run if run is None else run
     epoches = latest_epoches if epoches is None else epoches
     batch_size = latest_batch_size if batch_size is None else batch_size
 
     # Build the model name
-    model_name = f"main_c{categories}_r{run}_e{epoches}_b{batch_size}"
+    model_name = f"main_c{categories}_run{run}_yolo11m_e{epoches}_b{batch_size}"
     __makeLinkFor(f"detect/{model_name}/weights/best.pt")
 
 if __name__ == "__main__":
