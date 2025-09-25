@@ -189,3 +189,6 @@ AI/*.pt
 AI/sync.sh 
 AI/negatives/*
 test_dataset/*
+# For demonstration use
+ours*.png
+others*.png
