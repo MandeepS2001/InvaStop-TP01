@@ -174,3 +174,21 @@ dmypy.json
 # Backup files
 *.bak
 *.backup
+
+# Model and datasets
+*.docx
+*.yml
+*.csv
+*.xlsx
+AI/datasets/*
+AI/detect/*
+AI/__pycache__/*
+AI/raw/*
+AI/*.pt
+# For sync with gpu server. Invalid without the private key.
+AI/sync.sh 
+AI/negatives/*
+test_dataset/*
+# For demonstration use
+ours*.png
+others*.png
