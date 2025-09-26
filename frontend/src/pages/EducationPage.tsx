@@ -280,7 +280,7 @@ const EducationPage: React.FC = () => {
             <SimpleHeader />
 
       {/* Main Content */}
-      <main className="pt-24">
+      <main className="pt-20">
         <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 overflow-hidden">
           {/* LiquidEther Background */}
           <div className="absolute inset-0 w-full h-full z-0">

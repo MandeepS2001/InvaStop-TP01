@@ -134,7 +134,7 @@ const QuizPage: React.FC = () => {
       </header>
 
       {/* Main Content Area */}
-      <div className="pt-24">
+      <div className="pt-24 sm:pt-28">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-green-50 via-white to-blue-50 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

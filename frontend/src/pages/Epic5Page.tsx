@@ -281,7 +281,7 @@ const Epic5Page: React.FC = () => {
       <SimpleHeader />
 
       {/* Main Content Area */}
-      <div className="pt-24">
+      <div className="pt-20">
         {/* Hero Section with LiquidEther */}
         <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 py-12 sm:py-16 lg:py-20 overflow-hidden">
           {/* LiquidEther Background */}

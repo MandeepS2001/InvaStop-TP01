@@ -522,7 +522,7 @@ const MagicBento = ({
           const cardProps = {
             className: `${baseClassName} ${sizeClass}`,
             style: {
-              backgroundColor: card.color || '#060010',
+              backgroundColor: card.color || '#ffffff',
               '--glow-color': glowColor as unknown as string
             }
           } as any;
@@ -570,28 +570,29 @@ const MagicBento = ({
                     {card.priority && (
                       <span style={{
                         fontSize: 12,
-                        padding: '3px 8px',
-                        borderRadius: 12,
-                        background: card.priority === 'High Priority' ? 'rgba(239,68,68,0.15)' : 
-                                   card.priority === 'Medium Priority' ? 'rgba(245,158,11,0.15)' : 'rgba(107,114,128,0.15)',
-                        color: card.priority === 'High Priority' ? '#fecaca' : 
-                               card.priority === 'Medium Priority' ? '#fde68a' : '#d1d5db',
-                        border: card.priority === 'High Priority' ? '1px solid rgba(239,68,68,0.35)' :
-                                card.priority === 'Medium Priority' ? '1px solid rgba(245,158,11,0.35)' : '1px solid rgba(107,114,128,0.35)',
-                        whiteSpace: 'nowrap'
+                        padding: '3px 10px',
+                        borderRadius: 9999,
+                        background: card.priority === 'High Priority' ? 'rgba(239, 68, 68, 0.20)' :
+                                   card.priority === 'Medium Priority' ? 'rgba(245, 158, 11, 0.20)' : 'rgba(34, 197, 94, 0.20)',
+                        color: card.priority === 'High Priority' ? '#7f1d1d' :
+                               card.priority === 'Medium Priority' ? '#7c2d12' : '#065f46',
+                        border: card.priority === 'High Priority' ? '1px solid rgba(239, 68, 68, 0.55)' :
+                                card.priority === 'Medium Priority' ? '1px solid rgba(245, 158, 11, 0.55)' : '1px solid rgba(34, 197, 94, 0.55)',
+                        whiteSpace: 'nowrap',
+                        fontWeight: 700
                       }}>
                         {card.priority}
                       </span>
                     )}
                   </div>
-                  <p className="card__description" style={{ margin: 0, display: 'block', WebkitLineClamp: 'unset' as any }}>{card.description}</p>
+                  <p className="card__description" style={{ margin: 0, display: 'block', WebkitLineClamp: 'unset' as any, color: '#0f172a' }}>{card.description}</p>
                   {card.statLine && (
-                    <p className="card__description" style={{ margin: '0 0 10px 0', fontWeight: 600 }}>{card.statLine}</p>
+                    <p className="card__description" style={{ margin: '0 0 10px 0', fontWeight: 800, color: '#0f172a' }}>{card.statLine}</p>
                   )}
                   {card.substats && card.substats.length > 0 && (
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                       {card.substats.map((s, i) => (
-                        <span key={i} style={{ fontSize: 11, color: '#9ca3af' }}>• {s}</span>
+                        <span key={i} style={{ fontSize: 12, color: '#1f2937' }}>• {s}</span>
                       ))}
                     </div>
                   )}
@@ -743,28 +744,29 @@ const MagicBento = ({
                   {card.priority && (
                     <span style={{
                       fontSize: 12,
-                      padding: '3px 8px',
-                      borderRadius: 12,
-                      background: card.priority === 'High Priority' ? 'rgba(239,68,68,0.15)' : 
-                                 card.priority === 'Medium Priority' ? 'rgba(245,158,11,0.15)' : 'rgba(107,114,128,0.15)',
-                      color: card.priority === 'High Priority' ? '#fecaca' : 
-                             card.priority === 'Medium Priority' ? '#fde68a' : '#d1d5db',
-                      border: card.priority === 'High Priority' ? '1px solid rgba(239,68,68,0.35)' :
-                              card.priority === 'Medium Priority' ? '1px solid rgba(245,158,11,0.35)' : '1px solid rgba(107,114,128,0.35)',
-                      whiteSpace: 'nowrap'
+                      padding: '3px 10px',
+                      borderRadius: 9999,
+                      background: card.priority === 'High Priority' ? 'rgba(239, 68, 68, 0.20)' :
+                                 card.priority === 'Medium Priority' ? 'rgba(245, 158, 11, 0.20)' : 'rgba(34, 197, 94, 0.20)',
+                      color: card.priority === 'High Priority' ? '#7f1d1d' :
+                             card.priority === 'Medium Priority' ? '#7c2d12' : '#065f46',
+                      border: card.priority === 'High Priority' ? '1px solid rgba(239, 68, 68, 0.55)' :
+                              card.priority === 'Medium Priority' ? '1px solid rgba(245, 158, 11, 0.55)' : '1px solid rgba(34, 197, 94, 0.55)',
+                      whiteSpace: 'nowrap',
+                      fontWeight: 700
                     }}>
                       {card.priority}
                     </span>
                   )}
                 </div>
-                <p className="card__description" style={{ margin: 0 }}>{card.description}</p>
+                <p className="card__description" style={{ margin: 0, color: '#0f172a' }}>{card.description}</p>
                 {card.statLine && (
-                  <p className="card__description" style={{ margin: '0 0 10px 0', fontWeight: 600 }}>{card.statLine}</p>
+                  <p className="card__description" style={{ margin: '0 0 10px 0', fontWeight: 800, color: '#0f172a' }}>{card.statLine}</p>
                 )}
                 {card.substats && card.substats.length > 0 && (
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {card.substats.map((s, i) => (
-                      <span key={i} style={{ fontSize: 11, color: '#9ca3af' }}>• {s}</span>
+                      <span key={i} style={{ fontSize: 12, color: '#1f2937' }}>• {s}</span>
                     ))}
                   </div>
                 )}

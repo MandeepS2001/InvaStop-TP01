@@ -24,7 +24,7 @@ const DidYouKnowPage: React.FC = () => {
   // Seasonal data for the MagicBento cards (uses currentSeason for copy)
   const springCardData: CardData[] = [
     {
-      color: '#1a1a1a',
+      color: 'rgba(34, 197, 94, 0.08)',
       title: 'Lantana',
       description: `This plant has been found thousands of times this ${currentSeason.toLowerCase()}.`,
       label: 'High Risk',
@@ -35,7 +35,7 @@ const DidYouKnowPage: React.FC = () => {
       size: 'xl'
     },
     {
-      color: '#1a1a1a',
+      color: 'rgba(34, 197, 94, 0.08)',
       title: 'Buffel Grass',
       description: `Widespread ${currentSeason.toLowerCase()} growth with active spread risk.`,
       label: 'High Risk',
@@ -47,7 +47,7 @@ const DidYouKnowPage: React.FC = () => {
       imageHeight: 220
     },
     {
-      color: '#1a1a1a',
+      color: 'rgba(34, 197, 94, 0.08)',
       title: 'Gamba Grass',
       description: `Rapid ${currentSeason.toLowerCase()} activity observed across multiple regions.`,
       label: 'High Risk',
@@ -56,10 +56,10 @@ const DidYouKnowPage: React.FC = () => {
       statLine: `Found 2,175 times across 2 different areas this ${currentSeason.toLowerCase()}.`,
       substats: ['#3 most common', 'Found in 2 locations'],
       size: 'xl',
-      imageHeight: 280
+      imageHeight: 220
     },
     {
-      color: '#1a1a1a',
+      color: 'rgba(34, 197, 94, 0.08)',
       title: 'Bitou Bush',
       description: 'Peak flowering season with spread potential.',
       label: 'Medium Risk',
@@ -70,14 +70,15 @@ const DidYouKnowPage: React.FC = () => {
       size: 'lg'
     },
     {
-      color: '#1a1a1a',
+      color: 'rgba(34, 197, 94, 0.08)',
       title: 'Gorse',
       description: `${currentSeason} growth surge; monitor hedgerows closely.`,
       label: 'Medium Risk',
       imageSrc: '/top10/Gorse.png',
       priority: 'Medium Priority',
       statLine: `Increasing presence in rural edges this ${currentSeason.toLowerCase()}.`,
-      size: 'md'
+      size: 'xl',
+      imageHeight: 220
     }
   ];
 
@@ -88,7 +89,7 @@ const DidYouKnowPage: React.FC = () => {
             <SimpleHeader />
 
       {/* Hero Section - Edge to Edge */}
-      <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 pt-20 sm:pt-24 lg:pt-32 w-full overflow-visible">
+      <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-16 sm:py-20 lg:py-24 overflow-hidden">
         {/* LiquidEther Background */}
         <div className="absolute inset-0 w-full h-full z-0">
           <LiquidEther
@@ -115,22 +116,15 @@ const DidYouKnowPage: React.FC = () => {
         {/* Dark overlay for text readability - with pointer-events-none to allow mouse events through */}
         <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
         
-        <div className="relative z-10 px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            {/* Left Side Content */}
-            <div className="text-center lg:text-left">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
                 <span className="inline-block">
                   Did you Know?
                 </span>
               </h1>
-              <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 text-green-100">
-                <span className="inline-block">
-                  Learn about problem plants that affect farms and properties across Australia. See real stories and pictures of the impact.
-                </span>
+              <p className="text-lg sm:text-xl lg:text-2xl text-green-100 max-w-4xl mx-auto">
+                Learn about problem plants that affect farms and properties across Australia. See real stories and pictures of the impact.
               </p>
-            </div>
-          </div>
         </div>
       </section>
 

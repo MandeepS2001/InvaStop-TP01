@@ -867,7 +867,7 @@ const SpeciesDetailPage: React.FC = () => {
       <SimpleHeader />
 
       {/* Page Content */}
-      <div className="pt-24">
+      <div className="pt-24 sm:pt-28">
         {/* Enhanced Back Button Header */}
         <div className="relative bg-gradient-to-r from-green-800 via-green-700 to-green-900 text-white py-8 sm:py-12 overflow-hidden">
           {/* Animated Background Elements */}

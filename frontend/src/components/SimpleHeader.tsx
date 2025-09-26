@@ -22,17 +22,13 @@ const SimpleHeader: React.FC = () => {
   };
 
   return (
-    <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
-      <div className="px-3 sm:px-4 lg:px-6">
-                <div className="flex justify-between items-center h-24 sm:h-28">
-          {/* Logo */}
-                  <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3">
-                    <img
-                      src="/Invastop-Logo.png"
-                      alt="InvaStop"
-                      className="h-24 w-24 sm:h-28 sm:w-28 object-contain"
-                    />
-          </Link>
+    <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full h-20">
+      <div className="px-3 sm:px-4 lg:px-6 h-full">
+        <div className="flex justify-between items-center h-full">
+          {/* Logo as a separate entity */}
+          <a className="flex items-center space-x-3" href="/">
+            <img src="/Invastop-Logo.png" alt="InvaStop" className="h-40 w-40 object-contain" />
+          </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-2">

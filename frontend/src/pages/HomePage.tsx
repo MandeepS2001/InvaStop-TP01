@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
             <SimpleHeader />
 
       {/* Hero Section - Edge to Edge */}
-      <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 pt-20 sm:pt-24 lg:pt-32 w-full overflow-visible">
+      <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 pt-24 sm:pt-28 w-full overflow-visible">
         {/* LiquidEther Background */}
         <div className="absolute inset-0 w-full h-full z-0">
           <LiquidEther

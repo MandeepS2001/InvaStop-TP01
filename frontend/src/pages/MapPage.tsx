@@ -60,7 +60,7 @@ const MapPage: React.FC = () => {
             <SimpleHeader />
 
       {/* Page Content */}
-      <div className="pt-20 sm:pt-24">
+      <div className="pt-20">
         {/* Enhanced Header Section */}
         <div className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 overflow-hidden">
           {/* LiquidEther Background */}
