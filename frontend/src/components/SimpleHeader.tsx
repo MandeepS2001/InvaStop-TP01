@@ -63,8 +63,8 @@ const SimpleHeader: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-green-700">
-            <nav className="flex flex-col space-y-2">
+          <div className="md:hidden py-4 border-t border-green-700 bg-green-800">
+            <nav className="flex flex-col space-y-3">
               {navItems.map((item) => (
                 <Link 
                   key={item.href}
@@ -74,8 +74,11 @@ const SimpleHeader: React.FC = () => {
                     scrollToTop(); 
                   }} 
                   className={`
-                    px-4 py-2 text-white hover:text-green-100 hover:bg-green-700/30 rounded-lg transition-colors
-                    ${isActive(item.href) ? 'text-green-200 bg-green-700/50 font-semibold' : ''}
+                    px-6 py-3 text-lg font-medium rounded-xl transition-all duration-200
+                    ${isActive(item.href) 
+                      ? 'text-white bg-green-600 shadow-lg border-2 border-green-400' 
+                      : 'text-green-100 hover:text-white hover:bg-green-700/50 border border-green-600/30 hover:border-green-500/50'
+                    }
                   `}
                 >
                   {item.label}
