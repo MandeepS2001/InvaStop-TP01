@@ -68,7 +68,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white p-4 shadow-xl">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-semibold">AI Plant Identifier</h2>
+          <h2 className="text-lg font-semibold">Identify My Plant</h2>
           <button onClick={onClose} className="rounded-md p-2 hover:bg-gray-100">✕</button>
         </div>
 
@@ -117,10 +117,10 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
               {top ? (
                 <div>
                   <div className="text-lg font-bold">{top.name}</div>
-                  <div className="text-sm text-gray-600">Confidence: {confidencePct}% ({confidenceLabel})</div>
+                  <div className="text-sm text-gray-600">Trust Level: {confidencePct}% ({confidenceLabel})</div>
                   {lowConfidence && (
                     <div className="mt-2 rounded-md bg-yellow-50 text-yellow-800 p-2 text-sm">
-                      Confidence is low. Try a clearer photo (single plant, in focus, good lighting). Here are other possibilities:
+                      Trust level is low. Try a clearer photo (single plant, in focus, good lighting). Here are other possibilities:
                       <ul className="list-disc pl-5 mt-1">
                         {results.slice(1, 4).map((r, i) => (
                           <li key={i}>{r.name} ({Math.round(r.confidence*100)}%)</li>
@@ -150,7 +150,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                   <div className="mt-2 rounded-md bg-gray-50 p-2 text-sm text-gray-700">
                     Quick next steps:
                     <ul className="list-disc pl-5 mt-1">
-                      <li>If confidence is Medium/Low, take another photo closer and well‑lit.</li>
+                      <li>If trust level is Medium/Low, take another photo closer and well‑lit.</li>
                       <li>Open the species profile for control and prevention tips.</li>
                       <li>Report a sighting if you suspect it’s invasive in your area.</li>
                     </ul>
@@ -172,8 +172,8 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
               in leaves, flowers, stems and shapes, then compares them with known species.
             </p>
             <p>
-              The result includes a confidence score. High confidence means the pattern closely matches a species; lower
-              scores suggest it might be another plant, so try a clearer photo or compare alternatives.
+              The result includes a trust level. High trust level means the pattern closely matches a species; lower
+              trust levels suggest it might be another plant, so try a clearer photo or compare alternatives.
             </p>
             <p>
               We do not store your photos for this feature; they are processed to generate the prediction and discarded.
