@@ -7,7 +7,8 @@ interface Props {
 }
 
 const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const cameraInputRef = useRef<HTMLInputElement | null>(null);
+  const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -16,9 +17,12 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
 
   if (!open) return null;
 
-  const pickFile = (capture?: boolean) => {
-    inputRef.current?.setAttribute('capture', capture ? 'environment' : '');
-    inputRef.current?.click();
+  const pickCamera = () => {
+    cameraInputRef.current?.click();
+  };
+
+  const pickUpload = () => {
+    uploadInputRef.current?.click();
   };
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,9 +79,25 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
           )}
 
           <div className="flex gap-2">
-            <button onClick={() => pickFile(true)} className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">Use Camera</button>
-            <button onClick={() => pickFile(false)} className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Upload Photo</button>
-            <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={onFileChange} />
+            <button onClick={pickCamera} className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">Use Camera</button>
+            <button onClick={pickUpload} className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Upload Photo</button>
+            {/* Dedicated camera input (mobile will open camera) */}
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={onFileChange}
+            />
+            {/* Dedicated upload input (no capture attribute so file picker opens) */}
+            <input
+              ref={uploadInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={onFileChange}
+            />
           </div>
 
           <div className="flex items-center gap-2">
