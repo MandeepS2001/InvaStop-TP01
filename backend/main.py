@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import auth, species, reports, analytics, epic1, quiz, impact
+from app.api.routes import auth, species, reports, analytics, epic1, quiz, impact, ai
 from app.core.config import settings
 
 app = FastAPI(
@@ -28,6 +28,7 @@ app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytic
 app.include_router(epic1.router, prefix="/api/v1/epic1", tags=["Epic 1.0"])
 app.include_router(quiz.router, prefix="/api/v1/quiz", tags=["Quiz"])
 app.include_router(impact.router, prefix="/api/v1/impact", tags=["Impact"])
+app.include_router(ai.router, prefix="/api/v1", tags=["AI"])
 
 @app.get("/")
 async def root():

@@ -9,7 +9,11 @@ export async function aiPredict(file: File, model?: string): Promise<AIPredictio
   // Allow runtime override via multiple window keys for quick local testing
   const w = (window as any) || {};
   const runtimeOverride = (w.__AI_API_URL || w.AI_API_URL || w.AT_API_URL) as string | undefined;
-  const apiBase = runtimeOverride || process.env.REACT_APP_AI_API_URL || 'http://localhost:8000';
+  // Prefer backend proxy in production: /api/v1/ai
+  const isProd = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
+  const apiBase = isProd
+    ? '/api/v1/ai' // backend proxy
+    : (runtimeOverride || process.env.REACT_APP_AI_API_URL || 'http://localhost:8000');
   const form = new FormData();
   form.append('img', file, file.name);
   if (model) form.append('model', model);
