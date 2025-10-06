@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { saveScan, loadScans, exportScansJson, shareLatestScan } from '../utils/scanHistory';
 import { aiPredict, AIPredictionBox } from '../services/ai';
 
 interface Props {
@@ -15,6 +16,8 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<AIPredictionBox[] | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [history, setHistory] = useState(loadScans());
 
   if (!open) return null;
 
@@ -44,6 +47,21 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
     try {
       const preds = await aiPredict(file);
       setResults(preds);
+      // Save top result to history
+      if (preds && preds.length > 0) {
+        const top = preds[0];
+        // capture a small preview if available
+        let preview: string | undefined = undefined;
+        if (previewUrl) preview = previewUrl;
+        saveScan({
+          id: `${Date.now()}-${Math.random().toString(36).slice(2,7)}`,
+          timestamp: Date.now(),
+          speciesName: top.name,
+          trust: top.confidence,
+          imageDataUrl: preview,
+        });
+        setHistory(loadScans());
+      }
     } catch (e: any) {
       setError(e?.message || 'Failed to identify.');
     } finally {
@@ -155,6 +173,18 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                       <li>Report a sighting if you suspect it’s invasive in your area.</li>
                     </ul>
                   </div>
+                  {/* Share / Export */}
+                  <div className="flex gap-2 mt-1">
+                    <button onClick={() => shareLatestScan()} className="rounded-md bg-indigo-600 px-3 py-2 text-white hover:bg-indigo-700">Share</button>
+                    <button onClick={() => {
+                      const blob = new Blob([exportScansJson()], { type: 'application/json' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url; a.download = 'invastop_scans.json'; a.click();
+                      URL.revokeObjectURL(url);
+                    }} className="rounded-md bg-gray-200 px-3 py-2 hover:bg-gray-300">Export</button>
+                    <button onClick={() => setHistoryOpen((v) => !v)} className="ml-auto rounded-md border px-3 py-2 hover:bg-gray-50">{historyOpen ? 'Hide' : 'View'} History</button>
+                  </div>
                 </div>
                 </div>
               ) : (
@@ -180,6 +210,28 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
             </p>
           </div>
         </details>
+
+        {/* History list */}
+        {historyOpen && (
+          <div className="mt-3 rounded-lg border p-3">
+            <div className="font-semibold mb-2">My Scan History</div>
+            {history.length === 0 ? (
+              <div className="text-sm text-gray-600">No scans yet.</div>
+            ) : (
+              <ul className="space-y-2 max-h-56 overflow-auto">
+                {history.map((h) => (
+                  <li key={h.id} className="flex items-center gap-3 border rounded-md p-2">
+                    {h.imageDataUrl && <img src={h.imageDataUrl} alt="prev" className="h-12 w-12 object-cover rounded" />}
+                    <div className="text-sm">
+                      <div className="font-medium">{h.speciesName}</div>
+                      <div className="text-gray-600">Trust Level {(h.trust*100).toFixed(0)}% · {new Date(h.timestamp).toLocaleString()}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
         </div>
       </div>
     </div>
