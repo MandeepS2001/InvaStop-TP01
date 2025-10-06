@@ -68,12 +68,40 @@ async def proxy_predict(img: UploadFile, model: str | None = Query(default=None)
     data = {}
     if model:
         data["model"] = model
+    # Try the configured URL first; on 404, retry alternate path (/detect <-> /predict)
     async with httpx.AsyncClient(timeout=60.0) as client:
-        r = await client.post(GPU_SERVER, files=files, data=data)
+        try_urls = [GPU_SERVER]
+        # Add smart fallback if path looks like /detect or /predict or has no path
+        try:
+            from urllib.parse import urlparse, urlunparse
+            parsed = urlparse(GPU_SERVER)
+            path = parsed.path or ''
+            if path.endswith('/detect'):
+                alt = urlunparse(parsed._replace(path=path[:-7] + '/predict'))
+                try_urls.append(alt)
+            elif path.endswith('/predict'):
+                alt = urlunparse(parsed._replace(path=path[:-8] + '/detect'))
+                try_urls.append(alt)
+            elif path == '' or path == '/':
+                # Try both common paths
+                try_urls.extend([
+                    urlunparse(parsed._replace(path='/detect')),
+                    urlunparse(parsed._replace(path='/predict')),
+                ])
+        except Exception:
+            pass
 
+        last_response: httpx.Response | None = None
+        for url in try_urls:
+            r = await client.post(url, files=files, data=data)
+            last_response = r
+            if r.status_code != 404:
+                break
+
+    # Return upstream response
     return Response(
-        content=r.content,
-        status_code=r.status_code,
+        content=(last_response.content if last_response else b''),
+        status_code=(last_response.status_code if last_response else 502),
         media_type=r.headers.get("content-type", "application/json"),
     )
 
