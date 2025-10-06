@@ -14,6 +14,10 @@ GPU_SERVER = os.getenv(
 )
 
 
+@router.get("/ping")
+async def ping():
+    return {"status": "ok"}
+
 @router.post("/predict")
 async def proxy_predict(img: UploadFile, model: str | None = Query(default=None)):
     # Validate image content type
