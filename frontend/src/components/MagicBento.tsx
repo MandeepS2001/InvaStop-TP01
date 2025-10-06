@@ -541,10 +541,11 @@ const MagicBento = ({
                 >
                  <div className="card__content" style={{ gap: 10 }}>
                   {card.imageSrc && (
-                    <div style={{ position: 'relative' }}>
+                    <div className="card-image-wrapper" style={{ position: 'relative' }}>
                       <img
                         src={card.imageSrc}
                         alt={card.title}
+                        className="card-image"
                         style={{
                           width: '100%',
                           height: card.imageHeight ?? (card.size === 'xl' ? 220 : card.size === 'lg' ? 180 : 140),
@@ -565,8 +566,8 @@ const MagicBento = ({
                       )}
                     </div>
                   )}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <h2 className="card__title" style={{ margin: 0 }}>{card.title}</h2>
+                  <div className="card-text-content" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 1em' }}>
+                    <h2 className="card__title" style={{ margin: 0, padding: 0 }}>{card.title}</h2>
                     {card.priority && (
                       <span style={{
                         fontSize: 12,
@@ -585,12 +586,12 @@ const MagicBento = ({
                       </span>
                     )}
                   </div>
-                  <p className="card__description" style={{ margin: 0, display: 'block', WebkitLineClamp: 'unset' as any, color: '#0f172a' }}>{card.description}</p>
+                  <p className="card__description" style={{ margin: 0, display: 'block', WebkitLineClamp: 'unset' as any, color: '#0f172a', padding: '0 1em' }}>{card.description}</p>
                   {card.statLine && (
-                    <p className="card__description" style={{ margin: '0 0 10px 0', fontWeight: 800, color: '#0f172a' }}>{card.statLine}</p>
+                    <p className="card__description" style={{ margin: '0 0 10px 0', fontWeight: 800, color: '#0f172a', padding: '0 1em' }}>{card.statLine}</p>
                   )}
                   {card.substats && card.substats.length > 0 && (
-                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', padding: '0 1em 1em 1em' }}>
                       {card.substats.map((s, i) => (
                         <span key={i} style={{ fontSize: 12, color: '#1f2937' }}>• {s}</span>
                       ))}

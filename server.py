@@ -3,8 +3,24 @@ import os
 
 from fastapi import FastAPI, status, File, UploadFile
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+@app.get("/")
+async def root():
+    return {"service": "ai-predict", "endpoints": ["POST /predict", "GET /health"]}
 
 @app.post("/predict")
 async def predict(img: UploadFile, model:str=None, remove:bool=True):
@@ -41,5 +57,6 @@ async def predict(img: UploadFile, model:str=None, remove:bool=True):
 
 if __name__ == "__main__":
     import uvicorn
-    os.environ["DEFAULT_MODEL"]="main_yolo11m_e50_b16.pt"
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    os.environ["DEFAULT_MODEL"] = os.environ.get("DEFAULT_MODEL", "main_yolo11m_e50_b16.pt")
+    port = int(os.environ.get("AI_PORT", "8001"))
+    uvicorn.run(app, host="0.0.0.0", port=port)
