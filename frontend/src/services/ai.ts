@@ -18,11 +18,12 @@ export async function aiPredict(file: File, model?: string): Promise<AIPredictio
   // Allow runtime override via multiple window keys for quick local testing
   const w = (window as any) || {};
   const runtimeOverride = (w.__AI_API_URL || w.AI_API_URL || w.AT_API_URL) as string | undefined;
-  // Prefer backend proxy in production: /api/v1/ai
+  // Prefer backend proxy. In production, use the deployed backend domain; locally use localhost.
   const isProd = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
-  const apiBase = isProd
-    ? '/api/v1/ai' // backend proxy
-    : (runtimeOverride || process.env.REACT_APP_AI_API_URL || 'http://localhost:8000');
+  const envApi = (process.env.REACT_APP_API_URL || '').replace(/\/$/, '');
+  const prodBase = (runtimeOverride as string) || (envApi ? `${envApi}/api/v1/ai` : 'https://invastopbackend.vercel.app/api/v1/ai');
+  const devBase = (runtimeOverride as string) || (process.env.REACT_APP_AI_API_URL || 'http://localhost:8000/api/v1/ai');
+  const apiBase = isProd ? prodBase : devBase;
   const form = new FormData();
   form.append('img', file, file.name);
   if (model) form.append('model', model);
