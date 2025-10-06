@@ -121,14 +121,71 @@
 @media (max-width: 599px) {
   .card-grid {
     grid-template-columns: 1fr;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
-    padding: 0.5em;
+    padding: 0;
+    gap: 1em;
   }
 
   .card {
     width: 100%;
-    min-height: 180px;
+    min-height: auto;
+    padding: 0;
+    border-radius: 16px;
+  }
+
+  .card__content {
+    gap: 0 !important;
+    padding: 0 !important;
+  }
+
+  .card__title {
+    font-size: 20px;
+    margin-bottom: 0.5em;
+    padding: 0 1em;
+  }
+
+  .card__description {
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 0 1em;
+  }
+
+  .card__label {
+    font-size: 11px;
+  }
+
+  /* Adjust size variants for mobile */
+  .card.card--xl,
+  .card.card--lg,
+  .card.card--md {
+    min-height: auto;
+  }
+
+  /* Adjust image wrapper for mobile */
+  .card-image-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Adjust image heights for mobile - make them full width and at the top */
+  .card-image {
+    height: 200px !important;
+    max-height: 200px;
+    border-radius: 16px 16px 0 0 !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+
+  /* Add spacing for text content on mobile */
+  .card-text-content {
+    padding: 1em 1em 0 1em !important;
+    margin-top: 0.5em;
+  }
+
+  /* Adjust stat and substat spacing */
+  .card__content p {
+    margin-top: 0.5em;
   }
 }
 

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import LiquidEther from '../components/LiquidEther';
 import SimpleHeader from '../components/SimpleHeader';
 import { X, AlertTriangle, TrendingUp, MapPin, Sun, Thermometer } from 'lucide-react';
+import AICaptureModal from '../components/AICaptureModal';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
@@ -36,6 +37,7 @@ const Epic5Page: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [locationLoading, setLocationLoading] = useState(false);
   const [areaName, setAreaName] = useState<string>('');
+  const [aiOpen, setAiOpen] = useState(false);
   const postcodeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleClearPostcode = () => {
@@ -582,9 +584,9 @@ const Epic5Page: React.FC = () => {
                                  </div>
                   
                   <div className="pt-4">
-                                   <button className="bg-yellow-400 hover:bg-yellow-300 text-red-800 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
-                                     🚨 Report Sighting
-                    </button>
+                                  <button onClick={() => setAiOpen(true)} className="bg-yellow-400 hover:bg-yellow-300 text-red-800 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
+                                    🚨 Report Sighting
+                                  </button>
                   </div>
                 </div>
               </div>
@@ -683,7 +685,7 @@ const Epic5Page: React.FC = () => {
                                  </div>
                                  
                                  <div className="pt-4">
-                                   <button className="bg-yellow-200 hover:bg-yellow-100 text-yellow-800 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
+                                   <button onClick={() => setAiOpen(true)} className="bg-yellow-200 hover:bg-yellow-100 text-yellow-800 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
                                      📍 Report Sighting
                                    </button>
                     </div>
@@ -816,6 +818,7 @@ const Epic5Page: React.FC = () => {
           </div>
         </div>
       </footer>
+      <AICaptureModal open={aiOpen} onClose={() => setAiOpen(false)} />
     </div>
   );
 };

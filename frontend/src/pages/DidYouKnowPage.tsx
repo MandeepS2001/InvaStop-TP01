@@ -214,8 +214,7 @@ const DidYouKnowPage: React.FC = () => {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Seasonal Information Section */}
-          <SeasonalMetrics />
+          {/* Removed old list section (SeasonalMetrics) per request */}
 
           {/* Simple Chart Section */}
           <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-10">
@@ -226,51 +225,7 @@ const DidYouKnowPage: React.FC = () => {
             <TaxonThreatChart />
           </div>
 
-          {/* Simple Plant Stories */}
-          <section className="mb-12">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Real Stories from Australian Farms</h2>
-              <p className="text-lg text-gray-600">See how problem plants affect properties just like yours</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Story 1 */}
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                <div className="text-center mb-4">
-                  <div className="bg-red-100 p-4 rounded-full w-16 h-16 mx-auto mb-3 flex items-center justify-center">
-                    <span className="text-red-600 text-2xl">🌿</span>
-                  </div>
-                  <h3 className="font-bold text-lg text-gray-900">Lantana Takes Over</h3>
-                </div>
-                <p className="text-gray-600 text-sm mb-4">"Within two years, Lantana had covered half my property. It was impossible to walk through some areas."</p>
-                <div className="text-xs text-gray-500">- Farmer from Queensland</div>
-              </div>
-
-              {/* Story 2 */}
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                <div className="text-center mb-4">
-                  <div className="bg-orange-100 p-4 rounded-full w-16 h-16 mx-auto mb-3 flex items-center justify-center">
-                    <span className="text-orange-600 text-2xl">🌿</span>
-                  </div>
-                  <h3 className="font-bold text-lg text-gray-900">Blackberry Bush Problem</h3>
-                </div>
-                <p className="text-gray-600 text-sm mb-4">"The blackberry bushes got so thick, they blocked access to my dam. I had to cut a new path."</p>
-                <div className="text-xs text-gray-500">- Property owner from Victoria</div>
-              </div>
-
-              {/* Story 3 */}
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                <div className="text-center mb-4">
-                  <div className="bg-yellow-100 p-4 rounded-full w-16 h-16 mx-auto mb-3 flex items-center justify-center">
-                    <span className="text-yellow-600 text-2xl">🌿</span>
-                  </div>
-                  <h3 className="font-bold text-lg text-gray-900">Gorse Spreading Fast</h3>
-                </div>
-                <p className="text-gray-600 text-sm mb-4">"Gorse started in one corner and now it's spreading to my neighbor's property too."</p>
-                <div className="text-xs text-gray-500">- Landowner from Tasmania</div>
-              </div>
-            </div>
-          </section>
+          {/* Removed: Real Stories from Australian Farms section */}
 
           {/* Simple Next Steps */}
           <section className="relative py-12 sm:py-16 bg-gradient-to-br from-green-50 via-white to-green-50">
