@@ -1,6 +1,8 @@
 from fastapi import APIRouter, UploadFile, Response, Query
+from fastapi.responses import JSONResponse
 import os
 import httpx
+from app.core.config import settings
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -14,6 +16,41 @@ GPU_SERVER = os.getenv(
 
 @router.post("/predict")
 async def proxy_predict(img: UploadFile, model: str | None = Query(default=None)):
+    # Validate image content type
+    allowed_types = set(settings.ALLOWED_IMAGE_TYPES)
+    if img.content_type not in allowed_types:
+        return JSONResponse(
+            status_code=415,
+            content={
+                "detail": f"Unsupported media type: {img.content_type}. Allowed: {sorted(list(allowed_types))}"
+            },
+        )
+
+    # Enforce serverless-friendly size limit (min of configured MAX_FILE_SIZE and 4MB Vercel limit)
+    serverless_limit = int(os.getenv("SERVERLESS_FILE_LIMIT", str(4 * 1024 * 1024)))
+    max_bytes = min(settings.MAX_FILE_SIZE, serverless_limit)
+
+    # Determine uploaded file size without loading into memory
+    try:
+        img.file.seek(0, os.SEEK_END)
+        size_bytes = img.file.tell()
+        img.file.seek(0)
+    except Exception:
+        # Fallback: read to measure (should be rare)
+        data = await img.read()
+        size_bytes = len(data)
+        await img.seek(0)
+
+    if size_bytes > max_bytes:
+        return JSONResponse(
+            status_code=413,
+            content={
+                "detail": "File too large",
+                "max_bytes": max_bytes,
+                "received_bytes": size_bytes,
+            },
+        )
+
     # Ensure we start at the beginning of the uploaded file
     await img.seek(0)
     files = {

@@ -6,6 +6,15 @@ export interface AIPredictionBox {
 }
 
 export async function aiPredict(file: File, model?: string): Promise<AIPredictionBox[]> {
+  // Enforce client-side size/type constraints to avoid 413 on serverless
+  const MAX_BYTES = 4 * 1024 * 1024; // 4MB (Vercel payload practical limit)
+  const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+  if (!allowedTypes.has(file.type)) {
+    throw new Error(`Unsupported image type: ${file.type}. Please use JPEG, PNG or WEBP.`);
+  }
+  if (file.size > MAX_BYTES) {
+    throw new Error(`Image is too large (${(file.size/1024/1024).toFixed(2)}MB). Please choose a photo under 4MB.`);
+  }
   // Allow runtime override via multiple window keys for quick local testing
   const w = (window as any) || {};
   const runtimeOverride = (w.__AI_API_URL || w.AI_API_URL || w.AT_API_URL) as string | undefined;
