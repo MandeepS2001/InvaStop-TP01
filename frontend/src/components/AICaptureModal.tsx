@@ -91,7 +91,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
         </div>
 
         {!results ? (
-          /* Initial state - single column for image capture */
+          // Initial state - single column for image capture
           <div className="space-y-3">
             {previewUrl ? (
               <img src={previewUrl} alt="preview" className="w-full rounded-lg border" />
@@ -133,7 +133,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
             {error && <div className="rounded-md bg-red-50 text-red-700 p-3 text-sm">{error}</div>}
           </div>
         ) : (
-          /* Results state - 2-column layout */
+          // Results state - 2-column layout
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left: Image and basic info */}
             <div className="space-y-3">
