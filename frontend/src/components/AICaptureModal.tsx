@@ -84,52 +84,56 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-4 shadow-xl">
+      <div className="w-full max-w-4xl rounded-2xl bg-white p-4 shadow-xl">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-lg font-semibold">Identify My Plant</h2>
           <button onClick={onClose} className="rounded-md p-2 hover:bg-gray-100">✕</button>
         </div>
 
-        <div className="space-y-3">
-          {previewUrl ? (
-            <img src={previewUrl} alt="preview" className="w-full rounded-lg border" />
-          ) : (
-            <div className="w-full h-40 rounded-lg border-2 border-dashed flex items-center justify-center text-gray-500">
-              No image selected
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Image and controls */}
+          <div className="space-y-3">
+            {previewUrl ? (
+              <img src={previewUrl} alt="preview" className="w-full rounded-lg border" />
+            ) : (
+              <div className="w-full h-40 rounded-lg border-2 border-dashed flex items-center justify-center text-gray-500">
+                No image selected
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <button onClick={pickCamera} className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">Use Camera</button>
+              <button onClick={pickUpload} className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Upload Photo</button>
+              {/* Dedicated camera input (mobile will open camera) */}
+              <input
+                ref={cameraInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={onFileChange}
+              />
+              {/* Dedicated upload input (no capture attribute so file picker opens) */}
+              <input
+                ref={uploadInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={onFileChange}
+              />
             </div>
-          )}
 
-          <div className="flex gap-2">
-            <button onClick={pickCamera} className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">Use Camera</button>
-            <button onClick={pickUpload} className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Upload Photo</button>
-            {/* Dedicated camera input (mobile will open camera) */}
-            <input
-              ref={cameraInputRef}
-              type="file"
-              accept="image/*"
-              capture="environment"
-              className="hidden"
-              onChange={onFileChange}
-            />
-            {/* Dedicated upload input (no capture attribute so file picker opens) */}
-            <input
-              ref={uploadInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={onFileChange}
-            />
+            <div className="flex items-center gap-2">
+              <button onClick={submit} disabled={!file || loading} className={`px-4 py-2 rounded-lg text-white ${(!file||loading)?'bg-green-400':'bg-green-600 hover:bg-green-700'}`}>
+                {loading ? 'Identifying…' : 'Identify'}
+              </button>
+              {!file && <span className="text-xs text-gray-500">Select a photo first</span>}
+            </div>
+
+            {error && <div className="rounded-md bg-red-50 text-red-700 p-3 text-sm">{error}</div>}
           </div>
 
-          <div className="flex items-center gap-2">
-            <button onClick={submit} disabled={!file || loading} className={`px-4 py-2 rounded-lg text-white ${(!file||loading)?'bg-green-400':'bg-green-600 hover:bg-green-700'}`}>
-              {loading ? 'Identifying…' : 'Identify'}
-            </button>
-            {!file && <span className="text-xs text-gray-500">Select a photo first</span>}
-          </div>
-
-          {error && <div className="rounded-md bg-red-50 text-red-700 p-3 text-sm">{error}</div>}
-
+          {/* Results panel */}
           {results && (
             <div className="rounded-lg border p-3">
               {top ? (
@@ -186,12 +190,35 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                     <button onClick={() => setHistoryOpen((v) => !v)} className="ml-auto rounded-md border px-3 py-2 hover:bg-gray-50">{historyOpen ? 'Hide' : 'View'} History</button>
                   </div>
                 </div>
-                </div>
-              ) : (
-                <div className="text-sm text-gray-600">No species detected. Try another angle or closer photo.</div>
-              )}
-            </div>
-          )}
+
+                {/* History list */}
+                {historyOpen && (
+                  <div className="mt-3 rounded-lg border p-3">
+                    <div className="font-semibold mb-2">My Scan History</div>
+                    {history.length === 0 ? (
+                      <div className="text-sm text-gray-600">No scans yet.</div>
+                    ) : (
+                      <ul className="space-y-2 max-h-56 overflow-auto">
+                        {history.map((h) => (
+                          <li key={h.id} className="flex items-center gap-3 border rounded-md p-2">
+                            {h.imageDataUrl && <img src={h.imageDataUrl} alt="prev" className="h-12 w-12 object-cover rounded" />}
+                            <div className="text-sm">
+                              <div className="font-medium">{h.speciesName}</div>
+                              <div className="text-gray-600">Trust Level {(h.trust*100).toFixed(0)}% · {new Date(h.timestamp).toLocaleString()}</div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-sm text-gray-600">No species detected. Try another angle or closer photo.</div>
+            )}
+          </div>
+        )}
+        </div>
 
         {/* How it works - simple explainer */}
         <details className="mt-3 rounded-lg border p-3 text-sm text-gray-700">
@@ -210,28 +237,6 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
             </p>
           </div>
         </details>
-
-        {/* History list */}
-        {historyOpen && (
-          <div className="mt-3 rounded-lg border p-3">
-            <div className="font-semibold mb-2">My Scan History</div>
-            {history.length === 0 ? (
-              <div className="text-sm text-gray-600">No scans yet.</div>
-            ) : (
-              <ul className="space-y-2 max-h-56 overflow-auto">
-                {history.map((h) => (
-                  <li key={h.id} className="flex items-center gap-3 border rounded-md p-2">
-                    {h.imageDataUrl && <img src={h.imageDataUrl} alt="prev" className="h-12 w-12 object-cover rounded" />}
-                    <div className="text-sm">
-                      <div className="font-medium">{h.speciesName}</div>
-                      <div className="text-gray-600">Trust Level {(h.trust*100).toFixed(0)}% · {new Date(h.timestamp).toLocaleString()}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
         </div>
       </div>
     </div>
