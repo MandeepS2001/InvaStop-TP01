@@ -256,7 +256,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
             ) : (
               <div className="text-sm text-gray-600">No species detected. Try another angle or closer photo.</div>
             )}
-          </div>
+            </div>
           )}
         )}
 
