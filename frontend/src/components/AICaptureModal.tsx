@@ -94,7 +94,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
           // Initial state - single column for image capture
           <div className="space-y-3">
             {previewUrl ? (
-              <img src={previewUrl} alt="preview" className="w-full rounded-lg border" />
+              <img src={previewUrl} alt="preview" className="w-full h-64 object-cover rounded-lg border" />
             ) : (
               <div className="w-full h-40 rounded-lg border-2 border-dashed flex items-center justify-center text-gray-500">
                 No image selected
@@ -138,7 +138,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
             {/* Left: Image and basic info */}
             <div className="space-y-3">
               {previewUrl && (
-                <img src={previewUrl} alt="preview" className="w-full rounded-lg border" />
+                <img src={previewUrl} alt="preview" className="w-full h-64 object-cover rounded-lg border" />
               )}
               
               <div className="flex gap-2">
