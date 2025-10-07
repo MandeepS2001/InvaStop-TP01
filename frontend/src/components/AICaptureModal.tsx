@@ -90,8 +90,8 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
           <button onClick={onClose} className="rounded-md p-2 hover:bg-gray-100">✕</button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Image and controls */}
+        {!results ? (
+          /* Initial state - single column for image capture */
           <div className="space-y-3">
             {previewUrl ? (
               <img src={previewUrl} alt="preview" className="w-full rounded-lg border" />
@@ -132,9 +132,49 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
 
             {error && <div className="rounded-md bg-red-50 text-red-700 p-3 text-sm">{error}</div>}
           </div>
+        ) : (
+          /* Results state - 2-column layout */
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left: Image and basic info */}
+            <div className="space-y-3">
+              {previewUrl && (
+                <img src={previewUrl} alt="preview" className="w-full rounded-lg border" />
+              )}
+              
+              <div className="flex gap-2">
+                <button onClick={pickCamera} className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">Use Camera</button>
+                <button onClick={pickUpload} className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Upload Photo</button>
+                {/* Dedicated camera input (mobile will open camera) */}
+                <input
+                  ref={cameraInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={onFileChange}
+                />
+                {/* Dedicated upload input (no capture attribute so file picker opens) */}
+                <input
+                  ref={uploadInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={onFileChange}
+                />
+              </div>
 
-          {/* Results panel */}
-          {results && (
+              <div className="flex items-center gap-2">
+                <button onClick={submit} disabled={!file || loading} className={`px-4 py-2 rounded-lg text-white ${(!file||loading)?'bg-green-400':'bg-green-600 hover:bg-green-700'}`}>
+                  {loading ? 'Identifying…' : 'Identify'}
+                </button>
+                {!file && <span className="text-xs text-gray-500">Select a photo first</span>}
+              </div>
+
+              {error && <div className="rounded-md bg-red-50 text-red-700 p-3 text-sm">{error}</div>}
+            </div>
+
+            {/* Right: Results and actions */}
+            <div className="space-y-3">
             <div className="rounded-lg border p-3">
               {top ? (
                 <div>
@@ -218,6 +258,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
             )}
           </div>
           )}
+        )}
 
         {/* How it works - simple explainer */}
         <details className="mt-3 rounded-lg border p-3 text-sm text-gray-700">
@@ -236,7 +277,6 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
             </p>
           </div>
         </details>
-        </div>
       </div>
     </div>
   );
