@@ -175,89 +175,90 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
 
             {/* Right: Results and actions */}
             <div className="space-y-3">
-            <div className="rounded-lg border p-3">
-              {top ? (
-                <div>
-                  <div className="text-lg font-bold">{top.name}</div>
-                  <div className="text-sm text-gray-600">Trust Level: {confidencePct}% ({confidenceLabel})</div>
-                  {lowConfidence && (
-                    <div className="mt-2 rounded-md bg-yellow-50 text-yellow-800 p-2 text-sm">
-                      Trust level is low. Try a clearer photo (single plant, in focus, good lighting). Here are other possibilities:
-                      <ul className="list-disc pl-5 mt-1">
-                        {results.slice(1, 4).map((r, i) => (
-                          <li key={i}>{r.name} ({Math.round(r.confidence*100)}%)</li>
-                        ))}
-                      </ul>
+              <div className="rounded-lg border p-3">
+                {top ? (
+                  <div>
+                    <div className="text-lg font-bold">{top.name}</div>
+                    <div className="text-sm text-gray-600">Trust Level: {confidencePct}% ({confidenceLabel})</div>
+                    {lowConfidence && (
+                      <div className="mt-2 rounded-md bg-yellow-50 text-yellow-800 p-2 text-sm">
+                        Trust level is low. Try a clearer photo (single plant, in focus, good lighting). Here are other possibilities:
+                        <ul className="list-disc pl-5 mt-1">
+                          {results.slice(1, 4).map((r, i) => (
+                            <li key={i}>{r.name} ({Math.round(r.confidence*100)}%)</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Next steps */}
+                    <div className="mt-3 grid gap-2">
+                      {speciesSlug && (
+                        <Link
+                          to={`/species/${speciesSlug}`}
+                          onClick={onClose}
+                          className="inline-flex items-center justify-center rounded-md bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"
+                        >
+                          View Species Profile
+                        </Link>
+                      )}
+                      <Link
+                        to={`/map`}
+                        onClick={onClose}
+                        className="inline-flex items-center justify-center rounded-md bg-green-600 px-3 py-2 text-white hover:bg-green-700"
+                      >
+                        Report a Sighting
+                      </Link>
+                      <div className="mt-2 rounded-md bg-gray-50 p-2 text-sm text-gray-700">
+                        Quick next steps:
+                        <ul className="list-disc pl-5 mt-1">
+                          <li>If trust level is Medium/Low, take another photo closer and well‑lit.</li>
+                          <li>Open the species profile for control and prevention tips.</li>
+                          <li>Report a sighting if you suspect it's invasive in your area.</li>
+                        </ul>
+                      </div>
+                      {/* Share / Export */}
+                      <div className="flex gap-2 mt-1">
+                        <button onClick={() => shareLatestScan()} className="rounded-md bg-indigo-600 px-3 py-2 text-white hover:bg-indigo-700">Share</button>
+                        <button onClick={() => {
+                          const blob = new Blob([exportScansJson()], { type: 'application/json' });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url; a.download = 'invastop_scans.json'; a.click();
+                          URL.revokeObjectURL(url);
+                        }} className="rounded-md bg-gray-200 px-3 py-2 hover:bg-gray-300">Export</button>
+                        <button onClick={() => setHistoryOpen((v) => !v)} className="ml-auto rounded-md border px-3 py-2 hover:bg-gray-50">{historyOpen ? 'Hide' : 'View'} History</button>
+                      </div>
                     </div>
-                  )}
 
-                {/* Next steps */}
-                <div className="mt-3 grid gap-2">
-                  {speciesSlug && (
-                    <Link
-                      to={`/species/${speciesSlug}`}
-                      onClick={onClose}
-                      className="inline-flex items-center justify-center rounded-md bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"
-                    >
-                      View Species Profile
-                    </Link>
-                  )}
-                  <Link
-                    to={`/map`}
-                    onClick={onClose}
-                    className="inline-flex items-center justify-center rounded-md bg-green-600 px-3 py-2 text-white hover:bg-green-700"
-                  >
-                    Report a Sighting
-                  </Link>
-                  <div className="mt-2 rounded-md bg-gray-50 p-2 text-sm text-gray-700">
-                    Quick next steps:
-                    <ul className="list-disc pl-5 mt-1">
-                      <li>If trust level is Medium/Low, take another photo closer and well‑lit.</li>
-                      <li>Open the species profile for control and prevention tips.</li>
-                      <li>Report a sighting if you suspect it’s invasive in your area.</li>
-                    </ul>
-                  </div>
-                  {/* Share / Export */}
-                  <div className="flex gap-2 mt-1">
-                    <button onClick={() => shareLatestScan()} className="rounded-md bg-indigo-600 px-3 py-2 text-white hover:bg-indigo-700">Share</button>
-                    <button onClick={() => {
-                      const blob = new Blob([exportScansJson()], { type: 'application/json' });
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url; a.download = 'invastop_scans.json'; a.click();
-                      URL.revokeObjectURL(url);
-                    }} className="rounded-md bg-gray-200 px-3 py-2 hover:bg-gray-300">Export</button>
-                    <button onClick={() => setHistoryOpen((v) => !v)} className="ml-auto rounded-md border px-3 py-2 hover:bg-gray-50">{historyOpen ? 'Hide' : 'View'} History</button>
-                  </div>
-                </div>
-
-                {/* History list */}
-                {historyOpen && (
-                  <div className="mt-3 rounded-lg border p-3">
-                    <div className="font-semibold mb-2">My Scan History</div>
-                    {history.length === 0 ? (
-                      <div className="text-sm text-gray-600">No scans yet.</div>
-                    ) : (
-                      <ul className="space-y-2 max-h-56 overflow-auto">
-                        {history.map((h) => (
-                          <li key={h.id} className="flex items-center gap-3 border rounded-md p-2">
-                            {h.imageDataUrl && <img src={h.imageDataUrl} alt="prev" className="h-12 w-12 object-cover rounded" />}
-                            <div className="text-sm">
-                              <div className="font-medium">{h.speciesName}</div>
-                              <div className="text-gray-600">Trust Level {(h.trust*100).toFixed(0)}% · {new Date(h.timestamp).toLocaleString()}</div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
+                    {/* History list */}
+                    {historyOpen && (
+                      <div className="mt-3 rounded-lg border p-3">
+                        <div className="font-semibold mb-2">My Scan History</div>
+                        {history.length === 0 ? (
+                          <div className="text-sm text-gray-600">No scans yet.</div>
+                        ) : (
+                          <ul className="space-y-2 max-h-56 overflow-auto">
+                            {history.map((h) => (
+                              <li key={h.id} className="flex items-center gap-3 border rounded-md p-2">
+                                {h.imageDataUrl && <img src={h.imageDataUrl} alt="prev" className="h-12 w-12 object-cover rounded" />}
+                                <div className="text-sm">
+                                  <div className="font-medium">{h.speciesName}</div>
+                                  <div className="text-gray-600">Trust Level {(h.trust*100).toFixed(0)}% · {new Date(h.timestamp).toLocaleString()}</div>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     )}
                   </div>
+                ) : (
+                  <div className="text-sm text-gray-600">No species detected. Try another angle or closer photo.</div>
                 )}
               </div>
-            ) : (
-              <div className="text-sm text-gray-600">No species detected. Try another angle or closer photo.</div>
-            )}
             </div>
-          )}
+          </div>
         )}
 
         {/* How it works - simple explainer */}
