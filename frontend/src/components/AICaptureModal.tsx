@@ -218,7 +218,6 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
             )}
           </div>
           )}
-          </div>
 
         {/* How it works - simple explainer */}
         <details className="mt-3 rounded-lg border p-3 text-sm text-gray-700">
