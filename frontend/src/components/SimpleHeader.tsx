@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const SimpleHeader: React.FC = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Species Profile', href: '/education' },
+    { label: 'Invader Insight', href: '/education' },
     { label: 'Did you Know?', href: '/insights' },
-    { label: 'Map', href: '/map' },
+    { label: "Know Your Land", href: '/map' },
     { label: 'Seasonal', href: '/epic5' }
   ];
 
@@ -22,7 +33,7 @@ const SimpleHeader: React.FC = () => {
   };
 
   return (
-    <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full h-20">
+    <header className={`${isScrolled ? 'bg-green-800 shadow-lg' : 'bg-transparent'} text-white fixed top-0 inset-x-0 z-50 w-full h-20 transition-all duration-300`}>
       <div className="px-3 sm:px-4 lg:px-6 h-full">
         <div className="flex justify-between items-center h-full">
           {/* Logo as a separate entity */}

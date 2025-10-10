@@ -1,262 +1,108 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Target, TrendingUp, Trophy } from 'lucide-react';
 import PlantIdentificationQuiz from '../components/PlantIdentificationQuiz';
-
-// Utility function to scroll to top
-const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
+import LiquidEther from '../components/LiquidEther';
+import SimpleHeader from '../components/SimpleHeader';
 
 const QuizPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'quiz'>('quiz');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
-        <div className="px-3 sm:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-24">
-            {/* Logo */}
-            <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3">
-              <img src="/Invastop-Logo.png" alt="InvaStop" className="h-60 w-60 object-contain" />
-            </Link>
+      {/* Simple Header */}
+      <SimpleHeader />
 
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-2">
-              <Link 
-                to="/" 
-                onClick={scrollToTop} 
-                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
-              >
-                <span className="relative z-10">Home</span>
-              </Link>
-              <Link 
-                to="/education" 
-                onClick={scrollToTop} 
-                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
-              >
-                <span className="relative z-10">Species Profile</span>
-              </Link>
-              <Link 
-                to="/insights" 
-                onClick={scrollToTop} 
-                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
-              >
-                <span className="relative z-10">Did you Know?</span>
-              </Link>
-              <Link 
-                to="/map" 
-                onClick={scrollToTop} 
-                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
-              >
-                <span className="relative z-10">Map</span>
-              </Link>
-              <Link 
-                to="/epic5" 
-                onClick={scrollToTop} 
-                className="group relative px-6 py-3 text-white hover:text-green-100 hover:bg-gradient-to-r hover:from-green-600/20 hover:to-green-700/20 rounded-xl transition-all duration-300 font-medium border border-green-300/30 hover:border-green-300/60 hover:shadow-lg hover:shadow-green-500/20 transform hover:scale-105 active:scale-95"
-              >
-                <span className="relative z-10">Seasonal</span>
-              </Link>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden p-2 text-white hover:text-green-200 transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
+      {/* Hero Section with LiquidEther */}
+      <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-16 sm:py-20 lg:py-24 overflow-hidden">
+        {/* LiquidEther Background */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <LiquidEther
+            colors={['#22c55e', '#16a34a', '#15803d', '#166534']}
+            mouseForce={16}
+            cursorSize={130}
+            isViscous={false}
+            viscous={20}
+            iterationsViscous={16}
+            iterationsPoisson={16}
+            dt={0.016}
+            BFECC={true}
+            resolution={0.6}
+            isBounce={false}
+            autoDemo={true}
+            autoSpeed={0.3}
+            autoIntensity={1.7}
+            takeoverDuration={0.25}
+            autoResumeDelay={1500}
+            autoRampDuration={0.6}
+          />
         </div>
         
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-green-700 border-t border-green-600">
-            <div className="px-4 py-2 space-y-1">
-              <Link 
-                to="/" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/education" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Species Profile
-              </Link>
-              <Link 
-                to="/insights" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Did you Know?
-              </Link>
-              <Link 
-                to="/map" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Map
-              </Link>
-              <Link 
-                to="/epic5" 
-                className="block px-3 py-2 text-white hover:text-green-200 hover:bg-green-600 rounded-md transition-colors"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  scrollToTop();
-                }}
-              >
-                Seasonal
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
+        {/* Dark overlay for text readability - with pointer-events-none to allow mouse events through */}
+        <div className="absolute inset-0 bg-black/17 pointer-events-none"></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
+            <span className="inline-block">
+              Test Your Plant Knowledge
+            </span>
+          </h1>
+          
+          <p className="text-lg md:text-xl lg:text-2xl text-green-100 max-w-4xl mx-auto leading-relaxed">
+            Build confidence in identifying invasive plants and see the positive impact of protecting your land.
+          </p>
+        </div>
+      </section>
 
       {/* Main Content Area */}
-      <div className="pt-24 sm:pt-28">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-green-50 via-white to-blue-50 py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Test Your Plant Knowledge
-              </h1>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Build confidence in identifying invasive plants and see the positive impact of protecting your land
-              </p>
-            </div>
+      <div className="bg-gradient-to-br from-green-50 via-white to-blue-50 py-12 sm:py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Why It Matters Section */}
+          <div className="py-12 bg-white rounded-2xl shadow-lg border border-gray-200 mb-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Why It Matters</h2>
+                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                  Every time you spot and remove an invasive species, you help protect Australia's unique wildlife and keep our environment healthy.
+                </p>
+              </div>
 
-            {/* Tab Navigation */}
-            <div className="flex justify-center mb-8">
-              <div className="bg-white rounded-xl p-2 shadow-lg border border-gray-200">
-                <button
-                  onClick={() => setActiveTab('quiz')}
-                  className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
-                    'bg-green-600 text-white shadow-md'
-                  }`}
-                >
-                  <div className="flex items-center">
-                    <Target className="h-5 w-5 mr-2" />
-                    Spot the Invader
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center p-4">
+                  <div className="bg-green-100 p-3 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-green-600 text-xl">🎯</span>
                   </div>
-                </button>
-              </div>
-            </div>
-
-            {/* Tab Content */}
-            {activeTab === 'quiz' && <PlantIdentificationQuiz />}
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Why It Matters</h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Every time you spot and remove an invasive species, you help protect Australia’s unique wildlife and keep our environment healthy.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center p-6">
-                <div className="bg-green-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <Target className="h-8 w-8 text-green-600" />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Build Confidence</h3>
+                  <p className="text-sm text-gray-600">
+                    Practice identifying invasive plants in a safe environment before encountering them in real life
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Build Confidence</h3>
-                <p className="text-gray-600">
-                  Practice identifying invasive plants in a safe environment before encountering them in real life
-                </p>
-              </div>
 
-              <div className="text-center p-6">
-                <div className="bg-blue-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <Trophy className="h-8 w-8 text-blue-600" />
+                <div className="text-center p-4">
+                  <div className="bg-blue-100 p-3 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-blue-600 text-xl">🏆</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Earn Achievements</h3>
+                  <p className="text-sm text-gray-600">
+                    Unlock badges and track your progress as you become more skilled at plant identification
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Earn Achievements</h3>
-                <p className="text-gray-600">
-                  Unlock badges and track your progress as you become more skilled at plant identification
-                </p>
-              </div>
 
-              <div className="text-center p-6">
-                <div className="bg-purple-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <TrendingUp className="h-8 w-8 text-purple-600" />
+                <div className="text-center p-4">
+                  <div className="bg-purple-100 p-3 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-purple-600 text-xl">📈</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">See the Impact</h3>
+                  <p className="text-sm text-gray-600">
+                    Visualize how your actions contribute to environmental protection and land restoration
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">See the Impact</h3>
-                <p className="text-gray-600">
-                  Visualize how your actions contribute to environmental protection and land restoration
-                </p>
               </div>
             </div>
           </div>
-        </section>
+
+          {/* Quiz Content */}
+          <PlantIdentificationQuiz />
+        </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-green-800 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Logo and Copyright */}
-            <div className="md:col-span-1">
-              <div className="flex items-center space-x-2 mb-4">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-8 w-8" />
-                <span className="text-xl font-bold">invastop</span>
-              </div>
-              <p className="text-green-100">© 2025</p>
-            </div>
-
-            {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div>
-                <h3 className="font-bold mb-4">Learn</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><Link to="/education" className="hover:text-white transition-colors">Species Profiles</Link></li>
-                  <li><Link to="/insights" className="hover:text-white transition-colors">Did You Know?</Link></li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-bold mb-4">Explore</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><Link to="/map" className="hover:text-white transition-colors">Interactive Map</Link></li>
-                  <li><Link to="/epic5" className="hover:text-white transition-colors">Seasonal Analysis</Link></li>
-                  <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-bold mb-4">Contact</h3>
-                <ul className="space-y-2 text-green-100">
-                  <li><a href="mailto:EnvironmentalHealth@hv.sistem.com" className="hover:text-white transition-colors">Email Support</a></li>
-                  <li><span className="text-green-200">Environmental Health Team</span></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

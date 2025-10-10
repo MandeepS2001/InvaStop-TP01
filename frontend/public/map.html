@@ -46,6 +46,33 @@
   .btn:hover { background:#f5f7f6; }
   .stat { font-size:12px; color:#555; margin-top: 6px; }
 
+  /* Custom zoom controls positioned on map */
+  .zoom-controls { position: absolute; top: 12px; left: 12px; z-index: 1000; }
+  .zoom-btn { 
+    display: block; 
+    width: 40px; 
+    height: 40px; 
+    background: #fff; 
+    border: 1px solid #d1d5db; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #374151; 
+    margin-bottom: 2px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+  }
+  .zoom-btn:hover { 
+    background: #f9fafb; 
+    border-color: #9ca3af; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  .zoom-btn:active { 
+    background: #e5e7eb; 
+    transform: scale(0.95);
+  }
+
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
@@ -89,10 +116,6 @@
     </div>
     <div class="panel" style="grid-column: 4 / span 1; text-align:right;">
       <h3>Map</h3>
-      <div class="toolbar">
-        <button id="resetView" class="btn">Reset view</button>
-        <button id="fitToData" class="btn">Zoom to data</button>
-      </div>
       <div class="stat" id="countStats"></div>
     </div>
   </div>
@@ -108,6 +131,11 @@
   <div class="map-wrap">
     <main id="map"></main>
     <div id="legendOverlay" class="legend legend-overlay"></div>
+    <!-- Custom zoom controls positioned on map -->
+    <div class="zoom-controls">
+      <button id="zoomIn" class="zoom-btn">+</button>
+      <button id="zoomOut" class="zoom-btn">−</button>
+    </div>
   </div>
 </div>
 
@@ -253,15 +281,7 @@ function renderChips() {
     }
   };
   
-  // Lightweight reset: do not reload data to avoid UI hang
-  document.getElementById("resetView").onclick = () => {
-    MAP.setCenter({ lat: AU_CENTER[0], lng: AU_CENTER[1] });
-    MAP.setZoom(AU_ZOOM);
-    locationStatsEl.textContent = "";
-    postcodeEl.value = "";
-    // Reapply current filters to ensure markers are in sync
-    applyFiltersAndRender();
-  };
+  // Note: resetView button removed, zoom controls added instead
 }
 
 function renderLegend() {
@@ -426,12 +446,20 @@ function drawMarkers(rows) {
 
 // --- Wire UI buttons ---
 document.getElementById("applyYear").onclick = () => applyFiltersAndRender();
-document.getElementById("resetView").onclick = () => MAP.setCenter({lat: AU_CENTER[0], lng: AU_CENTER[1]}) || MAP.setZoom(AU_ZOOM);
-document.getElementById("fitToData").onclick = () => {
-  const bounds = new google.maps.LatLngBounds();
-  if (!CURRENT_MARKERS.length) return;
-  CURRENT_MARKERS.forEach(m => bounds.extend(m.getPosition()));
-  MAP.fitBounds(bounds, 40);
+
+// Custom zoom controls positioned on map
+document.getElementById("zoomIn").onclick = () => {
+  if (MAP) {
+    const currentZoom = MAP.getZoom();
+    MAP.setZoom(currentZoom + 1);
+  }
+};
+
+document.getElementById("zoomOut").onclick = () => {
+  if (MAP) {
+    const currentZoom = MAP.getZoom();
+    MAP.setZoom(currentZoom - 1);
+  }
 };
 
 // Seasonal CTA button handler (optional element)

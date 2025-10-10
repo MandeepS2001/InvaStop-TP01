@@ -37,6 +37,40 @@ const TaxonThreatChart: React.FC = () => {
           <h3 className="text-2xl font-bold text-gray-800 mb-3">How Much Impact Do Problem Plants Have?</h3>
           <p className="text-gray-600">This shows how much damage each plant causes across Australia</p>
       </div>
+
+        {/* Simple Impact Scale */}
+        <div className="bg-gradient-to-r from-green-50 to-red-50 rounded-xl p-6 border-2 border-gray-200 mb-8">
+          <h4 className="text-lg font-bold text-gray-800 mb-4 text-center">What Do These Numbers Mean?</h4>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+                <span className="text-white text-xl">✓</span>
+                    </div>
+              <h5 className="font-bold text-green-800 mb-1">70-80%</h5>
+              <p className="text-sm text-green-600">Medium Threat Level</p>
+              <p className="text-xs text-gray-600 mt-1">These plants cause problems but can be managed</p>
+                      </div>
+                      
+            <div className="text-center">
+              <div className="w-12 h-12 bg-orange-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+                <span className="text-white text-xl">⚠</span>
+                    </div>
+              <h5 className="font-bold text-orange-800 mb-1">80-90%</h5>
+              <p className="text-sm text-orange-600">High Threat Level</p>
+              <p className="text-xs text-gray-600 mt-1">These plants need regular attention</p>
+          </div>
+            
+            <div className="text-center">
+              <div className="w-12 h-12 bg-red-500 rounded-full mx-auto mb-2 flex items-center justify-center">
+                <span className="text-white text-xl">!</span>
+                                  </div>
+              <h5 className="font-bold text-red-800 mb-1">90-100%</h5>
+              <p className="text-sm text-red-600">Very High Threat Level</p>
+              <p className="text-xs text-gray-600 mt-1">These plants need immediate action</p>
+            </div>
+        </div>
+      </div>
       
         {/* Simple Bar Chart Visualization */}
         <div className="space-y-4 mb-8">
@@ -72,7 +106,7 @@ const TaxonThreatChart: React.FC = () => {
                 {/* Impact Score */}
                 <div className="flex-shrink-0 text-right">
                   <div className="text-2xl font-bold text-gray-800">{plant.impact}%</div>
-                  <div className="text-xs text-gray-500">Impact Level</div>
+                  <div className="text-xs text-gray-500">Threat Level</div>
           </div>
         </div>
 
@@ -87,39 +121,6 @@ const TaxonThreatChart: React.FC = () => {
           ))}
           </div>
 
-        {/* Simple Impact Scale */}
-        <div className="bg-gradient-to-r from-green-50 to-red-50 rounded-xl p-6 border-2 border-gray-200">
-          <h4 className="text-lg font-bold text-gray-800 mb-4 text-center">What Do These Numbers Mean?</h4>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-green-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-                <span className="text-white text-xl">✓</span>
-                    </div>
-              <h5 className="font-bold text-green-800 mb-1">70-80%</h5>
-              <p className="text-sm text-green-600">Medium Impact</p>
-              <p className="text-xs text-gray-600 mt-1">These plants cause problems but can be managed</p>
-                      </div>
-                      
-            <div className="text-center">
-              <div className="w-12 h-12 bg-orange-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-                <span className="text-white text-xl">⚠</span>
-                    </div>
-              <h5 className="font-bold text-orange-800 mb-1">80-90%</h5>
-              <p className="text-sm text-orange-600">High Impact</p>
-              <p className="text-xs text-gray-600 mt-1">These plants need regular attention</p>
-          </div>
-            
-            <div className="text-center">
-              <div className="w-12 h-12 bg-red-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-                <span className="text-white text-xl">!</span>
-                                  </div>
-              <h5 className="font-bold text-red-800 mb-1">90-100%</h5>
-              <p className="text-sm text-red-600">Very High Impact</p>
-              <p className="text-xs text-gray-600 mt-1">These plants need immediate action</p>
-            </div>
-        </div>
-      </div>
       
         {/* Simple Summary */}
         <div className="mt-6 bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6 border-2 border-green-200">

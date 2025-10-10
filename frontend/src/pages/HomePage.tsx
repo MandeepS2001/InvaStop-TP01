@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LiquidEther from '../components/LiquidEther';
 import SimpleHeader from '../components/SimpleHeader';
+import AICaptureModal from '../components/AICaptureModal';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
@@ -69,6 +70,7 @@ const CountUp: React.FC<{ end: number; duration?: number; prefix?: string; suffi
 const HomePage: React.FC = () => {
   const [expandedStat, setExpandedStat] = useState<number | null>(null);
   const navigate = useNavigate();
+  const [aiOpen, setAiOpen] = useState(false);
 
   // Static statistics - no API call needed
   const statistics = [
@@ -115,18 +117,18 @@ const HomePage: React.FC = () => {
             <SimpleHeader />
 
       {/* Hero Section - Edge to Edge */}
-      <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 pt-24 sm:pt-28 w-full overflow-visible">
+      <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 pt-48 sm:pt-52 w-full overflow-visible">
         {/* LiquidEther Background */}
         <div className="absolute inset-0 w-full h-full z-0">
           <LiquidEther
             colors={['#22c55e', '#16a34a', '#15803d', '#166534']}
-            mouseForce={20}
+            mouseForce={40}
             cursorSize={150}
             isViscous={false}
             viscous={25}
             iterationsViscous={20}
             iterationsPoisson={20}
-            dt={0.018}
+            dt={0.025}
             BFECC={true}
             resolution={0.7}
             isBounce={false}
@@ -145,7 +147,7 @@ const HomePage: React.FC = () => {
         <div className="relative z-10 px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side Content */}
-            <div className="text-center lg:text-left">
+            <div className="text-center lg:text-left mt-8 lg:mt-12">
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
                 <span className="inline-block">
                   Stop problem plants from taking over your property.
@@ -157,13 +159,10 @@ const HomePage: React.FC = () => {
                 </span>
               </p>
               <button 
-                onClick={() => {
-                  navigate('/education');
-                  scrollToTop();
-                }}
+                onClick={() => setAiOpen(true)}
                 className="group relative bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl border border-green-400/30 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto font-semibold shadow-lg hover:shadow-xl hover:shadow-green-500/25 hover:scale-105 transform"
               >
-                <span className="relative z-10">Protect Your Patch →</span>
+                <span className="relative z-10">Weed Watcher →</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
             </div>
@@ -291,7 +290,6 @@ const HomePage: React.FC = () => {
                 onClick={scrollToTop}
                 className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 via-green-700 to-green-800 hover:from-green-500 hover:via-green-600 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 text-lg shadow-xl hover:shadow-2xl hover:shadow-green-500/30 transform hover:scale-105 border-2 border-green-500/20 hover:border-green-400/40"
               >
-                <span className="mr-3 text-xl group-hover:rotate-12 transition-transform duration-300">📊</span>
                 <span className="group-hover:tracking-wide transition-all duration-300">Did you Know?</span>
                 <span className="ml-3 text-lg group-hover:translate-x-2 transition-transform duration-300">→</span>
               </Link>
@@ -301,42 +299,9 @@ const HomePage: React.FC = () => {
       </section>
 
 
-      {/* Footer */}
-      <footer className="bg-green-800 text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Logo and Copyright */}
-            <div className="md:col-span-1 flex flex-col items-start">
-              <div className="flex flex-col items-start mb-3">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
-              </div>
-              <p className="text-green-100 text-sm">© 2025</p>
-            </div>
-
-            {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-bold mb-3 text-sm">Products</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Species Database</Link></li>
-                  <li><Link to="/education" onClick={scrollToTop} className="hover:text-white transition-colors">Educational Resources</Link></li>
-                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Mapping Tools</Link></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="font-bold mb-3 text-sm">About Us</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Who We Are</span></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">FAQ</span></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Our Mission</span></li>
-                </ul>
-              </div>
-              
-            </div>
-          </div>
-        </div>
-      </footer>
+      
+      {/* AI Capture Modal */}
+      <AICaptureModal open={aiOpen} onClose={() => setAiOpen(false)} />
     </div>
   );
 };

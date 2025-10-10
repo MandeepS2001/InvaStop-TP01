@@ -46,7 +46,7 @@ const Epic5Page: React.FC = () => {
     setAreaName('');
   };
 
-  // Function to fetch area name for a postcode
+  // Function to fetch area name for a postcode from AWS RDS database
   const fetchAreaName = async (postcode: string) => {
     if (!postcode) {
       setAreaName('');
@@ -55,16 +55,27 @@ const Epic5Page: React.FC = () => {
 
     try {
       const apiUrl = process.env.REACT_APP_API_URL || 'https://invastopbackend.vercel.app/api/v1';
+      console.log(`Fetching area name for postcode ${postcode} from AWS RDS database...`);
+      
       const response = await fetch(`${apiUrl}/epic1/postcode-lookup/${postcode}`);
       
       if (response.ok) {
         const data = await response.json();
-        setAreaName(data.area_name || '');
+        console.log(`Received data from AWS RDS:`, data);
+        
+        if (data.area_name) {
+          setAreaName(data.area_name);
+          console.log(`Area name set to: ${data.area_name} (source: ${data.source || 'unknown'})`);
+        } else {
+          console.warn('No area name returned from API');
+          setAreaName('');
+        }
       } else {
+        console.error(`API request failed with status: ${response.status}`);
         setAreaName('');
       }
     } catch (err) {
-      console.error('Error fetching area name:', err);
+      console.error('Error fetching area name from AWS RDS:', err);
       setAreaName('');
     }
   };
@@ -283,9 +294,9 @@ const Epic5Page: React.FC = () => {
       <SimpleHeader />
 
       {/* Main Content Area */}
-      <div className="pt-20">
+      <div>
         {/* Hero Section with LiquidEther */}
-        <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 py-12 sm:py-16 lg:py-20 overflow-hidden">
+        <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 py-16 sm:py-20 lg:py-24 overflow-hidden">
           {/* LiquidEther Background */}
           <div className="absolute inset-0 w-full h-full z-0">
             <LiquidEther
@@ -782,42 +793,6 @@ const Epic5Page: React.FC = () => {
         </section>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-green-800 text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Logo and Copyright */}
-            <div className="md:col-span-1 flex flex-col items-start">
-              <div className="flex flex-col items-start mb-3">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
-              </div>
-              <p className="text-green-100 text-sm">© 2025</p>
-            </div>
-
-            {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-bold mb-3 text-sm">Products</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Species Database</Link></li>
-                  <li><Link to="/education" onClick={scrollToTop} className="hover:text-white transition-colors">Educational Resources</Link></li>
-                  <li><Link to="/map" onClick={scrollToTop} className="hover:text-white transition-colors">Mapping Tools</Link></li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-bold mb-3 text-sm">About Us</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Who We Are</span></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">FAQ</span></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Our Mission</span></li>
-                </ul>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </footer>
       <AICaptureModal open={aiOpen} onClose={() => setAiOpen(false)} />
     </div>
   );

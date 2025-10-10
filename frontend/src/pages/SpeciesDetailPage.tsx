@@ -867,9 +867,9 @@ const SpeciesDetailPage: React.FC = () => {
       <SimpleHeader />
 
       {/* Page Content */}
-      <div className="pt-24 sm:pt-28">
+      <div>
         {/* Enhanced Back Button Header */}
-        <div className="relative bg-gradient-to-r from-green-800 via-green-700 to-green-900 text-white py-8 sm:py-12 overflow-hidden">
+        <div className="relative bg-gradient-to-r from-green-800 via-green-700 to-green-900 text-white py-16 sm:py-20 lg:py-24 overflow-hidden">
           {/* Animated Background Elements */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400/10 rounded-full blur-3xl animate-pulse"></div>
@@ -1382,42 +1382,6 @@ const SpeciesDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-green-800 text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Logo and Copyright */}
-            <div className="md:col-span-1 flex flex-col items-start">
-              <div className="flex flex-col items-start mb-3">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
-              </div>
-              <p className="text-green-100 text-sm">© 2025</p>
-            </div>
-
-            {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-bold mb-3 text-sm">Products</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><a href="#" className="hover:text-white transition-colors">Species Database</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Educational Resources</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Mapping Tools</a></li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="font-bold mb-3 text-sm">About Us</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><a href="#" className="hover:text-white transition-colors">Who We Are</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Our Mission</a></li>
-                </ul>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </footer>
       </div>
     </div>
   );
