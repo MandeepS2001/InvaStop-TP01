@@ -38,6 +38,7 @@ const Epic5Page: React.FC = () => {
   const [locationLoading, setLocationLoading] = useState(false);
   const [areaName, setAreaName] = useState<string>('');
   const [aiOpen, setAiOpen] = useState(false);
+  const [postcodeLoading, setPostcodeLoading] = useState(false);
   const postcodeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleClearPostcode = () => {
@@ -46,38 +47,168 @@ const Epic5Page: React.FC = () => {
     setAreaName('');
   };
 
-  // Function to fetch area name for a postcode from AWS RDS database
+  // Enhanced function to fetch area name for a postcode with multiple fallbacks
   const fetchAreaName = async (postcode: string) => {
     if (!postcode) {
       setAreaName('');
+      setPostcodeLoading(false);
       return;
     }
 
+    setPostcodeLoading(true);
+    console.log(`Looking up area name for postcode ${postcode}...`);
+
+    // Try AWS RDS first
     try {
       const apiUrl = process.env.REACT_APP_API_URL || 'https://invastopbackend.vercel.app/api/v1';
-      console.log(`Fetching area name for postcode ${postcode} from AWS RDS database...`);
+      console.log(`Trying AWS RDS database...`);
       
-      const response = await fetch(`${apiUrl}/epic1/postcode-lookup/${postcode}`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(`${apiUrl}/epic1/postcode-lookup/${postcode}`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
       
       if (response.ok) {
         const data = await response.json();
         console.log(`Received data from AWS RDS:`, data);
         
-        if (data.area_name) {
+        // Check if the area_name looks valid (not corrupted like "NSW, 229" or generic "Area {postcode}")
+        if (data.area_name && 
+            !data.area_name.includes('NSW, 2') && 
+            !data.area_name.includes('VIC, 2') &&
+            !data.area_name.includes('QLD, 2') &&
+            !data.area_name.includes('WA, 2') &&
+            !data.area_name.includes('SA, 2') &&
+            !data.area_name.includes('TAS, 2') &&
+            !data.area_name.includes('ACT, 2') &&
+            !data.area_name.includes('NT, 2') &&
+            !data.area_name.startsWith('Area ') &&
+            data.source !== 'unknown') {
           setAreaName(data.area_name);
-          console.log(`Area name set to: ${data.area_name} (source: ${data.source || 'unknown'})`);
+          setPostcodeLoading(false);
+          console.log(`Area name set to: ${data.area_name} (source: AWS RDS)`);
+          return;
         } else {
-          console.warn('No area name returned from API');
-          setAreaName('');
+          console.log(`AWS RDS returned invalid data: ${data.area_name} (source: ${data.source}), trying external APIs`);
         }
-      } else {
-        console.error(`API request failed with status: ${response.status}`);
-        setAreaName('');
       }
     } catch (err) {
-      console.error('Error fetching area name from AWS RDS:', err);
-      setAreaName('');
+      console.warn('AWS RDS lookup failed, trying external API:', err);
     }
+
+    // Fallback to external Australian postcode API (Handy API)
+    try {
+      console.log(`Trying Handy API for postcode lookup...`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(`https://data.handyapi.com/au-postcodes/${postcode}`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+        if (response.ok) {
+          const data = await response.json();
+          console.log(`Received data from Handy API:`, data);
+          
+          if (data.Status === 'SUCCESS' && data.Locations && data.Locations.length > 0) {
+            // Handy API returns an array of locations, use the first one
+            const location = data.Locations[0];
+            const areaName = location.Name;
+            setAreaName(areaName);
+            setPostcodeLoading(false);
+            console.log(`Area name set to: ${areaName} (source: Handy API)`);
+            return;
+          } else if (data.valid && (data.locality || data.suburb || data.area || data.name)) {
+            // Fallback for other API formats
+            const areaName = data.locality || data.suburb || data.area || data.name;
+            setAreaName(areaName);
+            setPostcodeLoading(false);
+            console.log(`Area name set to: ${areaName} (source: Handy API)`);
+            return;
+          }
+        }
+    } catch (err) {
+      console.warn('Handy API lookup failed, trying alternative API:', err);
+    }
+
+    // Alternative external API fallback
+    try {
+      console.log(`Trying alternative postcode API...`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch(`https://postcodeapi.com.au/postcode/${postcode}`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log(`Received data from alternative API:`, data);
+        
+        if (data.suburb || data.locality || data.area || data.name) {
+          const areaName = data.suburb || data.locality || data.area || data.name;
+          setAreaName(areaName);
+          setPostcodeLoading(false);
+          console.log(`Area name set to: ${areaName} (source: Alternative API)`);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Alternative API lookup failed, trying Google Geocoding:', err);
+    }
+
+    // Fallback to Google Geocoding API
+    try {
+      const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+      if (apiKey) {
+        console.log(`Trying Google Geocoding API...`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${postcode},Australia&key=${apiKey}`,
+          { signal: controller.signal }
+        );
+        
+        clearTimeout(timeoutId);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log(`Received data from Google:`, data);
+          
+          if (data.results && data.results.length > 0) {
+            const result = data.results[0];
+            // Extract locality or administrative_area_level_2
+            const locality = result.address_components.find((component: any) => 
+              component.types.includes('locality') || 
+              component.types.includes('administrative_area_level_2')
+            );
+            
+            if (locality) {
+              setAreaName(locality.long_name);
+              setPostcodeLoading(false);
+              console.log(`Area name set to: ${locality.long_name} (source: Google Geocoding)`);
+              return;
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Google Geocoding failed:', err);
+    }
+
+    // If all APIs fail, leave area name empty
+    console.log(`All postcode lookup methods failed for postcode ${postcode}`);
+    setAreaName('');
+    setPostcodeLoading(false);
   };
 
   // Fallback function to approximate postcode from coordinates
@@ -228,7 +359,11 @@ const Epic5Page: React.FC = () => {
   // Fetch seasonal data when season or postcode changes (with debounce for postcode)
   // Fetch area name on component mount
   useEffect(() => {
-    fetchAreaName(postcode);
+    if (postcode) {
+      fetchAreaName(postcode);
+    } else {
+      setAreaName('');
+    }
   }, [postcode]);
 
 
@@ -261,9 +396,10 @@ const Epic5Page: React.FC = () => {
     };
 
     // Debounce postcode changes - only fetch after user stops typing for 500ms
+    // Also wait a bit longer to ensure area name lookup completes
     const timeoutId = setTimeout(() => {
       fetchSeasonalData();
-    }, postcode ? 500 : 0); // No delay for season changes, 500ms delay for postcode
+    }, postcode ? 1000 : 0); // Increased delay to 1 second to allow area name lookup to complete
 
     return () => clearTimeout(timeoutId);
   }, [selectedSeason, postcode]);
@@ -470,7 +606,12 @@ const Epic5Page: React.FC = () => {
                         {selectedSeason} Risk Summary
                       </h2>
                       <p className="text-blue-700 text-lg">
-                        {areaName ? `for ${areaName}` : `for ${seasonalData.location}`}
+                        {postcodeLoading ? (
+                          <span className="flex items-center">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-700 mr-2"></div>
+                            Looking up area...
+                          </span>
+                        ) : areaName ? `for ${areaName}` : (seasonalData?.location ? `for Area ${seasonalData.location}` : '')}
                       </p>
                     </div>
               </div>
@@ -594,11 +735,6 @@ const Epic5Page: React.FC = () => {
                   </ul>
                                  </div>
                   
-                  <div className="pt-4">
-                                  <button onClick={() => setAiOpen(true)} className="bg-yellow-400 hover:bg-yellow-300 text-red-800 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
-                                    🚨 Report Sighting
-                                  </button>
-                  </div>
                 </div>
               </div>
                            </>
@@ -695,11 +831,6 @@ const Epic5Page: React.FC = () => {
                                    </ul>
                                  </div>
                                  
-                                 <div className="pt-4">
-                                   <button onClick={() => setAiOpen(true)} className="bg-yellow-200 hover:bg-yellow-100 text-yellow-800 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
-                                     📍 Report Sighting
-                                   </button>
-                    </div>
                   </div>
                     </div>
                            </>
@@ -716,7 +847,7 @@ const Epic5Page: React.FC = () => {
                     Top Invasive Species in {selectedSeason}
                   </h2>
                   <p className="text-gray-600 text-lg">
-                    Based on sighting data for {areaName || seasonalData.location}
+                    Based on sighting data for {areaName || (seasonalData?.location ? `Area ${seasonalData.location}` : 'Unknown Area')}
                   </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -781,6 +912,17 @@ const Epic5Page: React.FC = () => {
                               </div>
                             )}
                           </div>
+
+                          <div className="mt-4 pt-4 border-t border-gray-200">
+                            <Link
+                              to={`/species/${encodeURIComponent(speciesName)}`}
+                              onClick={scrollToTop}
+                              className="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200 text-sm"
+                            >
+                              <span>View Species Profile</span>
+                              <span className="ml-2">→</span>
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     );
@@ -789,6 +931,26 @@ const Epic5Page: React.FC = () => {
               </div>
             )}
 
+          </div>
+        </section>
+
+        {/* Simple CTA to Patch Planner */}
+        <section className="relative py-12 bg-gradient-to-br from-green-600 via-green-700 to-green-800">
+          <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+              Ready to Plan Your Land?
+            </h2>
+            <p className="text-lg text-green-100 mb-8">
+              Test different land management scenarios and see how they affect invasive plant risk.
+            </p>
+            <Link
+              to="/land-simulator"
+              onClick={scrollToTop}
+              className="inline-flex items-center justify-center px-6 py-3 bg-white text-green-700 font-bold rounded-lg transition-all duration-300 hover:shadow-lg transform hover:scale-105"
+            >
+              <span>Start Planning Your Patch</span>
+              <span className="ml-2">→</span>
+            </Link>
           </div>
         </section>
       </div>

@@ -35,8 +35,8 @@ const TaxonThreatChart: React.FC = () => {
       <div className="bg-white border border-gray-200 rounded-xl p-8">
         <div className="text-center mb-8">
           <h3 className="text-2xl font-bold text-gray-800 mb-3">How Much Impact Do Problem Plants Have?</h3>
-          <p className="text-gray-600">This shows how much damage each plant causes across Australia</p>
       </div>
+
 
         {/* Simple Impact Scale */}
         <div className="bg-gradient-to-r from-green-50 to-red-50 rounded-xl p-6 border-2 border-gray-200 mb-8">
@@ -122,16 +122,6 @@ const TaxonThreatChart: React.FC = () => {
           </div>
 
       
-        {/* Simple Summary */}
-        <div className="mt-6 bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6 border-2 border-green-200">
-          <div className="text-center">
-            <div className="text-3xl mb-3">📊</div>
-            <h4 className="text-lg font-bold text-gray-800 mb-2">The Big Picture</h4>
-            <p className="text-gray-600">
-              All these plants cause problems, but some are much worse than others. The higher the percentage, the more damage they do to farms and native plants.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );

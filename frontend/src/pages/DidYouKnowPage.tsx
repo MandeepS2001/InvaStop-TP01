@@ -1,6 +1,5 @@
 import React from 'react';
 import TaxonThreatChart from '../components/TaxonThreatChart';
-import SeasonalMetrics from '../components/SeasonalMetrics';
 import { Link } from 'react-router-dom';
 import LiquidEther from '../components/LiquidEther';
 import SimpleHeader from '../components/SimpleHeader';
@@ -10,16 +9,7 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-const getAustralianSeason = (date: Date): 'Summer' | 'Autumn' | 'Winter' | 'Spring' => {
-  const month = date.getMonth() + 1; // 1-12
-  if (month === 12 || month === 1 || month === 2) return 'Summer';
-  if (month >= 3 && month <= 5) return 'Autumn';
-  if (month >= 6 && month <= 8) return 'Winter';
-  return 'Spring';
-};
-
 const DidYouKnowPage: React.FC = () => {
-  const currentSeason = getAustralianSeason(new Date());
 
   return (
     <div className="relative min-h-screen bg-neutral-50">
@@ -90,32 +80,6 @@ const DidYouKnowPage: React.FC = () => {
 
           {/* Removed: Real Stories from Australian Farms section */}
 
-          {/* How Urgent Are These Plants */}
-          <div className="mb-16">
-            <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
-              <h3 className="text-center text-2xl font-semibold text-gray-900 mb-6">How Urgent Are These Plants?</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="rounded-xl border border-red-200 bg-red-100 p-6 text-center">
-                  <div className="text-3xl mb-2">⚠️</div>
-                  <div className="text-4xl font-bold text-red-700">5</div>
-                  <div className="mt-1 font-semibold text-red-800">Act Now</div>
-                  <p className="mt-2 text-sm text-red-700">These plants need quick action to stop them spreading</p>
-                </div>
-                <div className="rounded-xl border border-amber-200 bg-amber-100 p-6 text-center">
-                  <div className="text-3xl mb-2">👀</div>
-                  <div className="text-4xl font-bold text-amber-700">0</div>
-                  <div className="mt-1 font-semibold text-amber-800">Keep Watch</div>
-                  <p className="mt-2 text-sm text-amber-700">Check on these plants regularly to make sure they don't spread</p>
-                </div>
-                <div className="rounded-xl border border-emerald-200 bg-emerald-100 p-6 text-center">
-                  <div className="text-3xl mb-2">✅</div>
-                  <div className="text-4xl font-bold text-emerald-700">0</div>
-                  <div className="mt-1 font-semibold text-emerald-800">Under Control</div>
-                  <p className="mt-2 text-sm text-emerald-700">These plants are being managed well and aren't spreading</p>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* Simple Next Steps */}
           <section className="relative py-12 sm:py-16 bg-gradient-to-br from-green-50 via-white to-green-50">

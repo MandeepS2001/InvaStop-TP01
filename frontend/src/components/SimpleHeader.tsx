@@ -21,7 +21,8 @@ const SimpleHeader: React.FC = () => {
     { label: 'Invader Insight', href: '/education' },
     { label: 'Did you Know?', href: '/insights' },
     { label: "Know Your Land", href: '/map' },
-    { label: 'Seasonal', href: '/epic5' }
+    { label: 'Seasonal', href: '/epic5' },
+    { label: 'Patch Planner', href: '/land-simulator' }
   ];
 
   const isActive = (href: string) => {
