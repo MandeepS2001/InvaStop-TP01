@@ -363,6 +363,8 @@ def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epochs:int=50, 
     train_setting = {
         "data": config_path,
         "imgsz": img_size,
+        "rect": False,
+        "multi_scale": False,
         "epochs": epochs,
         "batch": batch_size,
         "rect": True,
