@@ -908,13 +908,13 @@ const LandManagementSimulator: React.FC = () => {
               <div className="text-4xl mb-4">📱</div>
               <h3 className="text-xl font-bold text-white mb-3">Identify Plants</h3>
               <p className="text-green-100 mb-4">
-                Use our AI plant identifier to quickly identify any suspicious plants you find.
+                Use Spot & Stop to quickly identify any suspicious plants you find.
               </p>
               <button
                 onClick={() => setAiOpen(true)}
                 className="inline-flex items-center justify-center px-6 py-3 bg-white text-green-700 font-bold rounded-lg transition-all duration-300 hover:shadow-lg transform hover:scale-105"
               >
-                <span>Weed Watcher</span>
+                <span>Spot & Stop</span>
                 <span className="ml-2">→</span>
               </button>
             </div>

@@ -403,30 +403,30 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="w-full max-w-6xl rounded-3xl bg-white shadow-2xl border border-gray-100 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto">
+      <div className="w-full max-w-sm sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl max-h-[95vh] rounded-3xl bg-white shadow-2xl border border-gray-100 overflow-hidden flex flex-col my-2 sm:my-4">
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-green-600 to-green-700 px-8 py-6">
+        <div className="relative bg-gradient-to-r from-green-600 to-green-700 px-4 sm:px-6 py-3 sm:py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="text-white text-xl">🔍</span>
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <span className="text-white text-lg sm:text-xl">🔍</span>
               </div>
-              <h2 className="text-2xl font-bold text-white">Identify My Plant</h2>
+              <h2 className="text-lg sm:text-2xl font-bold text-white">Identify My Plant</h2>
             </div>
             <button 
               onClick={onClose} 
-              className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-colors duration-200"
+              className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-colors duration-200"
             >
               ✕
             </button>
           </div>
         </div>
 
-        <div className="p-8">
+        <div className="p-3 sm:p-4 md:p-6 flex-1 overflow-y-auto">
           {!results ? (
             // Initial state - single column for image capture
-            <div className="max-w-2xl mx-auto space-y-8">
+            <div className="max-w-2xl mx-auto space-y-3 sm:space-y-4 md:space-y-6">
               {/* Image Preview Area */}
               <div className="relative">
                 {previewUrl ? (
@@ -434,15 +434,15 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                     <img 
                       src={previewUrl} 
                       alt="preview" 
-                      className="w-full h-80 object-cover rounded-2xl shadow-lg border-4 border-gray-100 transition-transform duration-300 group-hover:scale-105" 
+                      className="w-full h-40 sm:h-48 md:h-56 object-cover rounded-2xl shadow-lg border-4 border-gray-100 transition-transform duration-300 group-hover:scale-105" 
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                 ) : (
-                  <div className="w-full h-80 rounded-2xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col items-center justify-center text-gray-500 hover:border-green-400 hover:bg-green-50 transition-all duration-300">
-                    <div className="text-6xl mb-4">📸</div>
-                    <p className="text-lg font-medium">No image selected</p>
-                    <p className="text-sm">Choose a photo to get started</p>
+                  <div className="w-full h-40 sm:h-48 md:h-56 rounded-2xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col items-center justify-center text-gray-500 hover:border-green-400 hover:bg-green-50 transition-all duration-300">
+                    <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">📸</div>
+                    <p className="text-base sm:text-lg font-medium">No image selected</p>
+                    <p className="text-xs sm:text-sm">Choose a photo to get started</p>
                   </div>
                 )}
               </div>
@@ -524,17 +524,17 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
               />
             </div>
           ) : (
-            // Results state - enhanced 2-column layout
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-              {/* Left: Image, controls, and history */}
-              <div className="space-y-6">
+            // Results state - responsive 2-column layout
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+              {/* Left Column: Image and Results */}
+              <div className="space-y-3">
                 <div className="relative">
                   {previewUrl && (
                     <div className="relative group">
                       <img 
                         src={previewUrl} 
                         alt="preview" 
-                        className="w-full h-80 object-cover rounded-2xl shadow-lg border-4 border-gray-100" 
+                        className="w-full h-48 sm:h-56 object-cover rounded-2xl shadow-lg border-4 border-gray-100" 
                       />
                       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1">
                         <span className="text-sm font-medium text-gray-700">Your Photo</span>
@@ -543,9 +543,70 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                   )}
                 </div>
                 
+                {/* AI Prediction Card */}
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl border-2 border-gray-100 p-3 shadow-lg">
+                  {top ? (
+                    <div>
+                      {/* Species Name */}
+                      <div className="text-center mb-3">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">{top.name}</h3>
+                        <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${getConfidenceColor(top.confidence)}`}>
+                          <span className="mr-2">
+                            {top.confidence >= 0.85 ? '✅' : top.confidence >= 0.6 ? '⚠️' : '❓'}
+                          </span>
+                          Trust Level: {confidencePct}% ({confidenceLabel})
+                        </div>
+                      </div>
+
+                      {/* Low Confidence Warning */}
+                      {lowConfidence && (
+                        <div className="mb-3 p-2 bg-yellow-50 border border-yellow-200 rounded-xl">
+                          <div className="flex items-start">
+                            <span className="text-yellow-600 text-lg mr-2 mt-0.5">⚠️</span>
+                            <div>
+                              <h4 className="font-semibold text-yellow-800 mb-1 text-sm">Low Trust Level</h4>
+                              <p className="text-yellow-700 text-xs mb-2">
+                                Try a clearer photo (single plant, in focus, good lighting) for better results.
+                              </p>
+                              <p className="text-yellow-700 text-xs font-medium">Other possibilities:</p>
+                              <ul className="list-disc pl-4 mt-1 text-yellow-700 text-xs">
+                                {results.slice(1, 4).map((r, i) => (
+                                  <li key={i}>{r.name} ({Math.round(r.confidence*100)}%)</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Species Information Card */}
+                      <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl border-2 border-green-200 p-3">
+                        <div className="text-center">
+                          <div className="text-4xl mb-2">🌿</div>
+                          <h4 className="text-lg font-bold text-gray-900 mb-2">Plant Identified</h4>
+                          <p className="text-gray-600 mb-2 text-sm">
+                            Your photo has been successfully analyzed by our AI system.
+                          </p>
+                          <div className="inline-flex items-center px-3 py-1 bg-white rounded-full shadow-sm">
+                            <span className="text-xs font-medium text-gray-700">
+                              Analysis complete • {new Date().toLocaleTimeString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-6">
+                      <div className="text-4xl mb-3">🤔</div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">No Species Detected</h3>
+                      <p className="text-gray-600 text-sm">Try another angle or closer photo for better results.</p>
+                    </div>
+                  )}
+                </div>
+
                 {/* New Photo Buttons */}
-                <div className="bg-gray-50 rounded-2xl p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3 text-center">Try Another Photo</h3>
+                <div className="bg-gray-50 rounded-2xl p-3">
+                  <h3 className="text-base font-semibold text-gray-900 mb-2 text-center">Try Another Photo</h3>
                   <div className="flex gap-3">
                     <button 
                       onClick={pickCamera} 
@@ -562,41 +623,6 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                       Upload
                     </button>
                   </div>
-                </div>
-
-                {/* Scan History - Always Visible */}
-                <div className="bg-white rounded-2xl border border-gray-200 p-4">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                    <span className="mr-2">📚</span>
-                    Scan History
-                  </h4>
-                  {history.length === 0 ? (
-                    <div className="text-center py-6">
-                      <div className="text-3xl mb-2">📸</div>
-                      <p className="text-gray-600 text-sm">No previous scans</p>
-                      <p className="text-gray-500 text-xs">Your identification history will appear here</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {history.map((h) => (
-                        <div key={h.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                          {h.imageDataUrl && (
-                            <img 
-                              src={h.imageDataUrl} 
-                              alt="prev" 
-                              className="h-10 w-10 object-cover rounded-md border border-gray-200 flex-shrink-0" 
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium text-gray-900 text-sm truncate">{h.speciesName}</div>
-                            <div className="text-xs text-gray-600">
-                              Trust {(h.trust*100).toFixed(0)}% · {new Date(h.timestamp).toLocaleDateString()}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
 
                 {/* Hidden inputs */}
@@ -617,131 +643,102 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                 />
               </div>
 
-              {/* Right: Results and actions */}
-              <div className="space-y-6">
-                {/* AI Prediction Card */}
-                <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl border-2 border-gray-100 p-6 shadow-lg">
-                  {top ? (
-                    <div>
-                      {/* Species Name */}
-                      <div className="text-center mb-6">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{top.name}</h3>
-                        <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${getConfidenceColor(top.confidence)}`}>
-                          <span className="mr-2">
-                            {top.confidence >= 0.85 ? '✅' : top.confidence >= 0.6 ? '⚠️' : '❓'}
-                          </span>
-                          Trust Level: {confidencePct}% ({confidenceLabel})
-                        </div>
-                      </div>
-
-                      {/* Low Confidence Warning */}
-                      {lowConfidence && (
-                        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
-                          <div className="flex items-start">
-                            <span className="text-yellow-600 text-xl mr-3 mt-0.5">⚠️</span>
-                            <div>
-                              <h4 className="font-semibold text-yellow-800 mb-2">Low Trust Level</h4>
-                              <p className="text-yellow-700 text-sm mb-3">
-                                Try a clearer photo (single plant, in focus, good lighting) for better results.
-                              </p>
-                              <p className="text-yellow-700 text-sm font-medium">Other possibilities:</p>
-                              <ul className="list-disc pl-5 mt-1 text-yellow-700 text-sm">
-                                {results.slice(1, 4).map((r, i) => (
-                                  <li key={i}>{r.name} ({Math.round(r.confidence*100)}%)</li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Species Information Card */}
-                      <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl border-2 border-green-200 p-6">
-                        <div className="text-center">
-                          <div className="text-6xl mb-4">🌿</div>
-                          <h4 className="text-xl font-bold text-gray-900 mb-2">Plant Identified!</h4>
-                          <p className="text-gray-600 mb-4">
-                            Your photo has been successfully analyzed by our AI system.
-                          </p>
-                          <div className="inline-flex items-center px-4 py-2 bg-white rounded-full shadow-sm">
-                            <span className="text-sm font-medium text-gray-700">
-                              Analysis complete • {new Date().toLocaleTimeString()}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <div className="text-6xl mb-4">🤔</div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">No Species Detected</h3>
-                      <p className="text-gray-600">Try another angle or closer photo for better results.</p>
-                    </div>
-                  )}
-                </div>
-
+              {/* Right Column: Actions and History */}
+              <div className="space-y-3">
                 {/* Quick Next Steps */}
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 p-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 p-3">
+                  <h4 className="text-base font-semibold text-gray-900 mb-2 flex items-center">
                     <span className="mr-2">💡</span>
                     Quick Next Steps
                   </h4>
-                  <ul className="space-y-3">
+                  <ul className="space-y-2">
                     <li className="flex items-start">
-                      <span className="text-blue-600 mr-3 mt-1">•</span>
-                      <span className="text-gray-700 text-sm">If trust level is Medium/Low, take another photo closer and well‑lit.</span>
+                      <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                      <span className="text-gray-700 text-xs">If trust level is Medium/Low, take another photo closer and well‑lit.</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-blue-600 mr-3 mt-1">•</span>
-                      <span className="text-gray-700 text-sm">Open the species profile for control and prevention tips.</span>
+                      <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                      <span className="text-gray-700 text-xs">Open the species profile for control and prevention tips.</span>
                     </li>
                     <li className="flex items-start">
-                      <span className="text-blue-600 mr-3 mt-1">•</span>
-                      <span className="text-gray-700 text-sm">Report a sighting if you suspect it's invasive in your area.</span>
+                      <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                      <span className="text-gray-700 text-xs">Report a sighting if you suspect it's invasive in your area.</span>
                     </li>
                   </ul>
                 </div>
 
+                {/* Scan History - Compact */}
+                <div className="bg-white rounded-2xl border border-gray-200 p-3">
+                  <h4 className="text-base font-semibold text-gray-900 mb-2 flex items-center">
+                    <span className="mr-2">📚</span>
+                    Scan History
+                  </h4>
+                  {history.length === 0 ? (
+                    <div className="text-center py-3">
+                      <div className="text-2xl mb-2">📸</div>
+                      <p className="text-gray-600 text-sm">No previous scans</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                      {history.map((h) => (
+                        <div key={h.id} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                          {h.imageDataUrl && (
+                            <img 
+                              src={h.imageDataUrl} 
+                              alt="prev" 
+                              className="h-8 w-8 object-cover rounded-md border border-gray-200 flex-shrink-0" 
+                            />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-gray-900 text-xs truncate">{h.speciesName}</div>
+                            <div className="text-xs text-gray-600">
+                              Trust {(h.trust*100).toFixed(0)}% · {new Date(h.timestamp).toLocaleDateString()}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 {/* Additional Actions */}
-                <div className="bg-white rounded-2xl border border-gray-200 p-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Additional Actions</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <button 
-                      onClick={() => shareLatestScan()} 
-                      className="flex flex-col items-center p-4 rounded-xl bg-gradient-to-br from-purple-100 to-purple-200 hover:from-purple-200 hover:to-purple-300 text-purple-700 transition-all duration-300 transform hover:scale-105"
-                    >
-                      <span className="text-2xl mb-2">📤</span>
-                      <span className="text-sm font-medium">Share</span>
-                    </button>
-                    <button 
-                      onClick={() => exportToPDF()} 
-                      className="flex flex-col items-center p-4 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 transition-all duration-300 transform hover:scale-105"
-                    >
-                      <span className="text-2xl mb-2">💾</span>
-                      <span className="text-sm font-medium">Export PDF</span>
-                    </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={shareLatestScan}
+                    className="flex-1 flex items-center justify-center px-3 py-2 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl text-sm"
+                  >
+                    <span className="mr-2">📤</span>
+                    Share
+                  </button>
+                  <button
+                    onClick={exportToPDF}
+                    className="flex-1 flex items-center justify-center px-3 py-2 bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl text-sm"
+                  >
+                    <span className="mr-2">💾</span>
+                    Export PDF
+                  </button>
+                </div>
+
+                {/* How the AI scan works */}
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border-2 border-blue-200 p-3">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 mr-3">
+                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-sm">ℹ️</span>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-base font-semibold text-gray-900 mb-1">How the AI scan works</h4>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        Your photo is securely scanned for leaf, flower, and stem patterns, then matched to known species—no images are stored. Results include a trust level to guide accuracy.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Enhanced How it works section */}
-          <div className="mt-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border-2 border-blue-200 p-6">
-            <div className="flex items-start">
-              <div className="flex-shrink-0 mr-4">
-                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xl">ℹ️</span>
-                </div>
-              </div>
-              <div>
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">How the AI scan works</h4>
-                <p className="text-gray-700 leading-relaxed">
-                  Your photo is securely scanned for leaf, flower, and stem patterns, then matched to known species—no images are stored. Results include a trust level to guide accuracy.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

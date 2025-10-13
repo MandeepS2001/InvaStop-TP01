@@ -427,7 +427,7 @@ const EducationPage: React.FC = () => {
                 </span>
               </h2>
               <p className="text-lg sm:text-xl lg:text-2xl text-green-100 max-w-3xl mx-auto mb-8">
-                See how good you are at spotting invasive plants with our fun quiz!
+                See how good you are at spotting invasive plants with our fun quiz.
               </p>
             </div>
 

@@ -63,7 +63,7 @@ const TaxonThreatChart: React.FC = () => {
             
             <div className="text-center">
               <div className="w-12 h-12 bg-red-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-                <span className="text-white text-xl">!</span>
+                <span className="text-white text-xl">⚠</span>
                                   </div>
               <h5 className="font-bold text-red-800 mb-1">90-100%</h5>
               <p className="text-sm text-red-600">Very High Threat Level</p>

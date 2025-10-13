@@ -154,10 +154,10 @@ const PlantIdentificationQuiz: React.FC = () => {
 
   const getScoreMessage = () => {
     const percentage = (score / shuffledQuestions.length) * 100;
-    if (percentage >= 90) return { message: "Outstanding! You're a true plant expert!", color: "text-green-600" };
-    if (percentage >= 70) return { message: "Great job! You have good plant identification skills!", color: "text-blue-600" };
-    if (percentage >= 50) return { message: "Good effort! Keep learning to improve your skills!", color: "text-yellow-600" };
-    return { message: "Keep practicing! Every expert was once a beginner!", color: "text-red-600" };
+    if (percentage >= 90) return { message: "Outstanding. You're a true plant expert.", color: "text-green-600" };
+    if (percentage >= 70) return { message: "Great job. You have good plant identification skills.", color: "text-blue-600" };
+    if (percentage >= 50) return { message: "Good effort. Keep learning to improve your skills.", color: "text-yellow-600" };
+    return { message: "Keep practicing. Every expert was once a beginner.", color: "text-red-600" };
   };
 
   const formatTime = (seconds: number) => {
@@ -176,7 +176,7 @@ const PlantIdentificationQuiz: React.FC = () => {
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Plant Identification Challenge</h2>
             <p className="text-lg text-gray-600 mb-6">
-              Test your ability to identify invasive plants! Can you tell which plants should be removed to protect our environment?
+              Test your ability to identify invasive plants. Can you tell which plants should be removed to protect our environment?
             </p>
           </div>
 
@@ -227,13 +227,13 @@ const PlantIdentificationQuiz: React.FC = () => {
             <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
               <Star className="h-12 w-12 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Quiz Complete!</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Quiz Complete</h2>
             <p className={`text-xl font-semibold ${scoreMessage.color} mb-6`}>
               {scoreMessage.message}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-green-50 p-6 rounded-xl border border-green-200 text-center">
               <div className="text-3xl font-bold text-green-600 mb-2">{score}/{shuffledQuestions.length}</div>
               <div className="text-green-800 font-semibold">Correct Answers</div>
@@ -387,7 +387,7 @@ const PlantIdentificationQuiz: React.FC = () => {
                     <XCircle className="h-8 w-8 text-red-600 mr-3" />
                   )}
                   <span className={`text-xl font-bold ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-                    {isCorrect ? 'Correct!' : 'Incorrect'}
+                    {isCorrect ? 'Correct' : 'Incorrect'}
                   </span>
                 </div>
                 <div className="bg-white p-4 rounded-lg">

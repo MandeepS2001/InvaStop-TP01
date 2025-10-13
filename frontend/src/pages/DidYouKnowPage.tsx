@@ -92,7 +92,7 @@ const DidYouKnowPage: React.FC = () => {
                   <div className="bg-green-100 p-3 rounded-full mr-4">
                     <span className="text-green-600 text-xl">🗺️</span>
                   </div>
-                  <h4 className="text-xl font-bold text-gray-900">Check Your Area</h4>
+                  <h4 className="text-xl font-bold text-gray-900">Know Your Land</h4>
                 </div>
                 <p className="text-gray-600 mb-4">See what problem plants are found near your property</p>
                 <Link
@@ -100,7 +100,7 @@ const DidYouKnowPage: React.FC = () => {
                   onClick={scrollToTop}
                   className="inline-flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-all duration-300"
                 >
-                  View Map
+                  Know Your Land
                 </Link>
               </div>
 
@@ -109,7 +109,7 @@ const DidYouKnowPage: React.FC = () => {
                   <div className="bg-blue-100 p-3 rounded-full mr-4">
                     <span className="text-blue-600 text-xl">📅</span>
                   </div>
-                  <h4 className="text-xl font-bold text-gray-900">Know the Seasons</h4>
+                  <h4 className="text-xl font-bold text-gray-900">Seasonal</h4>
                 </div>
                 <p className="text-gray-600 mb-4">Learn when problem plants are most active in your area</p>
                 <Link
@@ -117,7 +117,7 @@ const DidYouKnowPage: React.FC = () => {
                   onClick={scrollToTop}
                   className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all duration-300"
                 >
-                  Check Seasons
+                  Seasonal
                 </Link>
               </div>
             </div>

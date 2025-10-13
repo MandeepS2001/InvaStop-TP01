@@ -162,7 +162,7 @@ const HomePage: React.FC = () => {
                 onClick={() => setAiOpen(true)}
                 className="group relative bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl border border-green-400/30 transition-all duration-300 text-sm sm:text-base w-full sm:w-auto font-semibold shadow-lg hover:shadow-xl hover:shadow-green-500/25 hover:scale-105 transform"
               >
-                <span className="relative z-10">Weed Watcher →</span>
+                <span className="relative z-10">Spot & Stop →</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
             </div>
