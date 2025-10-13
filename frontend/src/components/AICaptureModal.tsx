@@ -652,19 +652,50 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                     Quick Next Steps
                   </h4>
                   <ul className="space-y-2">
-                    <li className="flex items-start">
-                      <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
-                      <span className="text-gray-700 text-xs">If trust level is Medium/Low, take another photo closer and well‑lit.</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
-                      <span className="text-gray-700 text-xs">Open the species profile for control and prevention tips.</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
-                      <span className="text-gray-700 text-xs">Report a sighting if you suspect it's invasive in your area.</span>
-                    </li>
+                    {top && top.confidence >= 0.6 ? (
+                      // Species-specific next steps for successful identification
+                      <>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                          <span className="text-gray-700 text-xs">Learn more about {top.name.replace(/_/g, ' ')} and how to manage it.</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                          <span className="text-gray-700 text-xs">Check if this species is invasive in your area.</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                          <span className="text-gray-700 text-xs">Get specific control and prevention tips for this plant.</span>
+                        </li>
+                      </>
+                    ) : (
+                      // Generic guidance for no recognition or low trust
+                      <>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                          <span className="text-gray-700 text-xs">If trust level is Medium/Low, take another photo closer and well‑lit.</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                          <span className="text-gray-700 text-xs">Open the species profile for control and prevention tips.</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                          <span className="text-gray-700 text-xs">Report a sighting if you suspect it's invasive in your area.</span>
+                        </li>
+                      </>
+                    )}
                   </ul>
+                  
+                  <div className="mt-4 pt-3 border-t border-blue-200">
+                    <Link
+                      to="/education"
+                      className="inline-flex items-center justify-center w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 text-sm"
+                    >
+                      <span className="mr-2">🌿</span>
+                      View Invader Insights
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Scan History - Compact */}
