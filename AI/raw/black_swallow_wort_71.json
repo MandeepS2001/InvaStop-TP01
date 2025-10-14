@@ -1,0 +1,118 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          191.3809523809524,
+          242.38095238095238
+        ],
+        [
+          254.23809523809527,
+          311.90476190476187
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          138.0476190476191,
+          243.33333333333331
+        ],
+        [
+          181.3809523809524,
+          309.5238095238095
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          259.00000000000006,
+          184.76190476190476
+        ],
+        [
+          319.47619047619054,
+          232.85714285714286
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          292.33333333333337,
+          245.23809523809524
+        ],
+        [
+          334.7142857142858,
+          297.1428571428571
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          247.09523809523813,
+          674.7619047619047
+        ],
+        [
+          304.7142857142858,
+          739.5238095238095
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          195.19047619047623,
+          726.1904761904761
+        ],
+        [
+          237.09523809523813,
+          773.8095238095237
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "black_swallow_wort_71.jpg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 768
+}

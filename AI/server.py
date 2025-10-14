@@ -48,4 +48,4 @@ def detect(img: UploadFile, model:str=None):
 if __name__ == "__main__":
     import uvicorn
     os.environ["DEFAULT_MODEL"]=os.environ.get("DEFAULT_MODEL", "latest.pt")
-    uvicorn.run(app, host="0.0.0.0", port=80)
+    uvicorn.run(app, host="localhost", port=55219)

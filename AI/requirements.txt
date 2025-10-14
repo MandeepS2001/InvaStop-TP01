@@ -1,0 +1,8 @@
+torch
+torchvision
+fastapi
+ultralytics
+requests
+Pillow
+fire
+uvicorn[standard]

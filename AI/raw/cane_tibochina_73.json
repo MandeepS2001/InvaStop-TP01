@@ -1,0 +1,64 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "cane_tibochina",
+      "points": [
+        [
+          308.42857142857144,
+          416.76190476190476
+        ],
+        [
+          672.2380952380952,
+          761.5238095238095
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "cane_tibochina",
+      "points": [
+        [
+          268.42857142857144,
+          134.8571428571429
+        ],
+        [
+          535.0952380952381,
+          324.38095238095235
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "cane_tibochina",
+      "points": [
+        [
+          194.14285714285717,
+          696.7619047619048
+        ],
+        [
+          441.7619047619048,
+          952.0
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "cane_tibochina_73.jpg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 894
+}

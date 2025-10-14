@@ -1,0 +1,82 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "cane_tibochina",
+      "points": [
+        [
+          209.23809523809527,
+          194.85714285714286
+        ],
+        [
+          388.28571428571433,
+          352.0
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "cane_tibochina",
+      "points": [
+        [
+          246.38095238095244,
+          487.23809523809524
+        ],
+        [
+          448.28571428571433,
+          643.4285714285714
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "cane_tibochina",
+      "points": [
+        [
+          103.52380952380955,
+          543.4285714285714
+        ],
+        [
+          241.61904761904768,
+          702.4761904761905
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "cane_tibochina",
+      "points": [
+        [
+          345.42857142857144,
+          632.0
+        ],
+        [
+          443.5238095238095,
+          748.1904761904763
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "cane_tibochina_80.jpeg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 768
+}

@@ -1,0 +1,82 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "asiatic_sand_sedge",
+      "points": [
+        [
+          571.4262295081967,
+          309.40983606557376
+        ],
+        [
+          634.5409836065573,
+          419.24590163934425
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "asiatic_sand_sedge",
+      "points": [
+        [
+          685.3606557377049,
+          383.1803278688525
+        ],
+        [
+          764.0491803278688,
+          502.8524590163935
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "asiatic_sand_sedge",
+      "points": [
+        [
+          461.59016393442624,
+          97.11475409836066
+        ],
+        [
+          515.688524590164,
+          206.1311475409836
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "asiatic_sand_sedge",
+      "points": [
+        [
+          865.688524590164,
+          223.344262295082
+        ],
+        [
+          937.0,
+          339.7377049180328
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "asiatic_sand_sedge_77.jpeg",
+  "imageData": null,
+  "imageHeight": 768,
+  "imageWidth": 1024
+}

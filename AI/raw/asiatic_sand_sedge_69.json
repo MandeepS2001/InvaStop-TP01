@@ -1,0 +1,28 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "asiatic_sand_sedge",
+      "points": [
+        [
+          65.07142857142856,
+          273.90476190476187
+        ],
+        [
+          411.7380952380952,
+          781.5238095238095
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "asiatic_sand_sedge_69.jpeg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 573
+}

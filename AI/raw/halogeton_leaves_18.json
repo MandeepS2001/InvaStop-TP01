@@ -1,0 +1,64 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "halogeton_leaves",
+      "points": [
+        [
+          154.952380952381,
+          413.90476190476187
+        ],
+        [
+          416.8571428571429,
+          757.7142857142858
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "halogeton_leaves",
+      "points": [
+        [
+          402.57142857142856,
+          357.7142857142857
+        ],
+        [
+          706.3809523809524,
+          584.3809523809524
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "halogeton_leaves",
+      "points": [
+        [
+          40.666666666666714,
+          41.52380952380954
+        ],
+        [
+          227.33333333333334,
+          200.57142857142858
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "halogeton_leaves_18.jpg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 768
+}

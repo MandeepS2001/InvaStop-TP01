@@ -1,0 +1,46 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "portuguese_bloom_seed",
+      "points": [
+        [
+          553.3934426229508,
+          95.47540983606558
+        ],
+        [
+          0.11475409836064454,
+          527.4426229508197
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "portuguese_bloom_seed",
+      "points": [
+        [
+          787.0,
+          334.0
+        ],
+        [
+          141.91803278688522,
+          732.360655737705
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "portuguese_bloom_seed_94.jpeg",
+  "imageData": null,
+  "imageHeight": 768,
+  "imageWidth": 1024
+}

@@ -1,0 +1,64 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          120.76923076923075,
+          304.61538461538464
+        ],
+        [
+          207.75147928994082,
+          380.94674556213016
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          133.19526627218934,
+          183.3136094674556
+        ],
+        [
+          216.03550295857988,
+          273.2544378698225
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          33.7869822485207,
+          296.9230769230769
+        ],
+        [
+          125.50295857988166,
+          367.3372781065089
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "black_swallow_wort_57.jpg",
+  "imageData": null,
+  "imageHeight": 640,
+  "imageWidth": 480
+}
