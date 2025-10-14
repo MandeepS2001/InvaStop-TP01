@@ -185,6 +185,7 @@ AI/detect/*
 AI/__pycache__/*
 AI/raw/*.jpg
 AI/raw/*.jpeg
+AI/raw/negative*
 AI/*.pt
 # For sync with gpu server. Invalid without the private key.
 AI/sync.sh 
