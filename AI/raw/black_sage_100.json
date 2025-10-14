@@ -1,0 +1,64 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          195.90476190476195,
+          231.04761904761907
+        ],
+        [
+          347.33333333333337,
+          611.047619047619
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          442.57142857142856,
+          473.90476190476187
+        ],
+        [
+          541.6190476190476,
+          775.8095238095239
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          240.6666666666667,
+          884.3809523809524
+        ],
+        [
+          324.4761904761905,
+          1019.6190476190476
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "black_sage_100.jpg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 768
+}

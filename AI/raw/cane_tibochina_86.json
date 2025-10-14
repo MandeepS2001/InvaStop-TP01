@@ -1,0 +1,28 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "cane_tibochina",
+      "points": [
+        [
+          134.78571428571422,
+          448.19047619047615
+        ],
+        [
+          288.11904761904754,
+          603.4285714285714
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "cane_tibochina_86.jpg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 461
+}

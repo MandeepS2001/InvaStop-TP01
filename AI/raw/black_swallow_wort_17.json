@@ -1,0 +1,28 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "black_swallow_wort",
+      "points": [
+        [
+          355.6428571428572,
+          309.1428571428571
+        ],
+        [
+          642.3095238095239,
+          589.1428571428572
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "black_swallow_wort_17.jpeg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 1017
+}
