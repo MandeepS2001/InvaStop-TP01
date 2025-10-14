@@ -834,12 +834,6 @@ const LandManagementSimulator: React.FC = () => {
                       >
                         Clear All & Start Over
                       </button>
-                      <button
-                        onClick={() => setShowPresets(true)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors duration-300"
-                      >
-                        Try a Preset Package
-                      </button>
                     </div>
                   </div>
                 </div>
