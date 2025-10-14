@@ -579,12 +579,15 @@ def get_postcode_area_name(
         
         # First try to get data from au_localities table
         try:
+            print(f"Attempting to query au_localities table for postcode: {postcode}")
             rows = db.execute(
                 sql_text(
                     "SELECT locality, state, latitude, longitude FROM au_localities WHERE postcode = :pc LIMIT 1"
                 ),
                 {"pc": str(postcode)}
             ).fetchall()
+            
+            print(f"Query returned {len(rows)} rows for postcode {postcode}")
             
             if rows and len(rows) > 0:
                 row = rows[0]
@@ -593,17 +596,22 @@ def get_postcode_area_name(
                 lat = float(row[2]) if row[2] else None
                 lng = float(row[3]) if row[3] else None
                 
-                # If we have valid coordinates, use the locality data
-                if lat and lng and lat != 0.0 and lng != 0.0:
-                    return {
-                        "postcode": postcode,
-                        "area_name": f"{locality}, {state}",
-                        "state": state,
-                        "latitude": lat,
-                        "longitude": lng,
-                        "source": "database"
-                    }
-        except Exception:
+                print(f"Found locality data: {locality}, {state}, lat: {lat}, lng: {lng}")
+                
+                # Use the locality data even if coordinates are invalid (0.0)
+                # The table has valid locality names, so we can use them
+                return {
+                    "postcode": postcode,
+                    "area_name": f"{locality}, {state}",
+                    "state": state,
+                    "latitude": lat if lat and lat != 0.0 else None,
+                    "longitude": lng if lng and lng != 0.0 else None,
+                    "source": "database"
+                }
+            else:
+                print(f"No rows found in au_localities table for postcode {postcode}")
+        except Exception as e:
+            print(f"Error querying au_localities table: {str(e)}")
             pass
         
         # Fallback to hardcoded major cities

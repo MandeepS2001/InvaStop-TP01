@@ -13,7 +13,6 @@ const MapPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [showInteractiveMap, setShowInteractiveMap] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
 
   // Parallax scroll effect
@@ -60,9 +59,9 @@ const MapPage: React.FC = () => {
             <SimpleHeader />
 
       {/* Page Content */}
-      <div className="pt-20 sm:pt-24">
+      <div>
         {/* Enhanced Header Section */}
-        <div className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-16 sm:py-20 lg:py-24 overflow-hidden">
           {/* LiquidEther Background */}
           <div className="absolute inset-0 w-full h-full z-0">
             <LiquidEther
@@ -112,150 +111,59 @@ const MapPage: React.FC = () => {
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Information Cards - Moved to top of map section */}
-          <div className="mb-8 sm:mb-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <div 
-                className="group relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-4 sm:p-6 text-center overflow-hidden transform hover:scale-105 hover:-rotate-1 transition-all duration-500"
-                onMouseEnter={() => setHoveredCard('current')}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                {/* Floating particles around each card */}
-                <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                  {[...Array(3)].map((_, i) => (
-                    <div
-                      key={`particle-current-${i}`}
-                      className="absolute w-1 h-1 bg-green-400/30 rounded-full animate-float"
-                      style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 3}s`,
-                        animationDuration: `${2 + Math.random() * 2}s`
-                      }}
-                    ></div>
-                  ))}
-                </div>
-                
-                <div className="relative z-10">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
-                    <span className="text-xl sm:text-2xl">🗺️</span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors duration-300">Current Information</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                    Our map shows up-to-date information about where invasive plants and animals are causing problems across Australia.
-                  </p>
-                </div>
-              </div>
-              
-              {/* Replaced card: Species Colors & Filters (no CTA since it's next to the map) */}
-              <div 
-                className="group relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-4 sm:p-6 text-center overflow-hidden transform hover:scale-105 hover:-rotate-1 transition-all duration-500"
-                onMouseEnter={() => setHoveredCard('legend')}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                  {[...Array(3)].map((_, i) => (
-                    <div
-                      key={`particle-legend-${i}`}
-                      className="absolute w-1 h-1 bg-purple-400/30 rounded-full animate-float"
-                      style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 3}s`,
-                        animationDuration: `${2 + Math.random() * 2}s`
-                      }}
-                    ></div>
-                  ))}
-                </div>
 
-                <div className="relative z-10">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
-                    <span className="text-xl sm:text-2xl">🎨</span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors duration-300">Species Colors & Filters</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                    Use the colored chips to filter species and check the legend on the map to see what each color means. Adjust the year range to explore trends over time.
-                  </p>
-                </div>
+          {/* Call-to-Action Card on top */}
+          <div className="mb-6">
+            <div className="relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-4 sm:p-6 overflow-hidden">
+              {/* Floating particles around the card */}
+              <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={`cta-particle-${i}`}
+                    className="absolute w-1 h-1 bg-green-400/30 rounded-full animate-float parallax-element"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      animationDelay: `${Math.random() * 3}s`,
+                      animationDuration: `${2 + Math.random() * 2}s`
+                    }}
+                  ></div>
+                ))}
               </div>
               
-              <div 
-                className="group relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-4 sm:p-6 text-center overflow-hidden transform hover:scale-105 hover:-rotate-1 transition-all duration-500 sm:col-span-2 lg:col-span-1"
-                onMouseEnter={() => setHoveredCard('details')}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                {/* Floating particles around each card */}
-                <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                  {[...Array(3)].map((_, i) => (
-                    <div
-                      key={`particle-details-${i}`}
-                      className="absolute w-1 h-1 bg-green-400/30 rounded-full animate-float"
-                      style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 3}s`,
-                        animationDuration: `${2 + Math.random() * 2}s`
-                      }}
-                    ></div>
-                  ))}
+              <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="text-center sm:text-left">
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                    Explore Detailed Species Distribution
+                  </h2>
                 </div>
-                
-                <div className="relative z-10">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
-                    <span className="text-xl sm:text-2xl">🔍</span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors duration-300">More Details</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                    Click on any state to see which invasive species are causing the most trouble there and learn how to deal with them.
-                  </p>
-                </div>
+                <button
+                  onClick={() => setShowInteractiveMap(true)}
+                  className="group inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 via-green-700 to-green-800 hover:from-green-500 hover:via-green-600 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 text-sm shadow-xl hover:shadow-2xl hover:shadow-green-500/30 transform hover:scale-105 border-2 border-green-500/20 hover:border-green-400/40"
+                >
+                  <span className="mr-2 text-lg group-hover:rotate-12 transition-transform duration-300">🗺️</span>
+                  <span className="group-hover:tracking-wide transition-all duration-300">Where They Are Map</span>
+                  <span className="ml-2 text-sm group-hover:translate-x-2 transition-transform duration-300">→</span>
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Map and Call-to-Action Side by Side */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
-            {/* Map Container - Takes 3/4 of the width */}
-            <div className="lg:col-span-3">
-              {isLoading ? (
-                // Skeleton Loading State
-                <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 animate-pulse">
-                  <div className="h-96 bg-gray-300 rounded-xl mb-4"></div>
-                  <div className="h-4 bg-gray-300 rounded w-1/3 mx-auto"></div>
-                </div>
-              ) : (
-                <div className="relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-6 sm:p-8 overflow-hidden">
-                  {/* Floating particles around the map */}
-                  <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                    {[...Array(6)].map((_, i) => (
-                      <div
-                        key={`map-particle-${i}`}
-                        className="absolute w-1 h-1 bg-green-400/30 rounded-full animate-float parallax-element"
-                        style={{
-                          left: `${Math.random() * 100}%`,
-                          top: `${Math.random() * 100}%`,
-                          animationDelay: `${Math.random() * 3}s`,
-                          animationDuration: `${2 + Math.random() * 2}s`
-                        }}
-                      ></div>
-                    ))}
-                  </div>
-                  
-                  <div className="relative z-10">
-                    <InteractiveMap />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Call-to-Action Card - Takes 1/4 of the width */}
-            <div className="lg:col-span-1">
-              <div className="relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-6 overflow-hidden h-fit">
-                {/* Floating particles around the card */}
+          {/* Map Container - Full width */}
+          <div>
+            {isLoading ? (
+              // Skeleton Loading State
+              <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 animate-pulse">
+                <div className="h-96 bg-gray-300 rounded-xl mb-4"></div>
+                <div className="h-4 bg-gray-300 rounded w-1/3 mx-auto"></div>
+              </div>
+            ) : (
+              <div className="relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-6 sm:p-8 overflow-hidden">
+                {/* Floating particles around the map */}
                 <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                  {[...Array(3)].map((_, i) => (
+                  {[...Array(6)].map((_, i) => (
                     <div
-                      key={`cta-particle-${i}`}
+                      key={`map-particle-${i}`}
                       className="absolute w-1 h-1 bg-green-400/30 rounded-full animate-float parallax-element"
                       style={{
                         left: `${Math.random() * 100}%`,
@@ -267,74 +175,24 @@ const MapPage: React.FC = () => {
                   ))}
                 </div>
                 
-                <div className="relative z-10 text-center">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">
-                    Explore Detailed Species Distribution
-                  </h2>
-                  <p className="text-sm sm:text-base text-gray-600 mb-6">
-                    View precise occurrence records and filter by species and year to understand the spread patterns of invasive species across Australia.
-                  </p>
-                  <button
-                    onClick={() => setShowInteractiveMap(true)}
-                    className="group inline-flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-green-600 via-green-700 to-green-800 hover:from-green-500 hover:via-green-600 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 text-sm shadow-xl hover:shadow-2xl hover:shadow-green-500/30 transform hover:scale-105 border-2 border-green-500/20 hover:border-green-400/40"
-                  >
-                    <span className="mr-2 text-lg group-hover:rotate-12 transition-transform duration-300">🗺️</span>
-                    <span className="group-hover:tracking-wide transition-all duration-300">Open Interactive Distribution Map</span>
-                    <span className="ml-2 text-sm group-hover:translate-x-2 transition-transform duration-300">→</span>
-                  </button>
+                <div className="relative z-10">
+                  <InteractiveMap />
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
 
-
-      {/* Footer */}
-      <footer className="bg-green-800 text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Logo and Copyright */}
-            <div className="md:col-span-1 flex flex-col items-start">
-              <div className="flex flex-col items-start mb-3">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
-              </div>
-              <p className="text-green-100 text-sm">© 2025</p>
-            </div>
-
-            {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-bold mb-3 text-sm">Products</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><a href="#" className="hover:text-white transition-colors">Species Database</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Educational Resources</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Mapping Tools</a></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="font-bold mb-3 text-sm">About Us</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><a href="#" className="hover:text-white transition-colors">Who We Are</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Our Mission</a></li>
-                </ul>
-              </div>
-              
-            </div>
-          </div>
-        </div>
-      </footer>
 
       {/* Interactive Map Overlay Modal */}
       {showInteractiveMap && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-2xl w-full h-full max-w-7xl max-h-[90vh] flex flex-col">
             {/* Modal Header */}
-            <div className="flex justify-between items-center p-4 border-b">
+            <div className="flex justify-between items-center p-4 border-b bg-white">
               <h3 className="text-xl font-semibold text-gray-900">
-                Interactive Species Distribution Map
+                Trouble Tracker
               </h3>
               <button
                 onClick={() => setShowInteractiveMap(false)}
@@ -346,13 +204,77 @@ const MapPage: React.FC = () => {
               </button>
             </div>
             
-            {/* Modal Content - Interactive Map */}
-            <div className="flex-1 overflow-hidden">
-              <iframe
-                src={`/map.html?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}&_=${Date.now()}`}
-                className="w-full h-full border-0"
-                title="Interactive Species Distribution Map"
-              />
+            {/* Scrollable Content Container */}
+            <div className="flex-1 overflow-y-auto">
+              {/* Enhanced Information Cards - Scrollable */}
+              <div className="p-6 bg-gradient-to-br from-gray-50 to-blue-50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* Real-Time Data Card */}
+                  <div className="group bg-white rounded-2xl shadow-lg hover:shadow-xl border border-gray-100 p-6 text-center transition-all duration-300 hover:-translate-y-1">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">Live Data Feed</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Get real-time updates on invasive species sightings across Australia. Our data comes directly from scientific surveys and citizen reports.
+                    </p>
+                    <div className="mt-4 inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                      Live Updates
+                    </div>
+                  </div>
+                  
+                  {/* Interactive Controls Card */}
+                  <div className="group bg-white rounded-2xl shadow-lg hover:shadow-xl border border-gray-100 p-6 text-center transition-all duration-300 hover:-translate-y-1">
+                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">Smart Filters</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Filter by species, time period, and location. Each species has its own color code to help you quickly identify patterns and trends.
+                    </p>
+                    <div className="mt-4 flex justify-center space-x-2">
+                      <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                      <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                      <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                      <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                      <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
+                    </div>
+                  </div>
+                  
+                  {/* Interactive Exploration Card */}
+                  <div className="group bg-white rounded-2xl shadow-lg hover:shadow-xl border border-gray-100 p-6 text-center transition-all duration-300 hover:-translate-y-1">
+                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">Explore & Learn</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Click any state to discover which invasive species are most problematic there and get actionable insights for your area.
+                    </p>
+                    <div className="mt-4 inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                      <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Interactive
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Modal Content - Interactive Map */}
+              <div className="h-[70vh] min-h-[500px]">
+                <iframe
+                  src={`/map.html?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}&_=${Date.now()}`}
+                  className="w-full h-full border-0"
+                  title="Trouble Tracker"
+                />
+              </div>
             </div>
           </div>
         </div>

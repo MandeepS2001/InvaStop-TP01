@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const SimpleHeader: React.FC = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Species Profile', href: '/education' },
+    { label: 'Invader Insight', href: '/education' },
     { label: 'Did you Know?', href: '/insights' },
-    { label: 'Map', href: '/map' },
-    { label: 'Seasonal', href: '/epic5' }
+    { label: "Know Your Land", href: '/map' },
+    { label: 'Seasonal', href: '/epic5' },
+    { label: 'Patch Planner', href: '/land-simulator' }
   ];
 
   const isActive = (href: string) => {
@@ -22,17 +34,13 @@ const SimpleHeader: React.FC = () => {
   };
 
   return (
-    <header className="bg-green-800 text-white fixed top-0 inset-x-0 z-50 w-full">
-      <div className="px-3 sm:px-4 lg:px-6">
-                <div className="flex justify-between items-center h-24 sm:h-28">
-          {/* Logo */}
-                  <Link to="/" onClick={scrollToTop} className="flex items-center space-x-3">
-                    <img
-                      src="/Invastop-Logo.png"
-                      alt="InvaStop"
-                      className="h-24 w-24 sm:h-28 sm:w-28 object-contain"
-                    />
-          </Link>
+    <header className={`${isScrolled ? 'bg-green-800 shadow-lg' : 'bg-transparent'} text-white fixed top-0 inset-x-0 z-50 w-full h-20 transition-all duration-300`}>
+      <div className="px-3 sm:px-4 lg:px-6 h-full">
+        <div className="flex justify-between items-center h-full">
+          {/* Logo as a separate entity */}
+          <a className="flex items-center space-x-3" href="/">
+            <img src="/Invastop-Logo.png" alt="InvaStop" className="h-40 w-40 object-contain" />
+          </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-2">
@@ -67,8 +75,8 @@ const SimpleHeader: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-green-700">
-            <nav className="flex flex-col space-y-2">
+          <div className="md:hidden py-4 border-t border-green-700 bg-green-800">
+            <nav className="flex flex-col space-y-3">
               {navItems.map((item) => (
                 <Link 
                   key={item.href}
@@ -78,8 +86,11 @@ const SimpleHeader: React.FC = () => {
                     scrollToTop(); 
                   }} 
                   className={`
-                    px-4 py-2 text-white hover:text-green-100 hover:bg-green-700/30 rounded-lg transition-colors
-                    ${isActive(item.href) ? 'text-green-200 bg-green-700/50 font-semibold' : ''}
+                    px-6 py-3 text-lg font-medium rounded-xl transition-all duration-200
+                    ${isActive(item.href) 
+                      ? 'text-white bg-green-600 shadow-lg border-2 border-green-400' 
+                      : 'text-green-100 hover:text-white hover:bg-green-700/50 border border-green-600/30 hover:border-green-500/50'
+                    }
                   `}
                 >
                   {item.label}

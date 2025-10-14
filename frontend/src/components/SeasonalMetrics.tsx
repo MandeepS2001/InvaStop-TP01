@@ -140,7 +140,7 @@ const SeasonalMetrics: React.FC = () => {
             </div>
           </div>
           <p className="text-center text-gray-700 text-lg">
-            That's a lot of plants causing problems for farmers and property owners across Australia!
+            That's a lot of plants causing problems for farmers and property owners across Australia.
           </p>
         </div>
 

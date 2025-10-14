@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
-import { CheckCircle, XCircle, Trophy, Star, Target, Leaf } from 'lucide-react';
+import { CheckCircle, XCircle, Star, Target, Leaf } from 'lucide-react';
 
 interface QuizQuestion {
   id: number;
@@ -38,8 +38,6 @@ const PlantIdentificationQuiz: React.FC = () => {
   const [score, setScore] = useState(0);
   const [timeSpent, setTimeSpent] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const [achievements, setAchievements] = useState<string[]>([]);
-  const [showAchievement, setShowAchievement] = useState<string | null>(null);
 
   // Remote quiz questions
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -48,24 +46,18 @@ const PlantIdentificationQuiz: React.FC = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const imageCandidates: Record<string, string[]> = {
-    // Invasive (existing lowercase directory)
+    // Invasive species (existing lowercase directory)
     'Lantana': ['/top10/Lantana.png'],
     'Bitou Bush': ['/top10/BitouBush.png'],
     'Gamba Grass': ['/top10/GambaGrass.png'],
     'Gorse': ['/top10/Gorse.png'],
     'Buffel Grass': ['/top10/BuffelGrass.png'],
-    // Native (new capitalized Top10 images provided by user)
-    'Eucalyptus': ['/Top10/Eucalyptus.jpg', '/Top10/Eucalyptus.png', '/top10/Tree.png'],
-    'Acacia/Wattle': [
-      '/Top10/Acacia/Wattle.jpg',
-      '/Top10/Acacia-Wattle.jpg',
-      '/Top10/Acacia_Wattle.jpg',
-      '/Top10/Acacia%2FWattle.jpg',
-      '/Top10/AcaciaWattle.jpg'
-    ],
-    'Banksia': ['/Top10/Banksia.jpg'],
-    'Melaleuca': ['/Top10/Melaleuca.jpg'],
-    'Grevillea': ['/Top10/Grevillea.png']
+    // Native species (corrected paths to match actual files)
+    'Eucalyptus': ['/top10/Eucalyptus.png'],
+    'Acacia/Wattle': ['/top10/Acacia-Wattle.jpg'],
+    'Banksia': ['/top10/Banksia.jpg'],
+    'Melaleuca': ['/top10/Melaleuca.jpg'],
+    'Grevillea': ['/top10/Grevillea.png']
   };
 
   const toQuizQuestion = (r: BackendQuizRecord): QuizQuestion => {
@@ -102,18 +94,6 @@ const PlantIdentificationQuiz: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const reloadQuestions = () => {
-    setLoading(true);
-    setLoadError(null);
-    api.get<BackendQuizRecord[]>('/quiz/records')
-      .then(res => {
-        const mapped = res.data.map(toQuizQuestion);
-        setQuestions(mapped);
-      })
-      .catch(() => setLoadError('Failed to load quiz data'))
-      .finally(() => setLoading(false));
-  };
-
   useEffect(() => {
     if (quizStarted && startTime && !quizCompleted) {
       const timer = setInterval(() => {
@@ -131,7 +111,6 @@ const PlantIdentificationQuiz: React.FC = () => {
     setScore(0);
     setTimeSpent(0);
     setQuizCompleted(false);
-    setAchievements([]);
     const source = questions.length > 0 ? questions : [];
     const shuffled = [...source].sort(() => Math.random() - 0.5).slice(0, 6);
     setShuffledQuestions(shuffled);
@@ -149,8 +128,6 @@ const PlantIdentificationQuiz: React.FC = () => {
       setScore(score + 1);
     }
 
-    // Check for achievements with context
-    checkAchievements(isCorrect, q);
 
     if (currentQuestion < shuffledQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
@@ -160,52 +137,9 @@ const PlantIdentificationQuiz: React.FC = () => {
       setQuizCompleted(true);
       setStartTime(null);
 
-      // End-of-quiz achievements
-      const total = shuffledQuestions.length;
-      const finalScore = isCorrect ? score + 1 : score;
-      const endAchievements: string[] = [];
-      if (finalScore === total) endAchievements.push('Perfect Score');
-      if (timeSpent <= 20 && finalScore >= Math.ceil(total * 0.6)) endAchievements.push('Quick Thinker');
-      endAchievements.forEach((a) => {
-        if (!achievements.includes(a)) setAchievements(prev => [...prev, a]);
-      });
     }
   };
 
-  const checkAchievements = (wasCorrect?: boolean, questionParam?: QuizQuestion) => {
-    const newAchievements: string[] = [];
-    
-    if (score === 0 && currentQuestion === 0) {
-      newAchievements.push('First Steps');
-    }
-    if (score >= 3 && currentQuestion === 2) {
-      newAchievements.push('Getting the Hang of It');
-    }
-    if (score >= 5 && currentQuestion === 4) {
-      newAchievements.push('Plant Expert');
-    }
-    if (timeSpent < 30 && currentQuestion === 2) {
-      newAchievements.push('Speed Demon');
-    }
-
-    // Contextual badges
-    if (typeof wasCorrect === 'boolean' && questionParam) {
-      if (wasCorrect && questionParam.isInvasive) {
-        newAchievements.push('Invasive Hunter');
-      }
-      if (wasCorrect && !questionParam.isInvasive) {
-        newAchievements.push('Native Guardian');
-      }
-    }
-
-    newAchievements.forEach(achievement => {
-      if (!achievements.includes(achievement)) {
-        setAchievements(prev => [...prev, achievement]);
-        setShowAchievement(achievement);
-        setTimeout(() => setShowAchievement(null), 3000);
-      }
-    });
-  };
 
   const resetQuiz = () => {
     setQuizStarted(false);
@@ -216,15 +150,14 @@ const PlantIdentificationQuiz: React.FC = () => {
     setScore(0);
     setTimeSpent(0);
     setStartTime(null);
-    setAchievements([]);
   };
 
   const getScoreMessage = () => {
     const percentage = (score / shuffledQuestions.length) * 100;
-    if (percentage >= 90) return { message: "Outstanding! You're a true plant expert!", color: "text-green-600" };
-    if (percentage >= 70) return { message: "Great job! You have good plant identification skills!", color: "text-blue-600" };
-    if (percentage >= 50) return { message: "Good effort! Keep learning to improve your skills!", color: "text-yellow-600" };
-    return { message: "Keep practicing! Every expert was once a beginner!", color: "text-red-600" };
+    if (percentage >= 90) return { message: "Outstanding. You're a true plant expert.", color: "text-green-600" };
+    if (percentage >= 70) return { message: "Great job. You have good plant identification skills.", color: "text-blue-600" };
+    if (percentage >= 50) return { message: "Good effort. Keep learning to improve your skills.", color: "text-yellow-600" };
+    return { message: "Keep practicing. Every expert was once a beginner.", color: "text-red-600" };
   };
 
   const formatTime = (seconds: number) => {
@@ -243,7 +176,7 @@ const PlantIdentificationQuiz: React.FC = () => {
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Plant Identification Challenge</h2>
             <p className="text-lg text-gray-600 mb-6">
-              Test your ability to identify invasive plants! Can you tell which plants should be removed to protect our environment?
+              Test your ability to identify invasive plants. Can you tell which plants should be removed to protect our environment?
             </p>
           </div>
 
@@ -254,20 +187,13 @@ const PlantIdentificationQuiz: React.FC = () => {
             <div className="text-center text-red-600 mb-6">{loadError}</div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-green-50 p-6 rounded-xl border border-green-200">
               <div className="flex items-center mb-3">
                 <CheckCircle className="h-6 w-6 text-green-600 mr-2" />
                 <h3 className="font-bold text-green-800">6 Questions</h3>
               </div>
               <p className="text-green-700 text-sm">Identify invasive vs native plants</p>
-            </div>
-            <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
-              <div className="flex items-center mb-3">
-                <Trophy className="h-6 w-6 text-blue-600 mr-2" />
-                <h3 className="font-bold text-blue-800">Earn Achievements</h3>
-              </div>
-              <p className="text-blue-700 text-sm">Unlock badges as you progress</p>
             </div>
             <div className="bg-purple-50 p-6 rounded-xl border border-purple-200">
               <div className="flex items-center mb-3">
@@ -278,19 +204,13 @@ const PlantIdentificationQuiz: React.FC = () => {
             </div>
           </div>
 
-          <div className="text-center space-x-3">
+          <div className="text-center">
             <button
               onClick={startQuiz}
               disabled={loading || questions.length === 0}
               className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-500 shadow-lg ${loading || questions.length === 0 ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white transform hover:scale-105'}`}
             >
               Start Challenge →
-            </button>
-            <button
-              onClick={reloadQuestions}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all duration-500 shadow-lg hover:shadow-xl"
-            >
-              Reload Data
             </button>
           </div>
         </div>
@@ -305,15 +225,15 @@ const PlantIdentificationQuiz: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-xl border-2 border-green-100 p-8">
           <div className="text-center mb-8">
             <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-              <Trophy className="h-12 w-12 text-white" />
+              <Star className="h-12 w-12 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Quiz Complete!</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Quiz Complete</h2>
             <p className={`text-xl font-semibold ${scoreMessage.color} mb-6`}>
               {scoreMessage.message}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-green-50 p-6 rounded-xl border border-green-200 text-center">
               <div className="text-3xl font-bold text-green-600 mb-2">{score}/{shuffledQuestions.length}</div>
               <div className="text-green-800 font-semibold">Correct Answers</div>
@@ -322,24 +242,8 @@ const PlantIdentificationQuiz: React.FC = () => {
               <div className="text-3xl font-bold text-blue-600 mb-2">{formatTime(timeSpent)}</div>
               <div className="text-blue-800 font-semibold">Time Taken</div>
             </div>
-            <div className="bg-purple-50 p-6 rounded-xl border border-purple-200 text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">{achievements.length}</div>
-              <div className="text-purple-800 font-semibold">Achievements</div>
-            </div>
           </div>
 
-          {achievements.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">🏆 Achievements Unlocked</h3>
-              <div className="flex flex-wrap justify-center gap-3">
-                {achievements.map((achievement, index) => (
-                  <div key={index} className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full font-semibold shadow-md">
-                    {achievement}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           <div className="text-center space-x-4">
             <button
@@ -365,9 +269,9 @@ const PlantIdentificationQuiz: React.FC = () => {
       <div className="max-w-2xl mx-auto p-6">
         <div className="bg-white rounded-2xl shadow-xl border-2 border-red-100 p-8 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-3">No quiz questions available</h2>
-          <p className="text-gray-700 mb-6">Please reload quiz data and try again.</p>
+          <p className="text-gray-700 mb-6">No quiz questions are currently available. Please try again later.</p>
           <button
-            onClick={() => { setQuizStarted(false); reloadQuestions(); }}
+            onClick={() => setQuizStarted(false)}
             className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white px-8 py-3 rounded-xl font-bold transition-all duration-500"
           >
             Go Back
@@ -390,15 +294,6 @@ const PlantIdentificationQuiz: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {/* Achievement Popup */}
-      {showAchievement && (
-        <div className="fixed top-4 right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 animate-bounce">
-          <div className="flex items-center">
-            <Trophy className="h-5 w-5 mr-2" />
-            <span className="font-bold">Achievement Unlocked: {showAchievement}!</span>
-          </div>
-        </div>
-      )}
 
       <div className="bg-white rounded-2xl shadow-xl border-2 border-green-100 p-8">
         {/* Progress Bar */}
@@ -492,7 +387,7 @@ const PlantIdentificationQuiz: React.FC = () => {
                     <XCircle className="h-8 w-8 text-red-600 mr-3" />
                   )}
                   <span className={`text-xl font-bold ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-                    {isCorrect ? 'Correct!' : 'Incorrect'}
+                    {isCorrect ? 'Correct' : 'Incorrect'}
                   </span>
                 </div>
                 <div className="bg-white p-4 rounded-lg">

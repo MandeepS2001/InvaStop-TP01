@@ -19,14 +19,74 @@
   .sub { color:#555; font-size: 13px; }
 
   .wrap { display: grid; grid-template-rows: auto 1fr; height: calc(100vh - 68px); }
-  .controls { padding: 10px 14px; border-bottom: 1px solid #e5e7eb; display: grid; grid-template-columns: 1fr auto auto auto; gap: 8px 12px; align-items: end; }
-  .controls h3 { margin: 0 0 6px; font-size: 14px; color:#111; }
-  .panel { margin-bottom: 0; }
+  .controls { 
+    padding: 8px 12px; 
+    border-bottom: 1px solid #e5e7eb; 
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    display: grid; 
+    grid-template-columns: 1fr auto auto auto; 
+    gap: 8px 12px; 
+    align-items: start; 
+  }
+  .controls h3 { 
+    margin: 0 0 4px; 
+    font-size: 13px; 
+    color: #1e293b; 
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .panel { 
+    margin-bottom: 0; 
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 6px;
+    padding: 6px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
   .panel label { font-size: 13px; color:#444; display:block; margin-bottom:6px; }
-  .chips { display:flex; flex-wrap:wrap; gap:6px; }
-  .chip { font-size: 12px; border:1px solid #d1d5db; border-radius: 999px; padding:2px 8px; cursor:pointer; user-select:none; }
-  .chip.active { background: #eef7f0; border-color: var(--green); color: #0d5a2e; }
-  .year-row { display:flex; gap:8px; align-items:center; }
+  .chips { display:flex; flex-wrap:wrap; gap:4px; margin-bottom: 4px; }
+  .chip { 
+    font-size: 11px; 
+    font-weight: 500;
+    border: 1px solid #e5e7eb; 
+    border-radius: 12px; 
+    padding: 3px 8px; 
+    cursor: pointer; 
+    user-select: none; 
+    transition: all 0.2s ease;
+    position: relative;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .chip:hover { 
+    transform: translateY(-1px); 
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .chip.active { 
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-color: var(--green); 
+    color: #0d5a2e; 
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(31, 157, 85, 0.2);
+  }
+  .chip.active::before {
+    content: '✓';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--green);
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+  }
+  .year-row { display:flex; gap:6px; align-items:center; }
   .legend { display:flex; flex-wrap:wrap; gap:8px 12px; }
   .legend-item { display:flex; align-items:center; gap:8px; font-size:12px; }
   .swatch { width:12px; height:12px; border-radius: 3px; }
@@ -41,10 +101,56 @@
 
   .dot { width: 12px; height: 12px; border-radius: 50%; }
 
-  .toolbar { display:flex; gap:8px; margin-top: 8px; }
-  .btn { font-size: 12px; border:1px solid #d1d5db; background:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; }
-  .btn:hover { background:#f5f7f6; }
-  .stat { font-size:12px; color:#555; margin-top: 6px; }
+  .toolbar { display:flex; gap:6px; margin-top: 4px; }
+  .btn { 
+    font-size: 10px; 
+    font-weight: 500;
+    border: 1px solid #d1d5db; 
+    background: #fff; 
+    padding: 4px 8px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .btn:hover { 
+    background: #f8fafc; 
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .stat { font-size:11px; color:#555; margin-top: 4px; }
+
+  /* Custom zoom controls positioned on map */
+  .zoom-controls { position: absolute; top: 12px; left: 12px; z-index: 1000; }
+  .zoom-btn { 
+    display: block; 
+    width: 40px; 
+    height: 40px; 
+    background: #fff; 
+    border: 1px solid #d1d5db; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #374151; 
+    margin-bottom: 2px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+  }
+  .zoom-btn:hover { 
+    background: #f9fafb; 
+    border-color: #9ca3af; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  .zoom-btn:active { 
+    background: #e5e7eb; 
+    transform: scale(0.95);
+  }
 
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
@@ -89,10 +195,6 @@
     </div>
     <div class="panel" style="grid-column: 4 / span 1; text-align:right;">
       <h3>Map</h3>
-      <div class="toolbar">
-        <button id="resetView" class="btn">Reset view</button>
-        <button id="fitToData" class="btn">Zoom to data</button>
-      </div>
       <div class="stat" id="countStats"></div>
     </div>
   </div>
@@ -108,6 +210,11 @@
   <div class="map-wrap">
     <main id="map"></main>
     <div id="legendOverlay" class="legend legend-overlay"></div>
+    <!-- Custom zoom controls positioned on map -->
+    <div class="zoom-controls">
+      <button id="zoomIn" class="zoom-btn">+</button>
+      <button id="zoomOut" class="zoom-btn">−</button>
+    </div>
   </div>
 </div>
 
@@ -218,18 +325,56 @@ function markerIcon(hex) {
 // --- UI: species chips + legend ---
 function renderChips() {
   chipsEl.innerHTML = "";
+  
   ALLOWED_SPECIES.forEach(sp => {
     const div = document.createElement("div");
     div.className = "chip" + (selectedSpecies.has(sp) ? " active" : "");
     div.textContent = sp;
-    div.style.borderColor = color(sp);
-    div.style.boxShadow = `inset 0 0 0 2px ${color(sp)}22`;
+    
+    // Enhanced styling with species-specific colors
+    const speciesColor = color(sp);
+    div.style.borderColor = selectedSpecies.has(sp) ? speciesColor : "#e5e7eb";
+    div.style.color = selectedSpecies.has(sp) ? speciesColor : "#374151";
+    
+    if (selectedSpecies.has(sp)) {
+      div.style.background = `linear-gradient(135deg, ${speciesColor}15 0%, ${speciesColor}25 100%)`;
+      div.style.boxShadow = `0 2px 8px ${speciesColor}30`;
+    } else {
+      div.style.background = "#ffffff";
+      div.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
+    }
+    
     div.addEventListener("click", () => {
-      if (selectedSpecies.has(sp)) selectedSpecies.delete(sp);
-      else selectedSpecies.add(sp);
+      if (selectedSpecies.has(sp)) {
+        selectedSpecies.delete(sp);
+      } else {
+        selectedSpecies.add(sp);
+      }
+      
+      // Update visual state immediately
       div.classList.toggle("active");
+      const isActive = selectedSpecies.has(sp);
+      div.style.borderColor = isActive ? speciesColor : "#e5e7eb";
+      div.style.color = isActive ? speciesColor : "#374151";
+      
+      if (isActive) {
+        div.style.background = `linear-gradient(135deg, ${speciesColor}15 0%, ${speciesColor}25 100%)`;
+        div.style.boxShadow = `0 2px 8px ${speciesColor}30`;
+      } else {
+        div.style.background = "#ffffff";
+        div.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
+      }
+      
+      // Apply filters with visual feedback
       applyFiltersAndRender();
+      
+      // Add brief visual feedback
+      div.style.transform = "scale(0.95)";
+      setTimeout(() => {
+        div.style.transform = "";
+      }, 150);
     });
+    
     chipsEl.appendChild(div);
   });
 
@@ -237,11 +382,30 @@ function renderChips() {
     selectedSpecies = new Set(ALLOWED_SPECIES);
     renderChips();
     applyFiltersAndRender();
+    
+    // Visual feedback
+    const btn = document.getElementById("selectAll");
+    btn.style.background = "#10b981";
+    btn.style.color = "white";
+    setTimeout(() => {
+      btn.style.background = "";
+      btn.style.color = "";
+    }, 300);
   };
+  
   document.getElementById("clearAll").onclick = () => {
     selectedSpecies.clear();
     renderChips();
     applyFiltersAndRender();
+    
+    // Visual feedback
+    const btn = document.getElementById("clearAll");
+    btn.style.background = "#ef4444";
+    btn.style.color = "white";
+    setTimeout(() => {
+      btn.style.background = "";
+      btn.style.color = "";
+    }, 300);
   };
   
   document.getElementById("findNearby").onclick = () => {
@@ -250,18 +414,11 @@ function renderChips() {
       findNearbyRecords(postcode);
     } else {
       locationStatsEl.textContent = "Please enter a postcode";
+      locationStatsEl.style.color = "#ef4444";
     }
   };
   
-  // Lightweight reset: do not reload data to avoid UI hang
-  document.getElementById("resetView").onclick = () => {
-    MAP.setCenter({ lat: AU_CENTER[0], lng: AU_CENTER[1] });
-    MAP.setZoom(AU_ZOOM);
-    locationStatsEl.textContent = "";
-    postcodeEl.value = "";
-    // Reapply current filters to ensure markers are in sync
-    applyFiltersAndRender();
-  };
+  // Note: resetView button removed, zoom controls added instead
 }
 
 function renderLegend() {
@@ -320,27 +477,50 @@ async function loadData() {
     }));
   }
 
-  // Basic cleaning & limit to the 10 species
-  rawRows = rawRows.filter(r =>
-    ALLOWED_SPECIES.includes(r.vernacularName) &&
-    Number.isFinite(r.decimalLatitude) &&
-    Number.isFinite(r.decimalLongitude)
-  );
+  // Basic cleaning & limit to allowed species + enforce 2015+ date filter
+  rawRows = rawRows.filter(r => {
+    // Check species
+    if (!ALLOWED_SPECIES.includes(r.vernacularName)) return false;
+    
+    // Check coordinates
+    if (!Number.isFinite(r.decimalLatitude) || !Number.isFinite(r.decimalLongitude)) return false;
+    
+    // CRITICAL: Filter out any data prior to 2015 at the source
+    if (r.eventDate instanceof Date && !isNaN(r.eventDate)) {
+      const year = r.eventDate.getFullYear();
+      if (year < 2015) {
+        console.log(`Excluding record from ${year} (prior to 2015):`, r.vernacularName);
+        return false;
+      }
+    }
+    
+    return true;
+  });
 
   if (rawRows.length === 0) {
     countStatsEl.textContent = 'No records for current filters.';
     return;
   }
 
-  // Infer min/max year from data (but clamp to 2015–present if needed)
+  // Infer min/max year from data (enforce 2015+ constraint)
   const years = rawRows
     .map(r => (r.eventDate instanceof Date && !isNaN(r.eventDate) ? r.eventDate.getFullYear() : null))
-    .filter(y => y !== null);
+    .filter(y => y !== null && y >= 2015); // Only consider years 2015+
+  
+  const currentYear = new Date().getFullYear();
   const yrMin = years.length ? Math.min(...years) : 2015;
-  const yrMax = years.length ? Math.max(...years) : new Date().getFullYear();
+  const yrMax = years.length ? Math.max(...years) : currentYear;
+  
+  // Enforce constraints: min 2015, max current year
   minYear = Math.max(2015, yrMin);
-  // Cap the inferred max year at 2025
-  maxYear = Math.min(2025, Math.max(minYear, yrMax));
+  maxYear = Math.min(currentYear, Math.max(minYear, yrMax));
+  
+  console.log('Year range inferred:', {
+    availableYears: years.length,
+    yrMin, yrMax,
+    finalRange: `${minYear}-${maxYear}`,
+    currentYear
+  });
 
   yearMinEl.value = minYear;
   yearMaxEl.value = maxYear;
@@ -354,29 +534,89 @@ async function loadData() {
 
 // --- Filtering + render markers ---
 function applyFiltersAndRender() {
-  const yMin = parseInt(yearMinEl.value, 10);
-  // Clamp yMax to 2025 even if input tries to exceed
-  const yMax = Math.min(parseInt(yearMaxEl.value, 10), 2025);
+  // Parse year inputs with robust validation
+  let yMin, yMax;
+  const minInput = yearMinEl.value.trim();
+  const maxInput = yearMaxEl.value.trim();
   
-  // If year fields are empty, don't filter by year (show all records)
-  const useYearFilter = !isNaN(yMin) && !isNaN(yMax);
+  // Parse year values with validation
+  if (minInput === '' || maxInput === '') {
+    // If either field is empty, use default range (2015 to current year)
+    yMin = 2015;
+    yMax = new Date().getFullYear();
+  } else {
+    yMin = parseInt(minInput, 10);
+    yMax = parseInt(maxInput, 10);
+    
+    // Validate parsed years
+    if (isNaN(yMin) || isNaN(yMax)) {
+      console.warn('Invalid year input detected, using default range');
+      yMin = 2015;
+      yMax = new Date().getFullYear();
+    }
+  }
+  
+  // Enforce minimum year of 2015 (no data prior to 2015 allowed)
+  yMin = Math.max(2015, yMin);
+  yMax = Math.min(new Date().getFullYear(), Math.max(yMin, yMax));
+  
+  // Update input fields to reflect enforced values
+  yearMinEl.value = yMin;
+  yearMaxEl.value = yMax;
+  
+  console.log('Year filter applied:', { yMin, yMax });
 
   filteredRows = rawRows.filter(r => {
-    if (!selectedSpecies.has(r.vernacularName)) return false;
+    // Filter by species - ensure we have valid species data
+    if (!r.vernacularName || !selectedSpecies.has(r.vernacularName)) {
+      return false;
+    }
     
-    // If we're not using year filter, skip date validation
-    if (!useYearFilter) return true;
+    // Always filter out data prior to 2015, regardless of user input
+    if (!(r.eventDate instanceof Date) || isNaN(r.eventDate)) {
+      return false; // Exclude records without valid dates
+    }
     
-    if (!(r.eventDate instanceof Date) || isNaN(r.eventDate)) return false;
-    const y = r.eventDate.getFullYear();
-    return y >= yMin && y <= yMax;
+    const year = r.eventDate.getFullYear();
+    
+    // Critical: Never show data prior to 2015
+    if (year < 2015) {
+      return false;
+    }
+    
+    // Apply user's year range filter
+    const yearInRange = year >= yMin && year <= yMax;
+    
+    // Additional validation for coordinates
+    const hasValidCoords = Number.isFinite(r.decimalLatitude) && 
+                          Number.isFinite(r.decimalLongitude) &&
+                          r.decimalLatitude >= -90 && r.decimalLatitude <= 90 &&
+                          r.decimalLongitude >= -180 && r.decimalLongitude <= 180;
+    
+    return yearInRange && hasValidCoords;
   });
 
+  // Enhanced logging with detailed breakdown
+  const speciesBreakdown = {};
+  ALLOWED_SPECIES.forEach(sp => {
+    speciesBreakdown[sp] = filteredRows.filter(r => r.vernacularName === sp).length;
+  });
+  
   console.log('Filtering results:', {
     totalRecords: rawRows.length,
     filteredRecords: filteredRows.length,
-    useYearFilter: useYearFilter,
-    selectedSpecies: Array.from(selectedSpecies)
+    yearRange: `${yMin}-${yMax}`,
+    selectedSpecies: Array.from(selectedSpecies),
+    speciesBreakdown: speciesBreakdown,
+    recordsExcludedBefore2015: rawRows.filter(r => {
+      if (!(r.eventDate instanceof Date) || isNaN(r.eventDate)) return false;
+      return r.eventDate.getFullYear() < 2015;
+    }).length,
+    invalidCoordinates: rawRows.filter(r => {
+      return !Number.isFinite(r.decimalLatitude) || !Number.isFinite(r.decimalLongitude) ||
+             r.decimalLatitude < -90 || r.decimalLatitude > 90 ||
+             r.decimalLongitude < -180 || r.decimalLongitude > 180;
+    }).length
   });
 
   drawMarkers(filteredRows);
@@ -421,17 +661,87 @@ function drawMarkers(rows) {
   CURRENT_MARKERS = markers;
   CLUSTER.addMarkers(markers);
 
+  // Enhanced count display with more context
+  const selectedCount = selectedSpecies.size;
+  const totalSpecies = ALLOWED_SPECIES.length;
   countStatsEl.textContent = `Showing ${rows.length.toLocaleString()} records`;
+  
+  // Add tooltip-like information
+  countStatsEl.title = `Filtered from ${rawRows.length.toLocaleString()} total records\n${selectedCount} of ${totalSpecies} species selected`;
 }
 
 // --- Wire UI buttons ---
 document.getElementById("applyYear").onclick = () => applyFiltersAndRender();
-document.getElementById("resetView").onclick = () => MAP.setCenter({lat: AU_CENTER[0], lng: AU_CENTER[1]}) || MAP.setZoom(AU_ZOOM);
-document.getElementById("fitToData").onclick = () => {
-  const bounds = new google.maps.LatLngBounds();
-  if (!CURRENT_MARKERS.length) return;
-  CURRENT_MARKERS.forEach(m => bounds.extend(m.getPosition()));
-  MAP.fitBounds(bounds, 40);
+
+// Add input validation for year fields
+function validateYearInput(input, isMin = true) {
+  const value = parseInt(input.value, 10);
+  const currentYear = new Date().getFullYear();
+  
+  if (isNaN(value)) {
+    input.value = isMin ? '2015' : currentYear.toString();
+    return;
+  }
+  
+  // Enforce minimum year of 2015
+  if (value < 2015) {
+    input.value = '2015';
+    return;
+  }
+  
+  // Enforce maximum year of current year
+  if (value > currentYear) {
+    input.value = currentYear.toString();
+    return;
+  }
+  
+  // For min input, ensure it doesn't exceed max
+  if (isMin && yearMaxEl.value && parseInt(yearMaxEl.value, 10) < value) {
+    input.value = yearMaxEl.value;
+    return;
+  }
+  
+  // For max input, ensure it doesn't go below min
+  if (!isMin && yearMinEl.value && parseInt(yearMinEl.value, 10) > value) {
+    input.value = yearMinEl.value;
+    return;
+  }
+}
+
+// Add event listeners for real-time validation
+yearMinEl.addEventListener('input', () => validateYearInput(yearMinEl, true));
+yearMinEl.addEventListener('blur', () => validateYearInput(yearMinEl, true));
+yearMaxEl.addEventListener('input', () => validateYearInput(yearMaxEl, false));
+yearMaxEl.addEventListener('blur', () => validateYearInput(yearMaxEl, false));
+
+// Add Enter key support for year inputs
+yearMinEl.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    validateYearInput(yearMinEl, true);
+    applyFiltersAndRender();
+  }
+});
+
+yearMaxEl.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    validateYearInput(yearMaxEl, false);
+    applyFiltersAndRender();
+  }
+});
+
+// Custom zoom controls positioned on map
+document.getElementById("zoomIn").onclick = () => {
+  if (MAP) {
+    const currentZoom = MAP.getZoom();
+    MAP.setZoom(currentZoom + 1);
+  }
+};
+
+document.getElementById("zoomOut").onclick = () => {
+  if (MAP) {
+    const currentZoom = MAP.getZoom();
+    MAP.setZoom(currentZoom - 1);
+  }
 };
 
 // Seasonal CTA button handler (optional element)

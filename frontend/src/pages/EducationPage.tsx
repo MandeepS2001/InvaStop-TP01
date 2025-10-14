@@ -13,7 +13,7 @@ const speciesList: {
   name: string; 
   image: string; 
   category: 'plant' | 'animal' | 'insect';
-  threatLevel: 'high' | 'medium' | 'critical' | 'low';
+  threatLevel: 'high' | 'medium' | 'low';
   quickFacts: {
     introduced: string;
     impact: string;
@@ -25,7 +25,7 @@ const speciesList: {
     name: 'Lantana', 
     image: '/top10/Lantana.png',
     category: 'plant',
-    threatLevel: 'critical',
+    threatLevel: 'high',
     quickFacts: {
       introduced: '1841',
       impact: 'Forms dense thickets, displaces native vegetation',
@@ -133,7 +133,7 @@ const speciesList: {
     name: 'Gamba Grass', 
     image: '/top10/GambaGrass.png',
     category: 'plant',
-    threatLevel: 'critical',
+    threatLevel: 'high',
     quickFacts: {
       introduced: '1930s',
       impact: 'Extreme fire risk, ecosystem transformation',
@@ -143,85 +143,10 @@ const speciesList: {
   },
 ];
 
-// Animal species data
-const animalSpeciesList: { 
-  name: string; 
-  image: string; 
-  category: 'plant' | 'animal' | 'insect';
-  threatLevel: 'high' | 'medium' | 'critical' | 'low';
-  quickFacts: {
-    introduced: string;
-    impact: string;
-    distribution: string;
-  };
-  relatedSpecies: string[];
-}[] = [
-  { 
-    name: 'Common Myna', 
-    image: '/top10/CommonMyna.png',
-    category: 'animal',
-    threatLevel: 'high',
-    quickFacts: {
-      introduced: '1862',
-      impact: 'Competes with native birds, spreads weeds',
-      distribution: 'All mainland states'
-    },
-    relatedSpecies: ['European Rabbit', 'Red Fox', 'Cane Toad']
-  },
-  { 
-    name: 'European Rabbit', 
-    image: '/top10/EuropeanRabbit.jpg',
-    category: 'animal',
-    threatLevel: 'critical',
-    quickFacts: {
-      introduced: '1859',
-      impact: 'Agricultural damage, soil erosion',
-      distribution: 'All states except NT'
-    },
-    relatedSpecies: ['Red Fox', 'Feral Pig', 'Common Myna']
-  },
-  { 
-    name: 'Red Fox', 
-    image: '/top10/RedFox.png',
-    category: 'animal',
-    threatLevel: 'critical',
-    quickFacts: {
-      introduced: '1855',
-      impact: 'Predation on native wildlife',
-      distribution: 'All mainland states'
-    },
-    relatedSpecies: ['European Rabbit', 'Feral Pig', 'Common Myna']
-  },
-  { 
-    name: 'Cane Toad', 
-    image: '/top10/CaneToad.png',
-    category: 'animal',
-    threatLevel: 'critical',
-    quickFacts: {
-      introduced: '1935',
-      impact: 'Poisonous to native predators',
-      distribution: 'QLD, NSW, NT, WA'
-    },
-    relatedSpecies: ['Red Fox', 'Common Myna', 'European Rabbit']
-  },
-  { 
-    name: 'Feral Pig', 
-    image: '/top10/FeralPig.png',
-    category: 'animal',
-    threatLevel: 'high',
-    quickFacts: {
-      introduced: '1788',
-      impact: 'Soil disturbance, crop damage',
-      distribution: 'All mainland states'
-    },
-    relatedSpecies: ['Red Fox', 'European Rabbit', 'Cane Toad']
-  },
-];
 
 const EducationPage: React.FC = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'plants' | 'animals'>('plants');
   const parallaxRef = useRef<HTMLDivElement>(null);
 
   // Parallax scroll effect
@@ -250,8 +175,6 @@ const EducationPage: React.FC = () => {
   // Get threat level styling
   const getThreatLevelStyle = (level: string) => {
     switch (level) {
-      case 'critical':
-        return 'bg-red-500 text-white shadow-red-500/50';
       case 'high':
         return 'bg-orange-500 text-white shadow-orange-500/50';
       case 'medium':
@@ -280,8 +203,8 @@ const EducationPage: React.FC = () => {
             <SimpleHeader />
 
       {/* Main Content */}
-      <main className="pt-24">
-        <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-12 sm:py-16 lg:py-20 overflow-hidden">
+      <main>
+        <section className="relative bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white py-16 sm:py-20 lg:py-24 overflow-hidden">
           {/* LiquidEther Background */}
           <div className="absolute inset-0 w-full h-full z-0">
             <LiquidEther
@@ -311,11 +234,11 @@ const EducationPage: React.FC = () => {
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
               <span className="inline-block">
-                Species Profile
+                Invader Insight
               </span>
             </h1>
             <p className="text-lg sm:text-xl lg:text-2xl text-green-100 max-w-3xl mx-auto">
-              Browse the top invasive species we track. Switch between plants and animals to explore different species profiles.
+              Browse the top invasive plants we track and learn about their impact on Australian ecosystems.
             </p>
           </div>
         </section>
@@ -330,33 +253,6 @@ const EducationPage: React.FC = () => {
           </div>
           
           <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-            {/* Tab Navigation */}
-            <div className="flex justify-center mb-8">
-              <div className="bg-white/80 backdrop-blur-md rounded-xl p-2 shadow-lg border border-white/30">
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setActiveTab('plants')}
-                    className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
-                      activeTab === 'plants'
-                        ? 'bg-green-600 text-white shadow-md shadow-green-500/30'
-                        : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
-                    }`}
-                  >
-                    🌱 Plants
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('animals')}
-                    className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
-                      activeTab === 'animals'
-                        ? 'bg-green-600 text-white shadow-md shadow-green-500/30'
-                        : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
-                    }`}
-                  >
-                    🐾 Animals
-                  </button>
-                </div>
-              </div>
-            </div>
 
             {isLoading ? (
               // Skeleton Loading States
@@ -372,17 +268,15 @@ const EducationPage: React.FC = () => {
             ) : (
               <div className="transition-all duration-500 ease-in-out">
                 <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-                  {(
-                    activeTab === 'plants'
-                      ? // Invasive first (critical/high), then natives (low/medium)
-                        [...speciesList].sort((a, b) => {
-                          const rank = (t: string) => (t === 'critical' || t === 'high' ? 0 : 1);
-                          const rA = rank(a.threatLevel);
-                          const rB = rank(b.threatLevel);
-                          return rA - rB || a.name.localeCompare(b.name);
-                        })
-                      : animalSpeciesList
-                  ).map((sp, index) => (
+                  {[...speciesList]
+                    .filter(sp => sp.threatLevel === 'high' || sp.quickFacts.introduced !== 'Native')
+                    .sort((a, b) => {
+                      const rank = (t: string) => (t === 'high' ? 0 : 1);
+                      const rA = rank(a.threatLevel);
+                      const rB = rank(b.threatLevel);
+                      return rA - rB || a.name.localeCompare(b.name);
+                    })
+                  .map((sp, index) => (
                   <div 
                     key={sp.name} 
                     className="group relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-700 overflow-hidden transform hover:scale-105 hover:-rotate-1 border border-white/30"
@@ -497,18 +391,84 @@ const EducationPage: React.FC = () => {
           </div>
         </section>
 
-        {/* Quiz Section */}
-        <section className="py-16 bg-gradient-to-br from-green-50 via-white to-blue-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Try Your Skills Hero Section */}
+        <section className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-gradient-to-br from-green-800 via-green-700 to-green-900">
+          {/* LiquidEther Background */}
+          <div className="absolute inset-0 w-full h-full z-0">
+            <LiquidEther
+              colors={['#22c55e', '#16a34a', '#15803d', '#166534']}
+              mouseForce={15}
+              cursorSize={120}
+              isViscous={false}
+              viscous={18}
+              iterationsViscous={15}
+              iterationsPoisson={15}
+              dt={0.015}
+              BFECC={true}
+              resolution={0.6}
+              isBounce={false}
+              autoDemo={true}
+              autoSpeed={0.35}
+              autoIntensity={1.7}
+              takeoverDuration={0.3}
+              autoResumeDelay={1800}
+              autoRampDuration={0.7}
+            />
+          </div>
+          
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-black/18 pointer-events-none"></div>
+          
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Try Your Skills
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight">
+                <span className="inline-block">
+                  Try Your Skills
+                </span>
               </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-                See how good you are at spotting invasive plants with our fun quiz!
+              <p className="text-lg sm:text-xl lg:text-2xl text-green-100 max-w-3xl mx-auto mb-8">
+                See how good you are at spotting invasive plants with our fun quiz.
               </p>
             </div>
 
+            {/* Features */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center p-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/30 hover:bg-white/95 transition-all duration-300 hover:-translate-y-1">
+                <div className="bg-gradient-to-br from-yellow-400 to-yellow-500 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center shadow-lg">
+                  <span className="text-white text-2xl">🏆</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-3">Earn Achievements</h4>
+                <p className="text-gray-700">
+                  Unlock badges and track your progress as you become more skilled at plant identification
+                </p>
+              </div>
+
+              <div className="text-center p-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/30 hover:bg-white/95 transition-all duration-300 hover:-translate-y-1">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center shadow-lg">
+                  <span className="text-white text-2xl">🎓</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-3">Build Confidence</h4>
+                <p className="text-gray-700">
+                  Practice in a safe environment before encountering invasive plants in real life
+                </p>
+              </div>
+
+              <div className="text-center p-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/30 hover:bg-white/95 transition-all duration-300 hover:-translate-y-1">
+                <div className="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center shadow-lg">
+                  <span className="text-white text-2xl">🌱</span>
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-3">Make a Difference</h4>
+                <p className="text-gray-700">
+                  Every correct identification helps protect Australia's unique biodiversity
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Quiz Section */}
+        <section className="py-16 bg-gradient-to-br from-gray-50 via-white to-blue-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center max-w-4xl mx-auto">
               {/* Quiz Card */}
               <div className="bg-white rounded-2xl shadow-xl border-2 border-green-100 p-8 hover:shadow-2xl transition-shadow duration-300">
@@ -530,79 +490,11 @@ const EducationPage: React.FC = () => {
                   </Link>
                 </div>
               </div>
-              {/* Removed secondary card per request */}
-            </div>
-
-            {/* Features */}
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center p-6">
-                <div className="bg-green-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-green-600 text-2xl">🏆</span>
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-3">Earn Achievements</h4>
-                <p className="text-gray-600">
-                  Unlock badges and track your progress as you become more skilled at plant identification
-                </p>
-              </div>
-
-              <div className="text-center p-6">
-                <div className="bg-blue-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-blue-600 text-2xl">🎓</span>
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-3">Build Confidence</h4>
-                <p className="text-gray-600">
-                  Practice in a safe environment before encountering invasive plants in real life
-                </p>
-              </div>
-
-              <div className="text-center p-6">
-                <div className="bg-purple-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-purple-600 text-2xl">🌱</span>
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-3">Make a Difference</h4>
-                <p className="text-gray-600">
-                  Every correct identification helps protect Australia's unique biodiversity
-                </p>
-              </div>
             </div>
           </div>
         </section>
+
       </main>
-
-      {/* Footer */}
-      <footer className="bg-green-800 text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Logo and Copyright */}
-            <div className="md:col-span-1 flex flex-col items-start">
-              <div className="flex flex-col items-start mb-3">
-                <img src="/Invastop-Logo.png" alt="InvaStop" className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain" />
-              </div>
-              <p className="text-green-100 text-sm">© 2025</p>
-            </div>
-
-            {/* Navigation Columns */}
-            <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-bold mb-3 text-sm">Products</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><Link to="/map" className="hover:text-white transition-colors">Species Database</Link></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Educational Resources</span></li>
-                  <li><Link to="/map" className="hover:text-white transition-colors">Mapping Tools</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-bold mb-3 text-sm">About Us</h3>
-                <ul className="space-y-2 text-green-100 text-sm">
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Who We Are</span></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">FAQ</span></li>
-                  <li><span className="hover:text-white transition-colors cursor-pointer">Our Mission</span></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
