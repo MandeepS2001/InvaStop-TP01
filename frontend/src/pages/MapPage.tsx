@@ -114,13 +114,13 @@ const MapPage: React.FC = () => {
 
           {/* Call-to-Action Card on top */}
           <div className="mb-6">
-            <div className="relative bg-gradient-to-br from-white/80 to-gray-50/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-4 sm:p-6 overflow-hidden">
+            <div className="relative bg-gradient-to-br from-green-600/90 to-green-700/90 backdrop-blur-md rounded-2xl shadow-xl border border-green-500/30 p-4 sm:p-6 overflow-hidden">
               {/* Floating particles around the card */}
               <div className="absolute inset-0 overflow-hidden rounded-2xl">
                 {[...Array(3)].map((_, i) => (
                   <div
                     key={`cta-particle-${i}`}
-                    className="absolute w-1 h-1 bg-green-400/30 rounded-full animate-float parallax-element"
+                    className="absolute w-1 h-1 bg-white/40 rounded-full animate-float parallax-element"
                     style={{
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
@@ -133,7 +133,7 @@ const MapPage: React.FC = () => {
               
               <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="text-center sm:text-left">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-lg sm:text-xl font-bold text-white mb-2">
                     Explore Detailed Species Distribution
                   </h2>
                 </div>

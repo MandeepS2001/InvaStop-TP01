@@ -67,6 +67,9 @@ InvaStop-TP01/
 └── README.md
 ```
 
+## Documentation
+- Maintenance guide: see `docs/MAINTENANCE.md` for security, ops, and extension guidance.
+
 ## Getting Started
 
 ### Prerequisites
