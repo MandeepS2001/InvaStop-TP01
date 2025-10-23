@@ -465,6 +465,24 @@ const LandManagementSimulator: React.FC = () => {
               <p className="text-lg text-gray-600 max-w-4xl mx-auto">
                 Our planner uses environmental science data and agricultural research to estimate how different land management practices might affect invasive plant risk on your property. Combine scenarios to model real-world farming decisions.
               </p>
+              
+              {/* AI Disclaimer */}
+              <div className="mt-6 max-w-3xl mx-auto">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 mr-3">
+                      <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs">ℹ️</span>
+                      </div>
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm text-blue-800">
+                        <span className="font-medium">Disclaimer:</span> Cost estimates and risk percentages are guidelines only. Actual costs vary by location and project. Consult local experts for accurate estimates.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -588,6 +606,15 @@ const LandManagementSimulator: React.FC = () => {
                     }`}>
                       {scenario.riskChange === 'increase' ? '⚠️ +' : '✅ -'}{scenario.riskPercentage}%
                     </div>
+                  </div>
+                  
+                  {/* Risk Impact Explanation */}
+                  <div className="mb-3 p-2 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-600">
+                      <span className="font-medium">
+                        {scenario.riskChange === 'increase' ? 'Increases' : 'Reduces'}
+                      </span> invasive plant risk by {scenario.riskPercentage}%
+                    </p>
                   </div>
                   
                   <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-green-700 transition-colors">

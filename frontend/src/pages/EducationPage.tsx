@@ -9,23 +9,49 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-const speciesList: { 
-  name: string; 
-  image: string; 
-  category: 'plant' | 'animal' | 'insect';
-  threatLevel: 'high' | 'medium' | 'low';
-  quickFacts: {
-    introduced: string;
-    impact: string;
-    distribution: string;
-  };
-  relatedSpecies: string[];
-}[] = [
+// Original 5 invasive species profiles
+const originalSpeciesList = [
+  { 
+    name: 'Bitou Bush', 
+    image: '/top10/BitouBush.png',
+    category: 'plant' as const,
+    threatLevel: 'high' as const,
+    quickFacts: {
+      introduced: '1908',
+      impact: 'Coastal dune invasion, biodiversity loss',
+      distribution: 'NSW, VIC, SA, WA'
+    },
+    relatedSpecies: ['Lantana', 'Gorse', 'Buffel Grass']
+  },
+  { 
+    name: 'Buffel Grass', 
+    image: '/top10/BuffelGrass.png',
+    category: 'plant' as const,
+    threatLevel: 'high' as const,
+    quickFacts: {
+      introduced: '1870s',
+      impact: 'Alters fire regimes, reduces biodiversity',
+      distribution: 'All mainland states'
+    },
+    relatedSpecies: ['Gamba Grass', 'Wiregrass', 'Asiatic Sand Sedge']
+  },
+  { 
+    name: 'Gamba Grass', 
+    image: '/top10/GambaGrass.png',
+    category: 'plant' as const,
+    threatLevel: 'high' as const,
+    quickFacts: {
+      introduced: '1930s',
+      impact: 'Extreme fire risk, ecosystem transformation',
+      distribution: 'NT, QLD, WA'
+    },
+    relatedSpecies: ['Buffel Grass', 'Wiregrass', 'Asiatic Sand Sedge']
+  },
   { 
     name: 'Lantana', 
     image: '/top10/Lantana.png',
-    category: 'plant',
-    threatLevel: 'high',
+    category: 'plant' as const,
+    threatLevel: 'high' as const,
     quickFacts: {
       introduced: '1841',
       impact: 'Forms dense thickets, displaces native vegetation',
@@ -34,113 +60,17 @@ const speciesList: {
     relatedSpecies: ['Bitou Bush', 'Gorse', 'Buffel Grass']
   },
   { 
-    name: 'Bitou Bush', 
-    image: '/top10/BitouBush.png',
-    category: 'plant',
-    threatLevel: 'high',
-    quickFacts: {
-      introduced: '1908',
-      impact: 'Coastal dune invasion, biodiversity loss',
-      distribution: 'NSW, VIC, SA, WA'
-    },
-    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Banksia']
-  },
-  { 
-    name: 'Eucalyptus', 
-    image: '/top10/Eucalyptus.png',
-    category: 'plant',
-    threatLevel: 'low',
-    quickFacts: {
-      introduced: 'Native',
-      impact: 'Essential for Australian ecosystems and wildlife',
-      distribution: 'Throughout Australia'
-    },
-    relatedSpecies: ['Acacia/Wattle', 'Banksia', 'Melaleuca']
-  },
-  { 
-    name: 'Acacia/Wattle', 
-    image: '/top10/Acacia-Wattle.jpg',
-    category: 'plant',
-    threatLevel: 'low',
-    quickFacts: {
-      introduced: 'Native',
-      impact: 'Important nitrogen fixer, food for native wildlife',
-      distribution: 'Throughout Australia'
-    },
-    relatedSpecies: ['Eucalyptus', 'Banksia', 'Grevillea']
-  },
-  { 
-    name: 'Banksia', 
-    image: '/top10/Banksia.jpg',
-    category: 'plant',
-    threatLevel: 'low',
-    quickFacts: {
-      introduced: 'Native',
-      impact: 'Critical food source for native birds and mammals',
-      distribution: 'Western Australia, Eastern Australia'
-    },
-    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Grevillea']
-  },
-  { 
     name: 'Gorse', 
     image: '/top10/Gorse.png',
-    category: 'plant',
-    threatLevel: 'high',
+    category: 'plant' as const,
+    threatLevel: 'high' as const,
     quickFacts: {
       introduced: '1830s',
       impact: 'Forms impenetrable thickets, fire hazard',
       distribution: 'VIC, TAS, NSW, SA'
     },
-    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Melaleuca']
-  },
-  { 
-    name: 'Buffel Grass', 
-    image: '/top10/BuffelGrass.png',
-    category: 'plant',
-    threatLevel: 'high',
-    quickFacts: {
-      introduced: '1870s',
-      impact: 'Alters fire regimes, reduces biodiversity',
-      distribution: 'All mainland states'
-    },
-    relatedSpecies: ['Eucalyptus', 'Banksia', 'Grevillea']
-  },
-  { 
-    name: 'Melaleuca', 
-    image: '/top10/Melaleuca.jpg',
-    category: 'plant',
-    threatLevel: 'low',
-    quickFacts: {
-      introduced: 'Native',
-      impact: 'Provides habitat and food for native wildlife',
-      distribution: 'Throughout Australia'
-    },
-    relatedSpecies: ['Eucalyptus', 'Banksia', 'Grevillea']
-  },
-  { 
-    name: 'Grevillea', 
-    image: '/top10/Grevillea.png',
-    category: 'plant',
-    threatLevel: 'low',
-    quickFacts: {
-      introduced: 'Native',
-      impact: 'Attracts native birds and insects, supports biodiversity',
-      distribution: 'Throughout Australia'
-    },
-    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Melaleuca']
-  },
-  { 
-    name: 'Gamba Grass', 
-    image: '/top10/GambaGrass.png',
-    category: 'plant',
-    threatLevel: 'high',
-    quickFacts: {
-      introduced: '1930s',
-      impact: 'Extreme fire risk, ecosystem transformation',
-      distribution: 'NT, QLD, WA'
-    },
-    relatedSpecies: ['Eucalyptus', 'Acacia/Wattle', 'Banksia']
-  },
+    relatedSpecies: ['Lantana', 'Bitou Bush', 'Portuguese Broom']
+  }
 ];
 
 
@@ -267,9 +197,8 @@ const EducationPage: React.FC = () => {
               </div>
             ) : (
               <div className="transition-all duration-500 ease-in-out">
-                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-                  {[...speciesList]
-                    .filter(sp => sp.threatLevel === 'high' || sp.quickFacts.introduced !== 'Native')
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+                  {originalSpeciesList
                     .sort((a, b) => {
                       const rank = (t: string) => (t === 'high' ? 0 : 1);
                       const rA = rank(a.threatLevel);
@@ -384,7 +313,7 @@ const EducationPage: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  ))}
+                ))}
                 </div>
               </div>
             )}
@@ -451,7 +380,7 @@ const EducationPage: React.FC = () => {
                 <p className="text-gray-700">
                   Practice in a safe environment before encountering invasive plants in real life
                 </p>
-              </div>
+            </div>
 
               <div className="text-center p-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/30 hover:bg-white/95 transition-all duration-300 hover:-translate-y-1">
                 <div className="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center shadow-lg">

@@ -22,10 +22,6 @@ export interface UserCreate {
   location?: string;
 }
 
-export interface UserLogin {
-  email: string;
-  password: string;
-}
 
 export interface UserUpdate {
   full_name?: string;
@@ -204,12 +200,6 @@ export interface PaginatedResponse<T> {
   pages: number;
 }
 
-// Auth types
-export interface AuthResponse {
-  access_token: string;
-  token_type: string;
-  user: User;
-}
 
 // Form types
 export interface FormField {

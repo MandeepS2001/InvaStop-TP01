@@ -8,6 +8,104 @@ interface Props {
   onClose: () => void;
 }
 
+// Helper function to get plant-specific next steps
+const getPlantSpecificSteps = (speciesName: string) => {
+  const plantName = speciesName.replace(/_/g, ' ').toLowerCase();
+  
+  // Define plant-specific guidance based on the AI model's capabilities
+  const plantGuidance: { [key: string]: string[] } = {
+    'mouse ear hawkweed': [
+      'Remove small infestations by hand-pulling before flowering',
+      'Prevent seed spread by cleaning tools and equipment',
+      'Monitor regularly as this plant spreads quickly'
+    ],
+    'mikania': [
+      'Cut and paint herbicide on cut stems immediately',
+      'Prevent vine growth by removing from trees and shrubs',
+      'Monitor for regrowth as roots can resprout'
+    ],
+    'lantana': [
+      'Wear protective clothing when handling - causes skin irritation',
+      'Apply herbicide to cut stumps within 30 seconds of cutting',
+      'Remove all plant material to prevent regrowth'
+    ],
+    'bitou bush': [
+      'Best controlled in winter when soil is moist',
+      'Apply herbicide to actively growing plants',
+      'Follow up treatment needed for seedling control'
+    ],
+    'gorse': [
+      'Cut mature plants and treat stumps with herbicide',
+      'Fire can be effective but requires permits and safety measures',
+      'Monitor for 2-3 years as seeds remain viable'
+    ],
+    'buffel grass': [
+      'Most effective control is in early growth stages',
+      'Avoid disturbing soil as this encourages germination',
+      'Consider biological control methods for large infestations'
+    ],
+    'spiked pepper': [
+      'Remove by hand for small plants, ensuring roots are removed',
+      'Cut larger plants and treat stumps immediately',
+      'Prevent seed spread by removing before fruiting'
+    ],
+    'black sage': [
+      'Apply herbicide when plants are actively growing',
+      'Monitor for seedlings after initial treatment',
+      'Consider mulching to suppress regrowth'
+    ],
+    'cane tibouchina': [
+      'Cut stems close to ground and treat immediately',
+      'Remove all plant material to prevent spread',
+      'Monitor for root suckers and treat promptly'
+    ],
+    'leafy spurge': [
+      'Wear gloves - milky sap causes skin irritation',
+      'Apply herbicide to actively growing plants',
+      'May require multiple treatments over several years'
+    ],
+    'asiatic sand sedge': [
+      'Most effective control is during active growth period',
+      'Apply herbicide when soil is moist',
+      'Monitor for regrowth and treat promptly'
+    ],
+    'halogeton': [
+      'Remove plants before seed production',
+      'Apply herbicide to actively growing plants',
+      'Be cautious - toxic to livestock'
+    ],
+    'wiregrass': [
+      'Control is most effective when soil is moist',
+      'Apply herbicide to actively growing plants',
+      'Monitor for regrowth and treat as needed'
+    ],
+    'portuguese broom': [
+      'Cut and treat stumps immediately with herbicide',
+      'Remove all seed pods to prevent spread',
+      'Monitor for 3-5 years due to long seed viability'
+    ],
+    'black swallow-wort': [
+      'Cut stems and treat with herbicide immediately',
+      'Remove all plant material including roots',
+      'Monitor for regrowth from remaining roots'
+    ]
+  };
+
+  // Find matching guidance or return generic advice
+  for (const [plant, guidance] of Object.entries(plantGuidance)) {
+    if (plantName.includes(plant) || plant.includes(plantName)) {
+      return guidance;
+    }
+  }
+
+  // Default guidance if no specific match found
+  return [
+    'Research specific control methods for this species',
+    'Contact local environmental authorities for guidance',
+    'Consider professional removal for large infestations'
+  ];
+};
+
 const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
@@ -479,7 +577,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                   {loading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                      Analyzing...
+                      Analysing...
                     </div>
                   ) : (
                     <>
@@ -579,19 +677,48 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                         </div>
                       )}
 
-                      {/* Species Information Card */}
-                      <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl border-2 border-green-200 p-3">
-                        <div className="text-center">
-                          <div className="text-4xl mb-2">🌿</div>
-                          <h4 className="text-lg font-bold text-gray-900 mb-2">Plant Identified</h4>
-                          <p className="text-gray-600 mb-2 text-sm">
-                            Your photo has been successfully analyzed by our AI system.
-                          </p>
-                          <div className="inline-flex items-center px-3 py-1 bg-white rounded-full shadow-sm">
-                            <span className="text-xs font-medium text-gray-700">
-                              Analysis complete • {new Date().toLocaleTimeString()}
-                            </span>
-                          </div>
+                      {/* Plant-Specific Quick Next Steps */}
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 p-3">
+                        <h4 className="text-base font-semibold text-gray-900 mb-2 flex items-center">
+                          <span className="mr-2">💡</span>
+                          Quick Next Steps
+                        </h4>
+                        <ul className="space-y-2">
+                          {top && top.confidence >= 0.6 ? (
+                            // Plant-specific next steps for successful identification
+                            getPlantSpecificSteps(top.name).map((step, index) => (
+                              <li key={index} className="flex items-start">
+                                <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                                <span className="text-gray-700 text-xs">{step}</span>
+                              </li>
+                            ))
+                          ) : (
+                            // Generic guidance for no recognition or low trust
+                            <>
+                              <li className="flex items-start">
+                                <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                                <span className="text-gray-700 text-xs">If trust level is Medium/Low, take another photo closer and well‑lit.</span>
+                              </li>
+                              <li className="flex items-start">
+                                <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                                <span className="text-gray-700 text-xs">Open the species profile for control and prevention tips.</span>
+                              </li>
+                              <li className="flex items-start">
+                                <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
+                                <span className="text-gray-700 text-xs">Report a sighting if you suspect it's invasive in your area.</span>
+                              </li>
+                            </>
+                          )}
+                        </ul>
+                        
+                        <div className="mt-4 pt-3 border-t border-blue-200">
+                          <Link
+                            to="/education"
+                            className="inline-flex items-center justify-center w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 text-sm"
+                          >
+                            <span className="mr-2">🌿</span>
+                            View Invader Insights
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -645,58 +772,6 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
 
               {/* Right Column: Actions and History */}
               <div className="space-y-3">
-                {/* Quick Next Steps */}
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 p-3">
-                  <h4 className="text-base font-semibold text-gray-900 mb-2 flex items-center">
-                    <span className="mr-2">💡</span>
-                    Quick Next Steps
-                  </h4>
-                  <ul className="space-y-2">
-                    {top && top.confidence >= 0.6 ? (
-                      // Species-specific next steps for successful identification
-                      <>
-                        <li className="flex items-start">
-                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
-                          <span className="text-gray-700 text-xs">Learn more about {top.name.replace(/_/g, ' ')} and how to manage it.</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
-                          <span className="text-gray-700 text-xs">Check if this species is invasive in your area.</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
-                          <span className="text-gray-700 text-xs">Get specific control and prevention tips for this plant.</span>
-                        </li>
-                      </>
-                    ) : (
-                      // Generic guidance for no recognition or low trust
-                      <>
-                        <li className="flex items-start">
-                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
-                          <span className="text-gray-700 text-xs">If trust level is Medium/Low, take another photo closer and well‑lit.</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
-                          <span className="text-gray-700 text-xs">Open the species profile for control and prevention tips.</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="text-blue-600 mr-2 mt-1 text-sm">•</span>
-                          <span className="text-gray-700 text-xs">Report a sighting if you suspect it's invasive in your area.</span>
-                        </li>
-                      </>
-                    )}
-                  </ul>
-                  
-                  <div className="mt-4 pt-3 border-t border-blue-200">
-                    <Link
-                      to="/education"
-                      className="inline-flex items-center justify-center w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 text-sm"
-                    >
-                      <span className="mr-2">🌿</span>
-                      View Invader Insights
-                    </Link>
-                  </div>
-                </div>
 
                 {/* Scan History - Compact */}
                 <div className="bg-white rounded-2xl border border-gray-200 p-3">
@@ -710,7 +785,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                       <p className="text-gray-600 text-sm">No previous scans</p>
                     </div>
                   ) : (
-                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
                       {history.map((h) => (
                         <div key={h.id} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                           {h.imageDataUrl && (
@@ -751,7 +826,7 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                 </div>
 
                 {/* How the AI scan works */}
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border-2 border-blue-200 p-3">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border-2 border-blue-200 p-3 mb-3">
                   <div className="flex items-start">
                     <div className="flex-shrink-0 mr-3">
                       <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -763,6 +838,38 @@ const AICaptureModal: React.FC<Props> = ({ open, onClose }) => {
                       <p className="text-gray-700 text-sm leading-relaxed">
                         Your photo is securely scanned for leaf, flower, and stem patterns, then matched to known species—no images are stored. Results include a trust level to guide accuracy.
                       </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Tips for Better Results */}
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200 p-3">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 mr-3">
+                      <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-sm">💡</span>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-base font-semibold text-gray-900 mb-2">Tips for Better Results</h4>
+                      <ul className="space-y-1">
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2 mt-1 text-xs">•</span>
+                          <span className="text-gray-700 text-xs">Take photos in good lighting</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2 mt-1 text-xs">•</span>
+                          <span className="text-gray-700 text-xs">Include leaves, flowers, and stems when possible</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2 mt-1 text-xs">•</span>
+                          <span className="text-gray-700 text-xs">Get close enough to see plant details clearly</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2 mt-1 text-xs">•</span>
+                          <span className="text-gray-700 text-xs">Avoid blurry or heavily shadowed images</span>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>

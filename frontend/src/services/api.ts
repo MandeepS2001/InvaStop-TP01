@@ -16,13 +16,9 @@ const api: AxiosInstance = axios.create({
   },
 });
 
-// Request interceptor to add auth token
+// Request interceptor (no auth needed)
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
     return config;
   },
   (error) => {
@@ -38,15 +34,8 @@ api.interceptors.response.use(
   (error) => {
     const message = error.response?.data?.detail || error.message || 'An error occurred';
     
-    // Handle authentication errors
-    if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-      toast.error('Session expired. Please login again.');
-    } else if (error.response?.status === 403) {
-      toast.error('You do not have permission to perform this action.');
-    } else if (error.response?.status >= 500) {
+    // Handle errors
+    if (error.response?.status >= 500) {
       toast.error('Server error. Please try again later.');
     } else {
       toast.error(message);

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { AlertTriangle, Shield, Target, MapPin, Calendar, Leaf, Info, Wrench, TrendingUp, Search, Eye } from 'lucide-react';
 import SimpleHeader from '../components/SimpleHeader';
+import { getSpeciesByName, ProcessedSpeciesData } from '../utils/speciesData';
 
 // Utility function to scroll to top
 const scrollToTop = () => {
@@ -36,6 +37,7 @@ const SpeciesDetailPage: React.FC = () => {
   const { speciesName } = useParams<{ speciesName: string }>();
   const navigate = useNavigate();
   const [species, setSpecies] = useState<SpeciesDetail | null>(null);
+  const [csvSpeciesData, setCsvSpeciesData] = useState<ProcessedSpeciesData | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,46 +72,14 @@ const SpeciesDetailPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Get species image - same function as in InteractiveMap
+  // Get species image - dynamic generation based on species name
   const getSpeciesImage = (speciesName: string) => {
-    // Use images from the top10 folder in public - updated to match actual file names
-    const imageMap: Record<string, string> = {
-      'Lantana': '/top10/Lantana.png',
-      'Bitou Bush': '/top10/BitouBush.png',
-      'Gorse': '/top10/Gorse.png',
-      'Buffel Grass': '/top10/BuffelGrass.png',
-      'Gamba Grass': '/top10/GambaGrass.png',
-      // Native species - fixed image paths
-      'Eucalyptus': '/top10/Eucalyptus.png',
-      'Acacia/Wattle': '/top10/Acacia-Wattle.jpg',
-      'Banksia': '/top10/Banksia.jpg',
-      'Melaleuca': '/top10/Melaleuca.jpg',
-      'Grevillea': '/top10/Grevillea.png',
-      // Animal species
-      'Common Myna': '/top10/CommonMyna.png',
-      'European Rabbit': '/top10/EuropeanRabbit.jpg',
-      'Red Fox': '/top10/RedFox.png',
-      'Cane Toad': '/top10/CaneToad.png',
-      'Feral Pig': '/top10/FeralPig.png'
-    };
+    // Generate image path based on species name
+    const cleanName = speciesName.replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '');
+    const imagePath = `/top10/${cleanName}.png`;
     
-    // Return the mapped image or create a simple SVG fallback
-    if (imageMap[speciesName]) {
-      console.log(`Loading image for ${speciesName}: ${imageMap[speciesName]}`);
-      return imageMap[speciesName];
-    }
-    
-    console.log(`No image found for ${speciesName}, using fallback`);
-    // Create a simple SVG fallback for missing images
-    const svgFallback = `data:image/svg+xml;base64,${btoa(`
-      <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
-        <rect width="300" height="200" fill="#4F46E5"/>
-        <text x="150" y="100" font-family="Arial" font-size="16" fill="white" text-anchor="middle">Species Image</text>
-        <text x="150" y="125" font-family="Arial" font-size="14" fill="white" text-anchor="middle">Not Available</text>
-      </svg>
-    `)}`;
-    
-    return svgFallback;
+    console.log(`Loading image for ${speciesName}: ${imagePath}`);
+    return imagePath;
   };
 
   // Convert URL parameter back to readable species name
@@ -825,6 +795,523 @@ const SpeciesDetailPage: React.FC = () => {
         distribution: 'Widespread across northern and eastern Australia, particularly in Queensland and New South Wales.',
         legalStatus: 'Declared pest animal in most Australian states. Control programs are actively managed.',
         reporting: 'Report large populations and damage to local authorities or agricultural agencies.'
+      },
+      'mouse-ear-hawkweed': {
+        name: 'Mouse Ear Hawkweed',
+        scientificName: 'Hieracium pilosella',
+        type: 'Perennial Herb',
+        nativeRange: 'Europe',
+        firstDetected: '1860s',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Mouse Ear Hawkweed forms dense mats that exclude native plants and can dominate pasture areas. It spreads rapidly through runners and seeds.',
+        controlMethods: [
+          'Herbicide application during active growth',
+          'Mechanical removal of small infestations',
+          'Prevent seed production by cutting flowers',
+          'Improve soil fertility to favor native species',
+          'Regular monitoring and early intervention'
+        ],
+        economicImpact: 'Reduces pasture productivity and can make land unsuitable for grazing. Increases management costs for agricultural operations.',
+        ecologicalImpact: 'Forms dense mats that exclude native vegetation, reduces biodiversity, and alters soil conditions.',
+        managementStrategies: [
+          'Integrated weed management programs',
+          'Pasture improvement initiatives',
+          'Early detection and rapid response',
+          'Community education programs',
+          'Regular monitoring and assessment'
+        ],
+        preventionTips: [
+          'Clean vehicles and equipment between sites',
+          'Prevent seed spread in hay and feed',
+          'Maintain healthy pastures',
+          'Report new infestations immediately',
+          'Use certified weed-free materials'
+        ],
+        identification: [
+          'Small rosettes of hairy leaves',
+          'Yellow daisy-like flowers on tall stems',
+          'White milky sap when broken',
+          'Spreads by runners forming dense mats',
+          'Prefers open, disturbed areas'
+        ],
+        seasonalBehavior: 'Flowers in spring and summer. Most active growth occurs in spring and autumn.',
+        habitat: 'Pastures, roadsides, disturbed areas, and open grasslands. Prefers well-drained soils.',
+        reproduction: 'Reproduces by seed and vegetative runners. Seeds can remain viable for several years.',
+        distribution: 'Found in NSW, VIC, and TAS, particularly in cooler regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control is required for landowners.',
+        reporting: 'Report new infestations to local agricultural authorities or biosecurity agencies.'
+      },
+      'mikania': {
+        name: 'Mikania',
+        scientificName: 'Mikania micrantha',
+        type: 'Climbing Vine',
+        nativeRange: 'Tropical America',
+        firstDetected: '1900s',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Mikania is a fast-growing vine that smothers native vegetation and can block waterways. It forms dense mats that exclude other plants.',
+        controlMethods: [
+          'Cut and treat vines immediately with herbicide',
+          'Remove from trees and structures before treatment',
+          'Prevent vine growth by regular cutting',
+          'Monitor for regrowth from roots',
+          'Biological control using specific insects'
+        ],
+        economicImpact: 'Significant costs in vegetation management and waterway maintenance. Can block irrigation systems and reduce agricultural productivity.',
+        ecologicalImpact: 'Smothers native vegetation, reduces biodiversity, blocks waterways, and can alter ecosystem functions.',
+        managementStrategies: [
+          'Integrated vine management programs',
+          'Waterway protection initiatives',
+          'Early detection and rapid response',
+          'Community awareness campaigns',
+          'Regular monitoring and control'
+        ],
+        preventionTips: [
+          'Prevent vine establishment in gardens',
+          'Clean equipment and vehicles',
+          'Avoid planting Mikania',
+          'Report new infestations immediately',
+          'Support native vegetation restoration'
+        ],
+        identification: [
+          'Fast-growing climbing vine',
+          'Heart-shaped leaves with pointed tips',
+          'Small white flowers in clusters',
+          'Forms dense mats over vegetation',
+          'Prefers moist, disturbed areas'
+        ],
+        seasonalBehavior: 'Most active growth in wet seasons. Can grow year-round in tropical climates.',
+        habitat: 'Forests, waterways, disturbed areas, and gardens. Prefers moist conditions.',
+        reproduction: 'Reproduces by seed and vegetative fragments. Seeds are dispersed by wind and water.',
+        distribution: 'Found in QLD, NSW, and NT, particularly in tropical and subtropical regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control is mandatory for landowners.',
+        reporting: 'Report new infestations to local biosecurity authorities or agricultural agencies.'
+      },
+      'spiked-pepper': {
+        name: 'Spiked Pepper',
+        scientificName: 'Piper aduncum',
+        type: 'Shrub/Tree',
+        nativeRange: 'Tropical America',
+        firstDetected: '1850s',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Spiked Pepper forms dense thickets with allelopathic effects that inhibit other plant growth. It can dominate disturbed areas and prevent native regeneration.',
+        controlMethods: [
+          'Cut larger plants and treat stumps immediately',
+          'Remove by hand for small plants ensuring roots are removed',
+          'Prevent seed spread by removing before fruiting',
+          'Apply herbicide to actively growing plants',
+          'Monitor for regrowth and treat promptly'
+        ],
+        economicImpact: 'Reduces land productivity and increases management costs. Can prevent agricultural development and reduce property values.',
+        ecologicalImpact: 'Forms dense thickets that exclude native species, has allelopathic effects that inhibit other plant growth, and prevents natural regeneration.',
+        managementStrategies: [
+          'Integrated weed management programs',
+          'Habitat restoration initiatives',
+          'Early detection and rapid response',
+          'Community education programs',
+          'Regular monitoring and control'
+        ],
+        preventionTips: [
+          'Prevent seed spread in soil and equipment',
+          'Avoid planting Spiked Pepper',
+          'Maintain healthy native vegetation',
+          'Report new infestations immediately',
+          'Support habitat restoration programs'
+        ],
+        identification: [
+          'Large shrub or small tree up to 6m tall',
+          'Alternate, heart-shaped leaves',
+          'Spikes of small white flowers',
+          'Produces small black berries',
+          'Distinctive peppery smell when crushed'
+        ],
+        seasonalBehavior: 'Flowers and fruits year-round in tropical climates. Most active growth during wet seasons.',
+        habitat: 'Forests, disturbed areas, and gardens. Prefers moist, well-drained soils.',
+        reproduction: 'Reproduces by seed and vegetative means. Seeds are dispersed by birds and animals.',
+        distribution: 'Found in NSW, QLD, and VIC, particularly in tropical and subtropical regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control is required for landowners.',
+        reporting: 'Report new infestations to local biosecurity authorities or agricultural agencies.'
+      },
+      'black-sage': {
+        name: 'Black Sage',
+        scientificName: 'Cordia curassavica',
+        type: 'Shrub',
+        nativeRange: 'Tropical America',
+        firstDetected: '1800s',
+        impact: 'Medium',
+        spread: 'Medium',
+        risk: 'Medium',
+        description: 'Black Sage forms dense stands that reduce biodiversity and can dominate disturbed areas. It spreads readily in coastal and near-coastal regions.',
+        controlMethods: [
+          'Apply herbicide when plants are actively growing',
+          'Monitor for seedlings after initial treatment',
+          'Consider mulching to suppress regrowth',
+          'Mechanical removal for small infestations',
+          'Regular follow-up treatments'
+        ],
+        economicImpact: 'Moderate costs in vegetation management and can reduce land productivity in affected areas.',
+        ecologicalImpact: 'Forms dense stands that reduce biodiversity and can alter ecosystem structure in coastal areas.',
+        managementStrategies: [
+          'Integrated weed management programs',
+          'Coastal vegetation protection',
+          'Early detection and intervention',
+          'Community awareness programs',
+          'Regular monitoring and assessment'
+        ],
+        preventionTips: [
+          'Prevent seed spread in coastal areas',
+          'Avoid planting Black Sage',
+          'Maintain healthy native coastal vegetation',
+          'Report new infestations immediately',
+          'Support coastal restoration programs'
+        ],
+        identification: [
+          'Dense shrub up to 3m tall',
+          'Oval leaves with smooth edges',
+          'Small white flowers in clusters',
+          'Black berries when ripe',
+          'Prefers coastal and near-coastal areas'
+        ],
+        seasonalBehavior: 'Flowers and fruits year-round in tropical climates. Most active growth during warm, wet periods.',
+        habitat: 'Coastal areas, disturbed sites, and gardens. Prefers well-drained soils and full sun.',
+        reproduction: 'Reproduces by seed and vegetative means. Seeds are dispersed by birds and water.',
+        distribution: 'Found in NSW, VIC, and QLD, particularly in coastal regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control may be required in some areas.',
+        reporting: 'Report new infestations to local coastal authorities or biosecurity agencies.'
+      },
+      'cane-tibouchina': {
+        name: 'Cane Tibouchina',
+        scientificName: 'Tibouchina urvilleana',
+        type: 'Shrub',
+        nativeRange: 'Brazil',
+        firstDetected: '1950s',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Cane Tibouchina forms dense thickets that displace native vegetation and can dominate disturbed areas. It spreads rapidly and is difficult to control.',
+        controlMethods: [
+          'Cut stems close to ground and treat immediately',
+          'Remove all plant material to prevent spread',
+          'Monitor for root suckers and treat promptly',
+          'Apply herbicide to actively growing plants',
+          'Regular follow-up treatments required'
+        ],
+        economicImpact: 'Significant costs in vegetation management and can reduce land productivity. Difficult and expensive to control once established.',
+        ecologicalImpact: 'Forms dense thickets that displace native species and can alter ecosystem structure and function.',
+        managementStrategies: [
+          'Integrated weed management programs',
+          'Early detection and rapid response',
+          'Habitat restoration initiatives',
+          'Community education programs',
+          'Regular monitoring and control'
+        ],
+        preventionTips: [
+          'Prevent seed spread in soil and equipment',
+          'Avoid planting Cane Tibouchina',
+          'Maintain healthy native vegetation',
+          'Report new infestations immediately',
+          'Support habitat restoration programs'
+        ],
+        identification: [
+          'Large shrub up to 4m tall',
+          'Large, hairy leaves with prominent veins',
+          'Bright purple flowers',
+          'Square stems with rough texture',
+          'Forms dense, spreading thickets'
+        ],
+        seasonalBehavior: 'Flowers primarily in autumn and winter. Most active growth during warm, wet periods.',
+        habitat: 'Forests, disturbed areas, and gardens. Prefers moist, well-drained soils.',
+        reproduction: 'Reproduces by seed and vegetative means. Seeds are dispersed by wind, water, and animals.',
+        distribution: 'Found in NSW and QLD, particularly in subtropical regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control is mandatory for landowners.',
+        reporting: 'Report new infestations to local biosecurity authorities or agricultural agencies.'
+      },
+      'leafy-spurge': {
+        name: 'Leafy Spurge',
+        scientificName: 'Euphorbia esula',
+        type: 'Perennial Herb',
+        nativeRange: 'Europe and Asia',
+        firstDetected: '1900s',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Leafy Spurge is toxic to livestock and forms dense stands that exclude other vegetation. It spreads rapidly through seeds and root fragments.',
+        controlMethods: [
+          'Wear gloves - milky sap causes skin irritation',
+          'Apply herbicide to actively growing plants',
+          'May require multiple treatments over several years',
+          'Prevent seed production by cutting flowers',
+          'Monitor for regrowth from deep roots'
+        ],
+        economicImpact: 'Significant costs in livestock management and pasture productivity. Can make land unsuitable for grazing.',
+        ecologicalImpact: 'Forms dense stands that exclude native vegetation and can be toxic to wildlife and livestock.',
+        managementStrategies: [
+          'Integrated weed management programs',
+          'Livestock protection initiatives',
+          'Early detection and rapid response',
+          'Community education programs',
+          'Regular monitoring and assessment'
+        ],
+        preventionTips: [
+          'Prevent seed spread in hay and feed',
+          'Clean vehicles and equipment thoroughly',
+          'Avoid areas with known infestations',
+          'Report new infestations immediately',
+          'Support native pasture improvement'
+        ],
+        identification: [
+          'Perennial herb up to 1m tall',
+          'Narrow, lance-shaped leaves',
+          'Small yellow-green flowers',
+          'White milky sap when broken',
+          'Forms dense, spreading colonies'
+        ],
+        seasonalBehavior: 'Flowers in spring and summer. Most active growth occurs in spring and autumn.',
+        habitat: 'Pastures, roadsides, and disturbed areas. Prefers well-drained soils.',
+        reproduction: 'Reproduces by seed and root fragments. Seeds can remain viable for many years.',
+        distribution: 'Found in NSW, VIC, and SA, particularly in temperate regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control is mandatory for landowners.',
+        reporting: 'Report new infestations to local agricultural authorities or biosecurity agencies.'
+      },
+      'asiatic-sand-sedge': {
+        name: 'Asiatic Sand Sedge',
+        scientificName: 'Carex kobomugi',
+        type: 'Perennial Grass',
+        nativeRange: 'Asia',
+        firstDetected: '1980s',
+        impact: 'Medium',
+        spread: 'Medium',
+        risk: 'Medium',
+        description: 'Asiatic Sand Sedge stabilizes dunes and can change coastal ecosystems by altering natural dune dynamics and excluding native species.',
+        controlMethods: [
+          'Most effective control during active growth period',
+          'Apply herbicide when soil is moist',
+          'Monitor for regrowth and treat promptly',
+          'Physical removal for small infestations',
+          'Prevent seed spread in coastal areas'
+        ],
+        economicImpact: 'Moderate costs in coastal management and can affect tourism and coastal property values.',
+        ecologicalImpact: 'Stabilizes dunes and changes coastal ecosystem dynamics, potentially excluding native dune species.',
+        managementStrategies: [
+          'Coastal weed management programs',
+          'Dune protection initiatives',
+          'Early detection and intervention',
+          'Community awareness programs',
+          'Regular monitoring and assessment'
+        ],
+        preventionTips: [
+          'Prevent seed spread in coastal areas',
+          'Avoid planting Asiatic Sand Sedge',
+          'Maintain healthy native dune vegetation',
+          'Report new infestations immediately',
+          'Support coastal restoration programs'
+        ],
+        identification: [
+          'Perennial grass forming dense mats',
+          'Long, narrow leaves',
+          'Brown flower spikes',
+          'Extensive root system',
+          'Prefers coastal dune environments'
+        ],
+        seasonalBehavior: 'Most active growth in spring and summer. Can tolerate harsh coastal conditions.',
+        habitat: 'Coastal dunes and sandy areas. Prefers well-drained, sandy soils.',
+        reproduction: 'Reproduces by seed and vegetative means. Seeds are dispersed by wind and water.',
+        distribution: 'Found in NSW, VIC, and SA, particularly in coastal regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control may be required in coastal areas.',
+        reporting: 'Report new infestations to local coastal authorities or biosecurity agencies.'
+      },
+      'halogeton': {
+        name: 'Halogeton',
+        scientificName: 'Halogeton glomeratus',
+        type: 'Annual Herb',
+        nativeRange: 'Central Asia',
+        firstDetected: '1960s',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Halogeton is toxic to livestock and forms dense stands that can dominate rangeland areas. It\'s particularly dangerous to sheep and cattle.',
+        controlMethods: [
+          'Remove plants before seed production',
+          'Apply herbicide to actively growing plants',
+          'Be cautious - toxic to livestock',
+          'Prevent seed spread in feed and equipment',
+          'Monitor for regrowth and treat promptly'
+        ],
+        economicImpact: 'Significant costs in livestock management and can cause livestock deaths. Reduces grazing productivity.',
+        ecologicalImpact: 'Forms dense stands that exclude native vegetation and can be toxic to wildlife and livestock.',
+        managementStrategies: [
+          'Integrated weed management programs',
+          'Livestock protection initiatives',
+          'Early detection and rapid response',
+          'Community education programs',
+          'Regular monitoring and assessment'
+        ],
+        preventionTips: [
+          'Prevent seed spread in feed and equipment',
+          'Avoid grazing areas with known infestations',
+          'Clean vehicles and equipment thoroughly',
+          'Report new infestations immediately',
+          'Support native rangeland improvement'
+        ],
+        identification: [
+          'Annual herb up to 60cm tall',
+          'Small, fleshy leaves',
+          'Red stems and leaf tips',
+          'Small green flowers in clusters',
+          'Forms dense, spreading colonies'
+        ],
+        seasonalBehavior: 'Annual plant that germinates in spring and flowers in summer. Dies back in winter.',
+        habitat: 'Rangelands, roadsides, and disturbed areas. Prefers alkaline soils.',
+        reproduction: 'Reproduces by seed only. Seeds can remain viable for several years.',
+        distribution: 'Found in NSW, VIC, SA, and WA, particularly in arid and semi-arid regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control is mandatory for landowners.',
+        reporting: 'Report new infestations to local agricultural authorities or biosecurity agencies.'
+      },
+      'wiregrass': {
+        name: 'Wiregrass',
+        scientificName: 'Sporobolus indicus',
+        type: 'Perennial Grass',
+        nativeRange: 'Tropical America',
+        firstDetected: '1800s',
+        impact: 'Medium',
+        spread: 'Medium',
+        risk: 'Medium',
+        description: 'Wiregrass forms dense stands that can be a fire hazard and competes with native grasses. It\'s particularly problematic in pasture areas.',
+        controlMethods: [
+          'Control is most effective when soil is moist',
+          'Apply herbicide to actively growing plants',
+          'Monitor for regrowth and treat as needed',
+          'Prevent seed spread in hay and feed',
+          'Improve soil fertility to favor native species'
+        ],
+        economicImpact: 'Moderate costs in pasture management and can reduce grazing productivity.',
+        ecologicalImpact: 'Forms dense stands that compete with native grasses and can alter fire regimes.',
+        managementStrategies: [
+          'Integrated weed management programs',
+          'Pasture improvement initiatives',
+          'Early detection and intervention',
+          'Community education programs',
+          'Regular monitoring and assessment'
+        ],
+        preventionTips: [
+          'Prevent seed spread in hay and feed',
+          'Clean vehicles and equipment between sites',
+          'Maintain healthy pastures',
+          'Report new infestations immediately',
+          'Support native pasture improvement'
+        ],
+        identification: [
+          'Perennial grass up to 1m tall',
+          'Narrow, wiry leaves',
+          'Open, spreading growth habit',
+          'Small seed heads',
+          'Forms dense, spreading colonies'
+        ],
+        seasonalBehavior: 'Most active growth in warm, wet periods. Can remain green year-round in suitable climates.',
+        habitat: 'Pastures, roadsides, and disturbed areas. Prefers well-drained soils.',
+        reproduction: 'Reproduces by seed and vegetative means. Seeds are dispersed by wind, water, and animals.',
+        distribution: 'Found in NSW, VIC, QLD, and SA, particularly in temperate and subtropical regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control may be required in some areas.',
+        reporting: 'Report new infestations to local agricultural authorities or biosecurity agencies.'
+      },
+      'portuguese-broom': {
+        name: 'Portuguese Broom',
+        scientificName: 'Cytisus striatus',
+        type: 'Shrub',
+        nativeRange: 'Portugal and Spain',
+        firstDetected: '1800s',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Portuguese Broom forms dense stands and is a nitrogen-fixing plant that can alter soil chemistry. It spreads rapidly and is difficult to control.',
+        controlMethods: [
+          'Cut and treat stumps immediately with herbicide',
+          'Remove all seed pods to prevent spread',
+          'Monitor for 3-5 years due to long seed viability',
+          'Apply herbicide to actively growing plants',
+          'Regular follow-up treatments required'
+        ],
+        economicImpact: 'Significant costs in vegetation management and can reduce land productivity. Difficult to control once established.',
+        ecologicalImpact: 'Forms dense stands that exclude native species and can alter soil chemistry through nitrogen fixation.',
+        managementStrategies: [
+          'Integrated weed management programs',
+          'Early detection and rapid response',
+          'Habitat restoration initiatives',
+          'Community education programs',
+          'Regular monitoring and control'
+        ],
+        preventionTips: [
+          'Prevent seed spread in soil and equipment',
+          'Avoid planting Portuguese Broom',
+          'Maintain healthy native vegetation',
+          'Report new infestations immediately',
+          'Support habitat restoration programs'
+        ],
+        identification: [
+          'Large shrub up to 3m tall',
+          'Small, three-parted leaves',
+          'Bright yellow pea-like flowers',
+          'Long, narrow seed pods',
+          'Forms dense, spreading thickets'
+        ],
+        seasonalBehavior: 'Flowers in spring and early summer. Seeds can remain viable for many years.',
+        habitat: 'Forests, disturbed areas, and gardens. Prefers well-drained soils.',
+        reproduction: 'Reproduces by seed and vegetative means. Seeds are dispersed by wind, water, and animals.',
+        distribution: 'Found in NSW, VIC, SA, and TAS, particularly in temperate regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control is mandatory for landowners.',
+        reporting: 'Report new infestations to local biosecurity authorities or agricultural agencies.'
+      },
+      'black-swallow-wort': {
+        name: 'Black Swallow-wort',
+        scientificName: 'Cynanchum louiseae',
+        type: 'Perennial Vine',
+        nativeRange: 'Europe',
+        firstDetected: '1900s',
+        impact: 'High',
+        spread: 'High',
+        risk: 'High',
+        description: 'Black Swallow-wort forms dense stands and is toxic to monarch butterflies. It can dominate disturbed areas and prevent native regeneration.',
+        controlMethods: [
+          'Cut stems and treat with herbicide immediately',
+          'Remove all plant material including roots',
+          'Monitor for regrowth from remaining roots',
+          'Apply herbicide to actively growing plants',
+          'Regular follow-up treatments required'
+        ],
+        economicImpact: 'Significant costs in vegetation management and can affect biodiversity conservation efforts.',
+        ecologicalImpact: 'Forms dense stands that exclude native species and can be toxic to monarch butterflies and other wildlife.',
+        managementStrategies: [
+          'Integrated weed management programs',
+          'Biodiversity conservation initiatives',
+          'Early detection and rapid response',
+          'Community education programs',
+          'Regular monitoring and control'
+        ],
+        preventionTips: [
+          'Prevent seed spread in soil and equipment',
+          'Avoid planting Black Swallow-wort',
+          'Maintain healthy native vegetation',
+          'Report new infestations immediately',
+          'Support biodiversity conservation programs'
+        ],
+        identification: [
+          'Perennial vine up to 2m tall',
+          'Opposite, heart-shaped leaves',
+          'Small, dark purple flowers',
+          'Long, narrow seed pods',
+          'Forms dense, spreading colonies'
+        ],
+        seasonalBehavior: 'Flowers in summer. Most active growth occurs during warm, wet periods.',
+        habitat: 'Forests, disturbed areas, and gardens. Prefers well-drained soils.',
+        reproduction: 'Reproduces by seed and vegetative means. Seeds are dispersed by wind and water.',
+        distribution: 'Found in NSW, VIC, and SA, particularly in temperate regions.',
+        legalStatus: 'Declared noxious weed in affected states. Control is mandatory for landowners.',
+        reporting: 'Report new infestations to local biosecurity authorities or agricultural agencies.'
       }
     };
 
@@ -833,8 +1320,75 @@ const SpeciesDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (speciesName) {
-      const speciesData = getSpeciesData(speciesName);
-      setSpecies(speciesData);
+      const loadSpeciesData = async () => {
+        try {
+          // Try to load from CSV first
+          const csvData = await getSpeciesByName(speciesName);
+          if (csvData) {
+            setCsvSpeciesData(csvData);
+            // Convert CSV data to the format expected by the component
+            const speciesDetail: SpeciesDetail = {
+              name: csvData.name,
+              scientificName: csvData.scientificName,
+              type: csvData.type,
+              nativeRange: csvData.nativeRange,
+              firstDetected: csvData.firstDetected,
+              impact: csvData.threatLevel === 'high' ? 'High' : csvData.threatLevel === 'medium' ? 'Medium' : 'Low',
+              spread: csvData.threatLevel === 'high' ? 'High' : csvData.threatLevel === 'medium' ? 'Medium' : 'Low',
+              risk: csvData.threatLevel === 'high' ? 'High' : csvData.threatLevel === 'medium' ? 'Medium' : 'Low',
+              description: csvData.description,
+              controlMethods: [
+                'Apply herbicide when plants are actively growing',
+                'Monitor for regrowth and treat promptly',
+                'Prevent seed spread in soil and equipment',
+                'Report new infestations immediately',
+                'Support habitat restoration programs'
+              ],
+              economicImpact: 'Costs vary based on infestation size and control methods required.',
+              ecologicalImpact: csvData.description,
+              managementStrategies: [
+                'Integrated weed management programs',
+                'Early detection and rapid response',
+                'Community education programs',
+                'Regular monitoring and assessment',
+                'Habitat restoration initiatives'
+              ],
+              preventionTips: [
+                'Prevent seed spread in soil and equipment',
+                'Avoid planting this species',
+                'Maintain healthy native vegetation',
+                'Report new infestations immediately',
+                'Support habitat restoration programs'
+              ],
+              identification: [
+                'Check field guides for specific identification features',
+                'Consult with local experts for confirmation',
+                'Take clear photos of key features',
+                'Note location and habitat details',
+                'Compare with known invasive species'
+              ],
+              seasonalBehavior: 'Most active growth during warm, wet periods. Varies by species and location.',
+              habitat: 'Disturbed areas, roadsides, and various habitats. Preferences vary by species.',
+              reproduction: 'Reproduces by seed and vegetative means. Seeds dispersed by various methods.',
+              distribution: csvData.quickFacts.distribution,
+              legalStatus: 'Declared noxious weed in affected states. Control may be required.',
+              reporting: 'Report new infestations to local biosecurity authorities or agricultural agencies.'
+            };
+            setSpecies(speciesDetail);
+            setIsLoading(false);
+            return;
+          }
+        } catch (error) {
+          console.error('Error loading CSV species data:', error);
+        }
+        
+        // Fallback to hardcoded data
+        const speciesData = getSpeciesData(speciesName);
+        setSpecies(speciesData);
+        setIsLoading(false);
+      };
+      
+      loadSpeciesData();
     }
   }, [speciesName]);
 

@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import './index.css';
 import App from './App';
-import { AuthProvider } from './hooks/useAuth';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -25,9 +24,8 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AuthProvider>
-          <App />
-          <Toaster
+        <App />
+        <Toaster
             position="top-right"
             toastOptions={{
               duration: 4000,
@@ -51,7 +49,6 @@ root.render(
               },
             }}
           />
-        </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>

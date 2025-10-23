@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import auth, species, reports, analytics, epic1, quiz, impact, ai
+from app.api.routes import species, reports, analytics, epic1, quiz, impact, ai
 from app.core.config import settings
 
 app = FastAPI(
@@ -21,7 +21,6 @@ app.add_middleware(
 )
 
 # Include API routes
-app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(species.router, prefix="/api/v1/species", tags=["Species"])
 app.include_router(reports.router, prefix="/api/v1/reports", tags=["Reports"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytics"])
