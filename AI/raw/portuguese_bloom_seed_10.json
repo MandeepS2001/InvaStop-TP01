@@ -1,0 +1,82 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "portuguese_bloom_seed",
+      "points": [
+        [
+          284.54098360655735,
+          231.3606557377049
+        ],
+        [
+          537.0,
+          353.4918032786885
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "portuguese_bloom_seed",
+      "points": [
+        [
+          544.3770491803278,
+          114.14754098360655
+        ],
+        [
+          690.2786885245902,
+          277.2622950819672
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "portuguese_bloom_seed",
+      "points": [
+        [
+          647.655737704918,
+          178.9016393442623
+        ],
+        [
+          809.1311475409836,
+          313.327868852459
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "portuguese_bloom_seed",
+      "points": [
+        [
+          460.7704918032787,
+          267.4262295081967
+        ],
+        [
+          727.1639344262295,
+          409.2295081967213
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "portuguese_bloom_seed_10.jpg",
+  "imageData": null,
+  "imageHeight": 566,
+  "imageWidth": 1024
+}

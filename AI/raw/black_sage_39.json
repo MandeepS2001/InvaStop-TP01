@@ -1,0 +1,28 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          323.1190476190476,
+          205.33333333333334
+        ],
+        [
+          450.7380952380952,
+          625.3333333333334
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "black_sage_39.jpeg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 771
+}

@@ -1,0 +1,82 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          92.2752293577982,
+          88.66055045871558
+        ],
+        [
+          408.78899082568813,
+          534.5321100917431
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          236.31192660550462,
+          518.9357798165138
+        ],
+        [
+          465.6697247706422,
+          887.743119266055
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          528.0550458715596,
+          262.05504587155957
+        ],
+        [
+          747.3211009174312,
+          617.1009174311927
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          675.7614678899082,
+          605.1743119266055
+        ],
+        [
+          934.4770642201834,
+          987.743119266055
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "black_sage_6.jpg",
+  "imageData": null,
+  "imageHeight": 992,
+  "imageWidth": 1024
+}

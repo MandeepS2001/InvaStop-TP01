@@ -1,0 +1,82 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "lantana",
+      "points": [
+        [
+          211.41935483870967,
+          441.5698924731183
+        ],
+        [
+          483.4623655913979,
+          679.2043010752689
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "lantana",
+      "points": [
+        [
+          199.59139784946237,
+          748.0215053763441
+        ],
+        [
+          297.4408602150538,
+          839.4193548387096
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "lantana",
+      "points": [
+        [
+          360.8817204301075,
+          249.0967741935484
+        ],
+        [
+          440.45161290322585,
+          325.44086021505376
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "lantana",
+      "points": [
+        [
+          679.1612903225806,
+          444.7956989247312
+        ],
+        [
+          758.7311827956989,
+          535.1182795698925
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "lantana_100.jpg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 768
+}

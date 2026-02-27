@@ -334,7 +334,7 @@ def prepareNDJson(dataset:str=DEFAULT_DATASET, train_ratio:float=0.85, val_ratio
             "\n".join(json.dumps(entry, ensure_ascii=False) for entry in train_entries + val_entries + test_entries) + '\n'
         )
     
-def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epochs:int=50, batch_size:int=16, img_size:int=640, project:str='detect', name:str='main'):
+def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epoches:int=50, batch_size:int=16, img_size:int=640, project:str='detect', name:str='main'):
     """
     Train a model using the dataset.
     """
@@ -358,12 +358,14 @@ def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epochs:int=50, 
     print(" [ Complete. ]\n")
 
     # Train the model
-    name = f"{name}_{model_name}_e{epochs}_b{batch_size}"
-    print(f" [ Training with config: ] \n  dataset:\t {dataset}\n  config file:\t{config_path}\n  model:\t{model_name}\n  epochs:\t{epochs}\n  batch_size:\t{batch_size}\n  img_size:\t{img_size}\n  project:\t{project}\n  name:\t{name}")
+    name = f"{name}_{model_name}_e{epoches}_b{batch_size}"
+    print(f" [ Training with config: ] \n  dataset:\t {dataset}\n  config file:\t{config_path}\n  model:\t{model_name}\n  epoches:\t{epoches}\n  batch_size:\t{batch_size}\n  img_size:\t{img_size}\n  project:\t{project}\n  name:\t{name}")
     train_setting = {
         "data": config_path,
         "imgsz": img_size,
-        "epochs": epochs,
+        "rect": False,
+        "multi_scale": False,
+        "epoches": epoches,
         "batch": batch_size,
         "rect": True,
         "auto_augment": None,
@@ -372,7 +374,7 @@ def train(dataset:str=DEFAULT_DATASET, model_name:str="yolo11m", epochs:int=50, 
         "mixup": 0.0,
         "copy_paste": 0.0,
         "lr0": 0.003,
-        "warmup_epochs": 5,
+        "warmup_epoches": 5,
         "freeze": 10,
         "patience": 100,
         "plots": True,
@@ -464,27 +466,42 @@ def updateModel(categories:int=None, run:int=None, epoches:int=None, batch_size:
     
     # For other cases, find the latest model by parsing the folder names in detect/
     print(" [ Finding the latest model... ]")
-    latest_categories = 0
-    latest_run = 0
-    latest_epoches = 0
-    latest_batch_size = 0
+    records = []
     for name in os.listdir("detect"):
-        match = re.match(r"main_c(\d+)_run(\d+)_yolo11m_e(\d+)_b(\d+)", name)
+        match = re.match(r".+c(\d+)_run(\d+).*?_e(\d+).*?_b(\d+)", name)
         if match:
+            print(f" [ Found model: {name} ]")
             c, r, e, b = map(int, match.groups())
-            latest_categories = max(latest_categories, c)
-            latest_run = max(latest_run, r)
-            latest_epoches = max(latest_epoches, e)
-            latest_batch_size = max(latest_batch_size, b)
+            records.append({
+                "name": name,
+                "categories": c,
+                "run": r,
+                "epoches": e,
+                "batch_size": b,
+            })
     
-    # Overlap those not given parameters 
-    categories = latest_categories if categories is None else categories
-    run = latest_run if run is None else run
-    epoches = latest_epoches if epoches is None else epoches
-    batch_size = latest_batch_size if batch_size is None else batch_size
+    # Step 1: Filter by given parameters
+    records = [r for r in records if 
+        (categories is None or r['categories'] == categories) and 
+        (run is None or r['run'] == run) and 
+        (epoches is None or r['epoches'] == epoches) and 
+        (batch_size is None or r['batch_size'] == batch_size)
+    ]
+    
+    # Step 2: Find the latest one by epoches, batch_size, run, categories
+    for key in ['categories', 'run', 'epoches', 'batch_size']:
+        max_value = max(r[key] for r in records) if records else None
+        records = [r for r in records if r[key] == max_value] if max_value is not None else records
+
+    # Step 3: Now the records should contain at most one record. Use that one.
+    if not records:
+        print(" [ No matching model found. ]")
+        return
+    latest_name = records[0]['name']
+    print(f" [ Latest model found: {latest_name} ]")
 
     # Build the model name
-    model_name = f"main_c{categories}_run{run}_yolo11m_e{epoches}_b{batch_size}"
+    model_name = model_name or latest_name
     __makeLinkFor(f"detect/{model_name}/weights/best.pt")
 
 if __name__ == "__main__":

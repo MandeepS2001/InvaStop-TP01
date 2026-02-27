@@ -1,0 +1,46 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          309.5909090909091,
+          2.045454545454546
+        ],
+        [
+          584.1363636363636,
+          650.2272727272726
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "black_sage",
+      "points": [
+        [
+          634.1363636363636,
+          207.5
+        ],
+        [
+          892.3181818181819,
+          645.6818181818181
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "black_sage_57.jpg",
+  "imageData": null,
+  "imageHeight": 975,
+  "imageWidth": 1011
+}

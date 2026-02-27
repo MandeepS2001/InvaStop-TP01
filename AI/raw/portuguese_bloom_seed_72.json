@@ -1,0 +1,28 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "portuguese_bloom_seed",
+      "points": [
+        [
+          261.5901639344262,
+          158.2377049180328
+        ],
+        [
+          633.7213114754098,
+          600.0409836065573
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "portuguese_bloom_seed_72.jpg",
+  "imageData": null,
+  "imageHeight": 805,
+  "imageWidth": 1024
+}

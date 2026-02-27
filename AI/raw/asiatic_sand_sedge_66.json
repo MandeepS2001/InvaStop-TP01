@@ -1,0 +1,46 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "asiatic_sand_sedge",
+      "points": [
+        [
+          786.1803278688525,
+          151.71311475409834
+        ],
+        [
+          841.9180327868852,
+          316.46721311475403
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "asiatic_sand_sedge",
+      "points": [
+        [
+          177.98360655737704,
+          265.6475409836065
+        ],
+        [
+          227.98360655737704,
+          412.36885245901635
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "asiatic_sand_sedge_66.jpeg",
+  "imageData": null,
+  "imageHeight": 769,
+  "imageWidth": 1024
+}

@@ -1,0 +1,28 @@
+{
+  "version": "5.8.3",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "halogeton_leaves",
+      "points": [
+        [
+          109.83333333333337,
+          115.80952380952382
+        ],
+        [
+          700.3095238095239,
+          891.047619047619
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "halogeton_leaves_39.jpeg",
+  "imageData": null,
+  "imageHeight": 1024,
+  "imageWidth": 893
+}
